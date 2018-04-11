@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">NewWeather</string>
+    <string name="strTvStrCity">Город:</string>
+    <string name="strTvStrLat">Широта:</string>
+    <string name="strTvStrLon">Долгота:</string>
+    <string name="strTvStrCurTemp">Температура:</string>
+    <string name="strTvStrPress">Давление:</string>
+    <string name="strTvStrHum">Влажность:</string>
+    <string name="strTvStrWindSpeed">Скорость ветра:</string>
+    <string name="strTvStrSkyDesc">Облачность:</string>
+    <string name="strMeterToSec">м/с</string>
+    <string name="strProcent">%</string>
+    <string name="strGektoPascal">гПа</string>
+    <string name="strGradusKelvin">°K</string>
+    <string name="strTvStrDateTime">Время:</string>
 </resources>
