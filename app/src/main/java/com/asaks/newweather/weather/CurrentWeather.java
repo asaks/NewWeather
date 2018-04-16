@@ -1,15 +1,21 @@
-package com.asaks.lib;
+package com.asaks.newweather.weather;
 
 /**
- * Created by asaks on 11.04.18.
+ * Created by asaks on 13.04.18.
+ *
+ * Класс, содержащий информацию о текущей погоде в указанном городе
  */
 
-/**
- * Класс, содержащий информацию о погодных условиях
- */
-
-public class WeatherData
+public class CurrentWeather
 {
+    // название города
+    private String sCityName;
+    // страна
+    private String sCountry;
+    // широта города
+    private double dCityLat;
+    // долгота города
+    private double dCityLon;
     // текущая температура
     private double dCurrentTemp;
     // давление
@@ -25,7 +31,7 @@ public class WeatherData
     // давление на уровне земли, гектопаскалей
     private double dGroundLevel;
     // дата и время
-    private int iDateTime;
+    private long iDateTime;
     // скорость ветра
     private double dWindSpeed;
     // направление ветра, в градусах
@@ -38,32 +44,65 @@ public class WeatherData
     private double dSnow;
     // описание погодных условий
     private String sWeatherDesc;
+    // id иконки погодных условий OpenWeatherMap
+    private int iIDweather;
     // описание неба
     private String sSkyDesc;
+    // иконка погодных условий
+    private String sWeatherIcon;
+    // время рассвета
+    private long iTimeDawn;
+    // время заката
+    private long iTimeSunset;
 
-    public WeatherData(double dCurrentTemp, double dPressure, double dHumidity, double dTempMin, double dTempMax,
-                       double dSeaLevel, double dGroundLevel, int iDateTime, double dWindSpeed, double dWindDeg,
-                       double dClouds, double dRain, double dSnow, String sSky, String sSkyDesc)
+
+    // Функция заполнения тестовыми данными
+    public void setTestData( String sCityName, double dLat, double dLon, long iTimeUpd, double dCurrentTemp, double dPressure,
+                                    double dHumidity, double dWindSpeed, double dWindDeg, String sWeatherDesc, String sSkyDesc )
     {
+        this.sCityName = sCityName;
+        this.dCityLat = dLat;
+        this.dCityLon = dLon;
+        this.iDateTime = iTimeUpd;
         this.dCurrentTemp = dCurrentTemp;
         this.dPressure = dPressure;
         this.dHumidity = dHumidity;
-        this.dTempMin = dTempMin;
-        this.dTempMax = dTempMax;
-        this.dSeaLevel = dSeaLevel;
-        this.dGroundLevel = dGroundLevel;
-        this.iDateTime = iDateTime;
         this.dWindSpeed = dWindSpeed;
         this.dWindDeg = dWindDeg;
-        this.dClouds = dClouds;
-        this.dRain = dRain;
-        this.dSnow = dSnow;
-        this.sWeatherDesc = sSky;
+        this.sWeatherDesc = sWeatherDesc;
         this.sSkyDesc = sSkyDesc;
     }
 
-    public WeatherData()
+    ////////////////////////////геттеры////////////////////////////
+
+    //! Возвращает название города
+    public String getCityName()
     {
+        return sCityName;
+    }
+
+    //! Возвращает название страны
+    public String getCountry()
+    {
+        return sCountry;
+    }
+
+    //! Возвращает широту
+    public double getLatitude()
+    {
+        return dCityLat;
+    }
+
+    //! Возвращает долготу
+    public double getLongitude()
+    {
+        return dCityLon;
+    }
+
+    //! Возвращает id погодных условий OpenWeatherMap
+    public int getIDweather()
+    {
+        return iIDweather;
     }
 
     //! Возвращает текущую температуру в кельвинах
@@ -109,7 +148,7 @@ public class WeatherData
     }
 
     //! Возвращает дату и время в виде количества секунд
-    public int getDateTime()
+    public long getDateTime()
     {
         return iDateTime;
     }
@@ -156,9 +195,60 @@ public class WeatherData
         return sSkyDesc;
     }
 
+    //! Возвращает иконку погодных условий
+    public String getWeatherIcon()
+    {
+        return sWeatherIcon;
+    }
+
+    //! Возвращает время рассвета
+    public long getTimeDawn()
+    {
+        return iTimeDawn;
+    }
+
+    //! Возвращает время заката
+    public long getTimeSunset()
+    {
+        return iTimeSunset;
+    }
+
+    ////////////////////////////сеттеры////////////////////////////
+
+    //! Записывает название города
+    public void setCityName( String sCity )
+    {
+        this.sCityName = sCity;
+    }
+
+    //! Записывает широту города
+    public void setCityLatitude( double dLat )
+    {
+        this.dCityLat = dLat;
+    }
+
+    //! Записывает долготу города
+    public void setCityLongitude( double dLon )
+    {
+        this.dCityLon = dLon;
+    }
+
+    //! Записывает название страны
+    public void setCountry( String sCountry )
+    {
+        this.sCountry = sCountry;
+    }
+
     //! Записывает текущую температуру
-    public void setCurrentTemp(double dCurrentTemp) {
+    public void setCurrentTemp( double dCurrentTemp )
+    {
         this.dCurrentTemp = dCurrentTemp;
+    }
+
+    //! Записывает id погодных условий OpenWeatherMap
+    public void setIDweather( int iIDweather )
+    {
+        this.iIDweather = iIDweather;
     }
 
     //! Записывает давление
@@ -192,7 +282,7 @@ public class WeatherData
     }
 
     //! Записывает текущую дату и время в секундах
-    public void setDateTime(int iDateTime) {
+    public void setDateTime(long iDateTime) {
         this.iDateTime = iDateTime;
     }
 
@@ -222,7 +312,7 @@ public class WeatherData
         this.dSnow = dSnow;
     }
 
-    //!
+    //! Записывает описание погодных условий
     public void setWeatherDesc(String sWeatherDesc) {
         this.sWeatherDesc = sWeatherDesc;
     }
@@ -230,5 +320,23 @@ public class WeatherData
     //! Записывает описание состояния неба
     public void setSkyDesc(String sSkyDesc) {
         this.sSkyDesc = sSkyDesc;
+    }
+
+    //! Записывает иконку погодных условий
+    public void setWeatherIcon( String sWeatherIcon )
+    {
+        this.sWeatherIcon = sWeatherIcon;
+    }
+
+    //! Записывает время рассвета
+    public  void setTimeDawn( long iTimeDawn )
+    {
+        this.iTimeDawn = iTimeDawn;
+    }
+
+    //! Записывает время заката
+    public void setTimeSunset( long iTimeSunset )
+    {
+        this.iTimeSunset = iTimeSunset;
     }
 }

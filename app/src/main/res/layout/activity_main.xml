@@ -4,240 +4,315 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context="com.asaks.newweather.MainActivity">
 
-    <TextView
-        android:id="@+id/tvStrCity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/strTvStrCity"
+    <TabHost
+        android:id = "@+id/tabHost"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/tvCityName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        android:textStyle="bold|italic"
-        app:layout_constraintStart_toEndOf="@+id/tvStrCity"
-        app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:id="@+id/llTabHost"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvStrLat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/strTvStrLat"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvStrCity" />
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/tvLat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toEndOf="@+id/tvStrLat"
-        app:layout_constraintTop_toBottomOf="@+id/tvCityName" />
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tvStrLon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/strTvStrLon"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvStrLat" />
+                <!-- Разметка вкладки текущей  -->
+                <LinearLayout
+                    android:id="@+id/llCurrentWeather"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvLon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toEndOf="@+id/tvStrLon"
-        app:layout_constraintTop_toBottomOf="@+id/tvLat" />
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/clCurrentWeather"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tvStrDateTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/strTvStrDateTime"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvStrLon" />
 
-    <TextView
-        android:id="@+id/tvStrCurTemp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="30dp"
-        android:text="@string/strTvStrCurTemp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvStrDateTime" />
+                        <TableLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginStart="10dp"
+                            android:stretchColumns="*"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent">
 
-    <TextView
-        android:id="@+id/tvStrPress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/strTvStrPress"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvStrCurTemp" />
+                            <!-- Страна, город -->
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tvStrHum"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/strTvStrHum"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvStrPress" />
+                                <!--<ImageView
+                                    android:id = "@+id/ivFlag"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />-->
 
-    <TextView
-        android:id="@+id/tvStrWindSpeed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/strTvStrWindSpeed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvStrHum" />
+                                <TextView
+                                    android:id="@+id/tvFlag"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="TextView"
+                                    android:textAlignment="textEnd"
+                                    android:textSize="18sp"
+                                    android:gravity="end" />
 
-    <TextView
-        android:id="@+id/tvCurrTemp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="30dp"
-        app:layout_constraintStart_toEndOf="@+id/tvStrCurTemp"
-        app:layout_constraintTop_toBottomOf="@+id/tvStrDateTime" />
+                                <TextView
+                                    android:id="@+id/tvCityName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_weight="3"
+                                    android:text="TextView"
+                                    android:textAlignment="textStart"
+                                    android:textSize="24sp"
+                                    android:textStyle="bold"
+                                    android:gravity="start" />
+                            </TableRow>
 
-    <TextView
-        android:id="@+id/tvPressure"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toEndOf="@+id/tvStrPress"
-        app:layout_constraintTop_toBottomOf="@+id/tvCurrTemp" />
+                            <!-- Широта -->
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tvHumidity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toEndOf="@+id/tvStrHum"
-        app:layout_constraintTop_toBottomOf="@+id/tvPressure" />
+                                <TextView
+                                    android:id="@+id/tvStrLat"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/strLatitude"
+                                    android:textAlignment="textEnd"
+                                    android:gravity="end" />
 
-    <TextView
-        android:id="@+id/tvWindSpeed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toEndOf="@+id/tvStrWindSpeed"
-        app:layout_constraintTop_toBottomOf="@+id/tvHumidity" />
+                                <TextView
+                                    android:id="@+id/tvLatitude"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="3dp"
+                                    android:layout_weight="1"
+                                    android:text="TextView" />
+                            </TableRow>
 
-    <TextView
-        android:id="@+id/tvStrSkyDesc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/strTvStrSkyDesc"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvStrWindSpeed" />
+                            <!-- Долгота -->
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tvSkyDesc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toEndOf="@+id/tvStrSkyDesc"
-        app:layout_constraintTop_toBottomOf="@+id/tvStrWindSpeed" />
+                                <TextView
+                                    android:id="@+id/tvStrLon"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/strLongitude"
+                                    android:textAlignment="textEnd"
+                                    android:gravity="end" />
 
-    <TextView
-        android:id="@+id/tvStrGradus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="3dp"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="30dp"
-        android:text="@string/strGradusKelvin"
-        app:layout_constraintStart_toEndOf="@+id/tvCurrTemp"
-        app:layout_constraintTop_toBottomOf="@+id/tvStrDateTime" />
+                                <TextView
+                                    android:id="@+id/tvLongitude"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="3dp"
+                                    android:layout_weight="1"
+                                    android:text="TextView" />
+                            </TableRow>
 
-    <TextView
-        android:id="@+id/tvStrPasc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="3dp"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/strGektoPascal"
-        app:layout_constraintStart_toEndOf="@+id/tvPressure"
-        app:layout_constraintTop_toBottomOf="@+id/tvStrGradus" />
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tvStrHumProcent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="3dp"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/strProcent"
-        app:layout_constraintStart_toEndOf="@+id/tvHumidity"
-        app:layout_constraintTop_toBottomOf="@+id/tvStrPasc" />
+                                <LinearLayout android:layout_height="30dp" />
+                            </TableRow>
 
-    <TextView
-        android:id="@+id/tvStrWindSpeedMeter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="3dp"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/strMeterToSec"
-        app:layout_constraintStart_toEndOf="@+id/tvWindSpeed"
-        app:layout_constraintTop_toBottomOf="@+id/tvStrHumProcent" />
+                            <!-- Время обновления -->
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tvDateTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toEndOf="@+id/tvStrDateTime"
-        app:layout_constraintTop_toBottomOf="@+id/tvLon" />
+                                <TextView
+                                    android:id="@+id/tvStrTimeUpdate"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/strTimeUpd"
+                                    android:textSize="18sp" />
+
+                                <TextView
+                                    android:id="@+id/tvTimeUpdate"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="TextView"
+                                    android:textSize="18sp" />
+
+                            </TableRow>
+
+                            <!-- Текущая температура -->
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/tvStrCurTemp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/strTemp"
+                                    android:textSize="18sp" />
+
+                                <TextView
+                                    android:id="@+id/tvCurrentTemp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="TextView"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
+
+                            </TableRow>
+
+                            <!-- Давление -->
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/tvStrPressure"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/strPressure"
+                                    android:textSize="18sp" />
+
+                                <TextView
+                                    android:id="@+id/tvPressure"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="TextView"
+                                    android:textSize="18sp" />
+
+                            </TableRow>
+
+                            <!-- Влажность -->
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/tvStrHumidity"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/strHumidity"
+                                    android:textSize="18sp" />
+
+                                <TextView
+                                    android:id="@+id/tvHumidity"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="TextView"
+                                    android:textSize="18sp" />
+
+                            </TableRow>
+
+                            <!-- Ветер -->
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/tvStrWindSpeed"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/strWind"
+                                    android:textSize="18sp" />
+
+                                <TextView
+                                    android:id="@+id/tvWindSpeed"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="TextView"
+                                    android:textSize="18sp" />
+
+                            </TableRow>
+
+                            <!-- Описание погодных условий -->
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/tvStrWeatherDesc"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/strWeatherConditions"
+                                    android:textSize="18sp" />
+
+                                <TextView
+                                    android:id="@+id/tvWeatherDesc"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="TextView"
+                                    android:textSize="18sp"/>
+
+                            </TableRow>
+
+                        </TableLayout>
+
+                        <!-- Разметка блока текущей погоды -->
+
+
+                    </android.support.constraint.ConstraintLayout>
+                </LinearLayout>
+
+                <!-- Разметка вкладки прогноза -->
+                <LinearLayout
+                    android:id="@+id/llPrognoz"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/textView22"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Здесь будет прогноз на 5 дней" />
+                    </android.support.constraint.ConstraintLayout>
+                </LinearLayout>
+
+
+            </FrameLayout>
+        </LinearLayout>
+    </TabHost>
 
 </android.support.constraint.ConstraintLayout>

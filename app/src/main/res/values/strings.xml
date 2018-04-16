@@ -1,16 +1,33 @@
 <resources>
     <string name="app_name">NewWeather</string>
-    <string name="strTvStrCity">Город:</string>
-    <string name="strTvStrLat">Широта:</string>
-    <string name="strTvStrLon">Долгота:</string>
-    <string name="strTvStrCurTemp">Температура:</string>
-    <string name="strTvStrPress">Давление:</string>
-    <string name="strTvStrHum">Влажность:</string>
-    <string name="strTvStrWindSpeed">Скорость ветра:</string>
-    <string name="strTvStrSkyDesc">Облачность:</string>
-    <string name="strMeterToSec">м/с</string>
-    <string name="strProcent">%</string>
+    <string name="strDateAndTime">Дата и время:</string>
+    <string name="strTimeUpd">Обновлено:</string>
+    <string name="strLatitude">Широта:</string>
+    <string name="strLongitude">Долгота:</string>
+    <string name="strCurrentTemp">Текущая температура:</string>
+    <string name="strTemp">Температура:</string>
+    <string name="strGradus">°</string>
+    <string name="strKelvin">K</string>
+    <string name="strCelcius">C</string>
+    <string name="strFarengeit">F</string>
+    <string name="strPressure">Давление:</string>
+    <string name="strHumidity">Влажность:</string>
     <string name="strGektoPascal">гПа</string>
-    <string name="strGradusKelvin">°K</string>
-    <string name="strTvStrDateTime">Время:</string>
+    <string name="strMmHg">мм.рт.ст.</string>
+    <string name="strProcent">%</string>
+    <string name="strWindSpeed">Скорость ветра:</string>
+    <string name="strMeterToSec">м/с</string>
+    <string name="strWindDir">Направление ветра:</string>
+    <string name="strWind">Ветер:</string>
+    <string name="strNorthLat">с.ш.</string>
+    <string name="strSouthLat">ю.ш.</string>
+    <string name="strEastLon">в.д.</string>
+    <string name="strWestLon">з.д.</string>
+    <string name="strClouds">Облачность:</string>
+    <string name="strWeatherConditions">Погодные условия:</string>
+    <string name="strUpdate">Обновить</string>
+    <string name="strSettings">Настройки</string>
+    <string name="strWeatherNow">Погода сейчас</string>
+    <string name="strPrognoz">Прогноз погоды</string>
+
 </resources>

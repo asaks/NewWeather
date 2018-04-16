@@ -1,14 +1,19 @@
 package com.asaks.lib;
 
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MyClass
 {
     public static void main( String[] args )
     {
-        InfoCity city = new InfoCity( 511565, "Penza", "RU", 53.2, 45 );
-        WeatherData weather = new WeatherData( 276.1, 1006.31, 83, 276.1, 276.1,
-                1032.21, 1006.31, 1523385261, 4.31, 193.505, 0,
-                0, 0, "clear", "clear sky" );
-        WeatherStorage weatherStorage = new WeatherStorage( city, weather );
+        long t = 1523385261;
+        Date timeUpd = new Date( t * 1000 );
+        String s = new SimpleDateFormat("HH:mm").format(timeUpd);
 
+        System.out.println( s );
     }
+
+
 }

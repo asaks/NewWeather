@@ -1,14 +1,10 @@
-package com.asaks.lib;
+package com.asaks.newweather.weather;
 
 /**
- * Created by asaks on 11.04.18.
+ * Created by asaks on 13.04.18.
  */
 
-/**
- * Класс, содержащий информацию о выбранном городе
- */
-
-public class InfoCity
+public class City
 {
     // id города в OpenWeatherMap
     private int iIDcity;
@@ -21,17 +17,18 @@ public class InfoCity
     // долгота
     private double dLongitude;
 
-    public InfoCity()
-    {
-    }
-
-    public InfoCity(int iIDcity, String sNameCity, String sCountry, double dLatitude, double dLongitude)
+    public City(int iIDcity, String sCityName, String sCountry, double dLatitude, double dLongitude)
     {
         this.iIDcity = iIDcity;
-        this.sCityName = sNameCity;
+        this.sCityName = sCityName;
         this.sCountry = sCountry;
         this.dLatitude = dLatitude;
         this.dLongitude = dLongitude;
+    }
+
+    public City()
+    {
+        this(0,"","",0.0,0.0);
     }
 
     //! Возвращает ID города OpenWeatherMap
