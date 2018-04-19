@@ -9,8 +9,8 @@ package com.asaks.newweather.api;
 public class ConstantsAPI
 {
     public static final String APIKEY = "";
-    public static final String BASE_API_URL = "";
-    public static final String DEFAULT_UNITS = "metric";
+    public static final String BASE_API_URL = "api.openweathermap.org/data/2.5/";
+    //public static final String DEFAULT_UNITS = "metric";
     public static final String DEFAULT_LANG = "ru";
 
 }

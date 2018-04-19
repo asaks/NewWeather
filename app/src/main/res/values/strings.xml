@@ -1,33 +1,55 @@
 <resources>
     <string name="app_name">NewWeather</string>
+    <string name="strGradus">°</string>
+    <string name="strProcent">%</string>
     <string name="strDateAndTime">Дата и время:</string>
     <string name="strTimeUpd">Обновлено:</string>
-    <string name="strLatitude">Широта:</string>
-    <string name="strLongitude">Долгота:</string>
-    <string name="strCurrentTemp">Текущая температура:</string>
-    <string name="strTemp">Температура:</string>
-    <string name="strGradus">°</string>
-    <string name="strKelvin">K</string>
-    <string name="strCelcius">C</string>
-    <string name="strFarengeit">F</string>
-    <string name="strPressure">Давление:</string>
-    <string name="strHumidity">Влажность:</string>
-    <string name="strGektoPascal">гПа</string>
-    <string name="strMmHg">мм.рт.ст.</string>
-    <string name="strProcent">%</string>
-    <string name="strWindSpeed">Скорость ветра:</string>
-    <string name="strMeterToSec">м/с</string>
-    <string name="strWindDir">Направление ветра:</string>
-    <string name="strWind">Ветер:</string>
-    <string name="strNorthLat">с.ш.</string>
-    <string name="strSouthLat">ю.ш.</string>
-    <string name="strEastLon">в.д.</string>
-    <string name="strWestLon">з.д.</string>
     <string name="strClouds">Облачность:</string>
     <string name="strWeatherConditions">Погодные условия:</string>
     <string name="strUpdate">Обновить</string>
     <string name="strSettings">Настройки</string>
     <string name="strWeatherNow">Погода сейчас</string>
     <string name="strPrognoz">Прогноз погоды</string>
+    <string name="strAboutApp">О приложении...</string>
+    <string name="strExit">Выход</string>
 
+    <!-- Температура -->
+    <string name="strCurrentTemp">Текущая температура:</string>
+    <string name="strTemp">Температура:</string>
+    <string name="strKelvin">K</string>
+    <string name="strCelcius">C</string>
+    <string name="strFarengeit">F</string>
+
+    <string name="strPressure">Давление:</string>
+    <string name="strHumidity">Влажность:</string>
+    <string name="strGektoPascal">гПа</string>
+    <string name="strMmHg">мм.рт.ст.</string>
+
+    <!-- Ветер -->
+    <string name="strWindSpeed">Скорость ветра:</string>
+    <string name="strMeterToSec">м/с</string>
+    <string name="strWindDir">Направление ветра:</string>
+    <string name="strWind">Ветер:</string>
+
+    <!-- Координаты -->
+    <string name="strLatitude">Широта:</string>
+    <string name="strLongitude">Долгота:</string>
+    <string name="strNorthLat">с.ш.</string>
+    <string name="strSouthLat">ю.ш.</string>
+    <string name="strEastLon">в.д.</string>
+    <string name="strWestLon">з.д.</string>
+
+    <!-- Названия месяцев в родительном падеже -->
+    <string name="strJanuary">января</string>
+    <string name="strFebruary">февраля</string>
+    <string name="strMarch">марта</string>
+    <string name="strApril">апреля</string>
+    <string name="strMay">мая</string>
+    <string name="strJune">июня</string>
+    <string name="strJuly">июля</string>
+    <string name="strAugust">августа</string>
+    <string name="strSeptember">сентября</string>
+    <string name="strOctober">октября</string>
+    <string name="strNovember">ноября</string>
+    <string name="strDecember">декабря</string>
 </resources>

@@ -9,7 +9,17 @@
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/action_buter"
+        android:id="@+id/action_settings"
         android:title="@string/strSettings"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_about"
+        android:title="@string/strAboutApp"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_exit"
+        android:title="@string/strExit"
         app:showAsAction="never"/>
 </menu>

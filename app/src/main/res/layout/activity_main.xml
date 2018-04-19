@@ -7,13 +7,15 @@
     tools:context="com.asaks.newweather.MainActivity">
 
     <TabHost
-        android:id = "@+id/tabHost"
+        android:id="@+id/tabHost"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
         <LinearLayout
             android:id="@+id/llTabHost"
@@ -31,7 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <!-- Разметка вкладки текущей  -->
+                <!-- Разметка вкладки текущей погоды -->
                 <LinearLayout
                     android:id="@+id/llCurrentWeather"
                     android:layout_width="match_parent"
@@ -43,39 +45,33 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-
+                        <!-- Город, координаты -->
                         <TableLayout
+                            android:id="@+id/tlCity"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginBottom="10dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginEnd="10dp"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:layout_marginStart="10dp"
+                            android:layout_marginTop="10dp"
                             android:stretchColumns="*"
-                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent">
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
 
-                            <!-- Страна, город -->
                             <TableRow
+                                android:id="@+id/rowCity"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent">
 
-                                <!--<ImageView
-                                    android:id = "@+id/ivFlag"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />-->
 
-                                <TextView
-                                    android:id="@+id/tvFlag"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                <ImageView
+                                    android:id="@+id/ivFlag"
+                                    android:layout_width="18dp"
+                                    android:layout_height="match_parent"
                                     android:layout_weight="1"
-                                    android:text="TextView"
-                                    android:textAlignment="textEnd"
-                                    android:textSize="18sp"
-                                    android:gravity="end" />
+                                    app:srcCompat="@drawable/russia" />
 
                                 <TextView
                                     android:id="@+id/tvCityName"
@@ -83,16 +79,18 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="10dp"
                                     android:layout_marginStart="10dp"
-                                    android:layout_weight="3"
+                                    android:layout_weight="1"
                                     android:text="TextView"
                                     android:textAlignment="textStart"
                                     android:textSize="24sp"
                                     android:textStyle="bold"
                                     android:gravity="start" />
+
                             </TableRow>
 
                             <!-- Широта -->
                             <TableRow
+                                android:id="@+id/rowLat"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent">
 
@@ -101,9 +99,9 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
+                                    android:gravity="end"
                                     android:text="@string/strLatitude"
-                                    android:textAlignment="textEnd"
-                                    android:gravity="end" />
+                                    android:textAlignment="textEnd" />
 
                                 <TextView
                                     android:id="@+id/tvLatitude"
@@ -116,6 +114,7 @@
 
                             <!-- Долгота -->
                             <TableRow
+                                android:id="@+id/rowLon"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent">
 
@@ -137,15 +136,27 @@
                                     android:text="TextView" />
                             </TableRow>
 
-                            <TableRow
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
+                        </TableLayout>
 
-                                <LinearLayout android:layout_height="30dp" />
-                            </TableRow>
+                        <!-- Информация о погодных условиях -->
+                        <TableLayout
+                            android:id="@+id/tlCurrentWeather"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="30dp"
+                            android:stretchColumns="*"
+                            android:shrinkColumns="*"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tlCity">
 
                             <!-- Время обновления -->
                             <TableRow
+                                android:id="@+id/rowTimeUpdate"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent">
 
@@ -169,6 +180,7 @@
 
                             <!-- Текущая температура -->
                             <TableRow
+                                android:id="@+id/rowCurrentTemp"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent">
 
@@ -193,6 +205,7 @@
 
                             <!-- Давление -->
                             <TableRow
+                                android:id="@+id/rowPressure"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent">
 
@@ -216,6 +229,7 @@
 
                             <!-- Влажность -->
                             <TableRow
+                                android:id="@+id/rowHumidity"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent">
 
@@ -239,6 +253,7 @@
 
                             <!-- Ветер -->
                             <TableRow
+                                android:id="@+id/rowWind"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent">
 
@@ -250,18 +265,41 @@
                                     android:text="@string/strWind"
                                     android:textSize="18sp" />
 
-                                <TextView
-                                    android:id="@+id/tvWindSpeed"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="TextView"
-                                    android:textSize="18sp" />
+                                <android.support.constraint.ConstraintLayout android:id="@+id/clWind">
+
+                                    <ImageView
+                                        android:id="@+id/ivWind"
+                                        android:layout_width="48dp"
+                                        android:layout_height="48dp"
+                                        android:src="@drawable/russia" />
+
+                                    <TextView
+                                        android:id="@+id/tvWindSpeed"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_centerVertical="true"
+                                        android:layout_marginBottom="8dp"
+                                        android:layout_marginLeft="8dp"
+                                        android:layout_marginStart="8dp"
+                                        android:layout_marginTop="8dp"
+                                        android:layout_weight="1"
+                                        android:gravity="center"
+                                        android:text="TextView"
+                                        android:textSize="18sp"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintStart_toEndOf="@+id/ivWind"
+                                        app:layout_constraintTop_toTopOf="parent" />
+
+                                </android.support.constraint.ConstraintLayout>
+
 
                             </TableRow>
 
                             <!-- Описание погодных условий -->
                             <TableRow
+                                android:id="@+id/rowWeatherConditions"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent">
 
@@ -273,21 +311,39 @@
                                     android:text="@string/strWeatherConditions"
                                     android:textSize="18sp" />
 
-                                <TextView
-                                    android:id="@+id/tvWeatherDesc"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="TextView"
-                                    android:textSize="18sp"/>
+                                <android.support.constraint.ConstraintLayout
+                                    android:id="@+id/clWeatherConditions">
+
+                                    <ImageView
+                                        android:id="@+id/ivWeatherCondition"
+                                        android:layout_width="48dp"
+                                        android:layout_height="48dp"
+                                        android:src="@drawable/russia" />
+
+                                    <TextView
+                                        android:id="@+id/tvWeatherDesc"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_centerVertical="true"
+                                        android:layout_marginBottom="8dp"
+                                        android:layout_marginLeft="8dp"
+                                        android:layout_marginStart="8dp"
+                                        android:layout_marginTop="8dp"
+                                        android:layout_weight="1"
+                                        android:gravity="center"
+                                        android:text="TextView"
+                                        android:textSize="18sp"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintStart_toEndOf="@+id/ivWeatherCondition"
+                                        app:layout_constraintTop_toTopOf="parent" />
+
+                                </android.support.constraint.ConstraintLayout>
 
                             </TableRow>
 
                         </TableLayout>
-
-                        <!-- Разметка блока текущей погоды -->
-
-
                     </android.support.constraint.ConstraintLayout>
                 </LinearLayout>
 
