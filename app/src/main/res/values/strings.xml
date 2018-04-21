@@ -12,6 +12,8 @@
     <string name="strPrognoz">Прогноз погоды</string>
     <string name="strAboutApp">О приложении...</string>
     <string name="strExit">Выход</string>
+    <string name="sunrise">Восход:</string>
+    <string name="sunset">Закат:</string>
 
     <!-- Температура -->
     <string name="strCurrentTemp">Текущая температура:</string>
@@ -27,7 +29,7 @@
 
     <!-- Ветер -->
     <string name="strWindSpeed">Скорость ветра:</string>
-    <string name="strMeterToSec">м/с</string>
+    <string name="strMeterPerSec">м/с</string>
     <string name="strWindDir">Направление ветра:</string>
     <string name="strWind">Ветер:</string>
 

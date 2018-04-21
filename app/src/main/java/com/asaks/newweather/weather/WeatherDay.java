@@ -1,5 +1,7 @@
 package com.asaks.newweather.weather;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,15 +13,33 @@ import java.util.List;
 
 public class WeatherDay
 {
+    public class Coords
+    {
+        // широта города
+        @SerializedName("lat")
+        double dCityLat;
+        // долгота города
+        @SerializedName("lon")
+        double dCityLon;
+    }
     //! Класс, содержащий сведения о температуре
     public class DayTemperature
     {
         // текущая температура
-        double dCurrentTemp;
+        @SerializedName("temp")
+        double temp;
         // температурный минимум
-        double dTempMin;
+        @SerializedName("temp_min")
+        double temp_min;
         // температурный максимум
-        double dTempMax;
+        @SerializedName("temp_max")
+        double temp_max;
+        // давление
+        @SerializedName("pressure")
+        double dPressure;
+        // влажность
+        @SerializedName("humidity")
+        double dHumidity;
     }
 
     //! Класс, содержащий описание погодных условий
@@ -27,44 +47,66 @@ public class WeatherDay
     {
         // id погодных условий в OpenWeatherMap
         int id;
+        // описание группы погодных условий
+        String main;
         // описание погодных условий
-        String sDesc;
-        // описание состояния неба
-        String skyDesc;
+        String description;
         // иконка
-        String sIcon;
+        String icon;
+    }
+
+    public class Wind
+    {
+        // скорость ветра
+        @SerializedName("speed")
+        double dWindSpeed;
+        // направление ветра, в градусах
+        @SerializedName("deg")
+        double dWindDeg;
+    }
+
+    public class Sys
+    {
+        // страна
+        @SerializedName("country")
+        private String sCountry;
+        // время рассвета
+        @SerializedName("sunrise")
+        private long iTimeSunrise;
+        // время заката
+        @SerializedName("sunset")
+        private long iTimeSunset;
     }
 
     // название города
+    @SerializedName("name")
     private String sCityName;
-    // страна
-    private String sCountry;
-    // широта города
-    private double dCityLat;
-    // долгота города
-    private double dCityLon;
+
+    //
+    @SerializedName("id")
+    private long iCityID;
+
+    @SerializedName("coord")
+    private Coords coords;
 
     // температура
+    @SerializedName("main")
     private DayTemperature temp;
 
     // описание погодных условий
+    @SerializedName("weather")
     private List<WeatherDesc> weatherDesc;
 
-    // давление
-    private double dPressure;
-    // влажность
-    private double dHumidity;
-    // дата и время
-    private long iDateTime;
-    // скорость ветра
-    private double dWindSpeed;
-    // направление ветра, в градусах
-    private double dWindDeg;
+    @SerializedName("wind")
+    private Wind wind;
 
-    // время рассвета
-    private long iTimeDawn;
-    // время заката
-    private long iTimeSunset;
+    // дата и время
+    @SerializedName("dt")
+    private long iDateTime;
+
+    @SerializedName("sys")
+    private Sys sys;
+
 
     public WeatherDay( DayTemperature temp, List<WeatherDesc> desc )
     {
@@ -76,6 +118,9 @@ public class WeatherDay
     {
         temp = new DayTemperature();
         weatherDesc = new ArrayList<WeatherDesc>();
+        coords = new Coords();
+        wind = new Wind();
+        sys = new Sys();
     }
 
 
@@ -86,23 +131,29 @@ public class WeatherDay
         weatherDesc.add( new WeatherDesc() );
 
         this.sCityName = sCity;
-        this.dCityLat = dLat;
-        this.dCityLon = dLon;
+        coords.dCityLat = dLat;
+        coords.dCityLon = dLon;
         this.iDateTime = iTimeUpd;
-        temp.dCurrentTemp = dCurrentTemp;
-        this.dPressure = dPressure;
-        this.dHumidity = dHumidity;
-        this.dWindSpeed = dWindSpeed;
-        this.dWindDeg = dWindDeg;
-        weatherDesc.get(0).sDesc = sWeatherDesc;
+        temp.temp = dCurrentTemp;
+        temp.dPressure = dPressure;
+        temp.dHumidity = dHumidity;
+        wind.dWindSpeed = dWindSpeed;
+        wind.dWindDeg = dWindDeg;
+        weatherDesc.get(0).description = sWeatherDesc;
     }
 
     ////////////////////////////геттеры////////////////////////////
 
     //! Возвращает URL иконки погоды
-    public String getIconUrl()
+    public String getWeatherIconUrl()
     {
-        return "http://openweathermap.org/img/w/" + weatherDesc.get(0).sIcon + ".png";
+        return "http://openweathermap.org/img/w/" + weatherDesc.get(0).icon + ".png";
+    }
+
+    //! Возвращает URL иконки флага страны
+    public String getCountryFlagUrl()
+    {
+        return "http://openweathermap.org/images/flags/" + sys.sCountry.toLowerCase() + ".png";
     }
 
     //! Возвращает название города
@@ -114,47 +165,47 @@ public class WeatherDay
     //! Возвращает название страны
     public String getCountry()
     {
-        return sCountry;
+        return sys.sCountry.toLowerCase();
     }
 
     //! Возвращает широту
     public double getLatitude()
     {
-        return dCityLat;
+        return coords.dCityLat;
     }
 
     //! Возвращает долготу
     public double getLongitude()
     {
-        return dCityLon;
+        return coords.dCityLon;
     }
 
     //! Возвращает текущую температуру в Кельвинах
     public double getCurrentTemp()
     {
-        return temp.dCurrentTemp;
+        return temp.temp;
     }
 
     //! Возвращает описание погодных условий
     public String getWeatherDesc()
     {
-        return weatherDesc.get(0).sDesc;
+        return weatherDesc.get(0).description;
     }
 
     //! Возвращает давление
     public double getPressure()
     {
-        return dPressure;
+        return temp.dPressure;
     }
 
     //! Возвращает влажность в процентах
     public double getHumidity()
     {
-        return dHumidity;
+        return temp.dHumidity;
     }
 
-    //! Возвращает дату и время в виде количества секунд
-    public long getDateTime()
+    //! Возвращает дату и время обновления в UNIX timestamp
+    public long getTimeUpdate()
     {
         return iDateTime;
     }
@@ -162,25 +213,25 @@ public class WeatherDay
     //! Возвращает скорость ветра в м/с
     public double getWindSpeed()
     {
-        return dWindSpeed;
+        return wind.dWindSpeed;
     }
 
     //! Возвращает направление ветра в градусах
     public double getWindDeg()
     {
-        return dWindDeg;
+        return wind.dWindDeg;
     }
 
-    //! Возвращает время рассвета
-    public long getTimeDawn()
+    //! Возвращает время рассвета UNIX timestamp
+    public long getTimeSunrise()
     {
-        return iTimeDawn;
+        return sys.iTimeSunrise;
     }
 
-    //! Возвращает время заката
+    //! Возвращает время заката в UNIX timestamp
     public long getTimeSunset()
     {
-        return iTimeSunset;
+        return sys.iTimeSunset;
     }
 
     ////////////////////////////сеттеры////////////////////////////
@@ -194,71 +245,71 @@ public class WeatherDay
     //! Записывает широту города
     public void setCityLatitude( double dLat )
     {
-        this.dCityLat = dLat;
+        coords.dCityLat = dLat;
     }
 
     //! Записывает долготу города
     public void setCityLongitude( double dLon )
     {
-        this.dCityLon = dLon;
+        coords.dCityLon = dLon;
     }
 
     //! Записывает название страны
     public void setCountry( String sCountry )
     {
-        this.sCountry = sCountry;
+        sys.sCountry = sCountry;
     }
 
     //! Записывает текущую температуру
     public void setCurrentTemp( double dCurrentTemp )
     {
-        temp.dCurrentTemp = dCurrentTemp;
+        temp.temp = dCurrentTemp;
     }
 
     //! Записывает минимальную температуру на данный момент
     public void setTempMin(double dTempMin) {
-        temp.dTempMin = dTempMin;
+        temp.temp_min = dTempMin;
     }
 
     //! Записывает максимальную температуру на данный момент
     public void setTempMax(double dTempMax) {
-        temp.dTempMax = dTempMax;
+        temp.temp_max = dTempMax;
     }
 
     //! Записывает давление
     public void setPressure(double dPressure) {
-        this.dPressure = dPressure;
+        temp.dPressure = dPressure;
     }
 
     //! Записывает влажность в процентах
     public void setHumidity(double dHumidity) {
-        this.dHumidity = dHumidity;
+        temp.dHumidity = dHumidity;
     }
 
-    //! Записывает текущую дату и время в секундах
-    public void setDateTime(long iDateTime) {
+    //! Записывает текущую дату и время в UNIX timestamp
+    public void setTimeUpdate(long iDateTime) {
         this.iDateTime = iDateTime;
     }
 
     //! Записывает скорость ветра в м/с
     public void setWindSpeed(double dWindSpeed) {
-        this.dWindSpeed = dWindSpeed;
+        wind.dWindSpeed = dWindSpeed;
     }
 
     //! Записывает направление ветра в градусах
     public void setWindDeg(double dWindDeg) {
-        this.dWindDeg = dWindDeg;
+        wind.dWindDeg = dWindDeg;
     }
 
-    //! Записывает время рассвета
-    public  void setTimeDawn( long iTimeDawn )
+    //! Записывает время рассвета в UNIX timestamp
+    public  void setTimeSunrise(long iTimeSunrise )
     {
-        this.iTimeDawn = iTimeDawn;
+        sys.iTimeSunrise = iTimeSunrise;
     }
 
-    //! Записывает время заката
+    //! Записывает время заката в UNIX timestamp
     public void setTimeSunset( long iTimeSunset )
     {
-        this.iTimeSunset = iTimeSunset;
+        sys.iTimeSunset = iTimeSunset;
     }
 }

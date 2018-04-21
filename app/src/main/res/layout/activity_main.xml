@@ -25,6 +25,7 @@
 
             <TabWidget
                 android:id="@android:id/tabs"
+                android:background="@color/colorBackground"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -36,6 +37,7 @@
                 <!-- Разметка вкладки текущей погоды -->
                 <LinearLayout
                     android:id="@+id/llCurrentWeather"
+                    android:background="@color/colorBackground"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
@@ -54,7 +56,9 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:layout_marginStart="10dp"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@color/colorTableBackground"
+                            android:shrinkColumns="*"
                             android:stretchColumns="*"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -80,11 +84,11 @@
                                     android:layout_marginLeft="10dp"
                                     android:layout_marginStart="10dp"
                                     android:layout_weight="1"
+                                    android:gravity="start"
                                     android:text="TextView"
                                     android:textAlignment="textStart"
                                     android:textSize="24sp"
-                                    android:textStyle="bold"
-                                    android:gravity="start" />
+                                    android:textStyle="bold" />
 
                             </TableRow>
 
@@ -123,9 +127,9 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
+                                    android:gravity="end"
                                     android:text="@string/strLongitude"
-                                    android:textAlignment="textEnd"
-                                    android:gravity="end" />
+                                    android:textAlignment="textEnd" />
 
                                 <TextView
                                     android:id="@+id/tvLongitude"
@@ -147,9 +151,10 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:layout_marginStart="10dp"
-                            android:layout_marginTop="30dp"
-                            android:stretchColumns="*"
+                            android:layout_marginTop="5dp"
+                            android:background="@color/colorTableBackground"
                             android:shrinkColumns="*"
+                            android:stretchColumns="*"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/tlCity">
@@ -271,7 +276,7 @@
                                         android:id="@+id/ivWind"
                                         android:layout_width="48dp"
                                         android:layout_height="48dp"
-                                        android:src="@drawable/russia" />
+                                        android:src="@mipmap/ic_launcher" />
 
                                     <TextView
                                         android:id="@+id/tvWindSpeed"
@@ -311,14 +316,13 @@
                                     android:text="@string/strWeatherConditions"
                                     android:textSize="18sp" />
 
-                                <android.support.constraint.ConstraintLayout
-                                    android:id="@+id/clWeatherConditions">
+                                <android.support.constraint.ConstraintLayout android:id="@+id/clWeatherConditions">
 
                                     <ImageView
                                         android:id="@+id/ivWeatherCondition"
                                         android:layout_width="48dp"
                                         android:layout_height="48dp"
-                                        android:src="@drawable/russia" />
+                                        android:src="@mipmap/ic_launcher" />
 
                                     <TextView
                                         android:id="@+id/tvWeatherDesc"
@@ -340,6 +344,52 @@
                                         app:layout_constraintTop_toTopOf="parent" />
 
                                 </android.support.constraint.ConstraintLayout>
+
+                            </TableRow>
+
+                            <TableRow
+                                android:id="@+id/rowSunrise"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/tvStrSunrise"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/sunrise"
+                                    android:textSize="18sp" />
+
+                                <TextView
+                                    android:id="@+id/tvSunrise"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="TextView"
+                                    android:textSize="18sp" />
+
+                            </TableRow>
+
+                            <TableRow
+                                android:id="@+id/rowSunset"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/tvStrSunset"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/sunset"
+                                    android:textSize="18sp" />
+
+                                <TextView
+                                    android:id="@+id/tvSunset"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="TextView"
+                                    android:textSize="18sp" />
 
                             </TableRow>
 
