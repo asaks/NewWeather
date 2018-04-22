@@ -1,5 +1,6 @@
 package com.asaks.newweather;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         public static final int COORD_LON = 1; // долгота
     }
 
+    @SuppressLint("StaticFieldLeak")
     private static Context mContext;
 
     //! Русские названия месяцев
@@ -220,15 +222,13 @@ public class MainActivity extends AppCompatActivity {
     //! Функция конвертации гектопаскалей в мм рт. ст.
     private double toMmHg(double dhPa )
     {
-        double dMm = dhPa * 0.750064;
-
-        return dMm;
+        return dhPa * 0.750064;
     }
 
     //! Функция возвращает описание географических координат
     private String getStringDesignationCoords(double dCoord, int coordConst )
     {
-        String sDesignation = "";
+        String sDesignation;
 
         switch( coordConst )
         {
@@ -261,6 +261,14 @@ public class MainActivity extends AppCompatActivity {
     //! Обновить данные о погоде
     private void updateWeather()
     {
+        updateCurrentWeather();
+
+        updateWeatherForecast();
+    }
+
+    //! Обновить данные о текущей погоде
+    private void updateCurrentWeather()
+    {
         //TODO для теста захардкодил координаты, OpenWeatherMap рекомендует делать запрос по id города
         //TODO В city.list.json перечислены города с id и координатами, но как быть с одинаковыми названиями городов?
         double dLat = 53.2;
@@ -285,7 +293,8 @@ public class MainActivity extends AppCompatActivity {
                         WeatherDay weatherDay = response.body();
 
                         if ( response.isSuccessful() )
-                            updateUICurrentWeather( weatherDay );
+                            if ( null != weatherDay )
+                                updateUICurrentWeather( weatherDay );
                     }
 
                     @Override
@@ -296,6 +305,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    //! Обновить прогноз погоды
+    private void updateWeatherForecast()
+    {
+        //TODO
     }
 
     //! Обновление вкладки текущей погоды

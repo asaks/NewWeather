@@ -1,6 +1,7 @@
 package com.asaks.newweather.api;
 
 import com.asaks.newweather.weather.WeatherDay;
+import com.asaks.newweather.weather.WeatherForecast;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -40,6 +41,14 @@ public class WeatherAPI
                 @Query("lang") String lang,
                 @Query("appid") String appid
         );
+
+        /*
+        @GET("forecast")
+        Call<WeatherForecast> getWeatherForecast(
+                @Query("id") long id,
+                @Query("lang") String lang,
+                @Query("appid") String appid;
+        );*/
 
     }
 

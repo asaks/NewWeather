@@ -1,5 +1,6 @@
 package com.asaks.newweather.weather;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,6 +9,11 @@ import java.util.List;
 public class WeatherForecast
 {
     private List<WeatherDay> weatherItems;
+
+    public WeatherForecast()
+    {
+        weatherItems = new ArrayList<>();
+    }
 
     public WeatherForecast( List<WeatherDay> items )
     {

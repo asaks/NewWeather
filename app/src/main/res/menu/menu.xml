@@ -6,7 +6,7 @@
         android:id="@+id/action_update"
         android:icon="@android:drawable/ic_menu_rotate"
         android:title="@string/strUpdate"
-        app:showAsAction="never"/>
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_settings"
