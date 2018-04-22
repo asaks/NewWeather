@@ -47,12 +47,16 @@ public class WeatherDay
     public class WeatherDesc
     {
         // id погодных условий в OpenWeatherMap
+        @SerializedName("id")
         int id;
         // описание группы погодных условий
+        @SerializedName("main")
         String main;
         // описание погодных условий
+        @SerializedName("description")
         String description;
         // иконка
+        @SerializedName("icon")
         String icon;
     }
 
@@ -132,7 +136,8 @@ public class WeatherDay
 
     // Функция заполнения тестовыми данными
     public void setTestData( String sCity, double dLat, double dLon, long iTimeUpd, double dCurrentTemp, double dPressure,
-                                    double dHumidity, double dWindSpeed, double dWindDeg, String sWeatherDesc )
+                                    double dHumidity, double dWindSpeed, double dWindDeg, String sWeatherDesc,
+                                    long iSunrise, long iSunset )
     {
         weatherDesc.add( new WeatherDesc() );
 
@@ -146,6 +151,8 @@ public class WeatherDay
         wind.dWindSpeed = dWindSpeed;
         wind.dWindDeg = dWindDeg;
         weatherDesc.get(0).description = sWeatherDesc;
+        sys.iTimeSunrise = iSunrise;
+        sys.iTimeSunset = iSunset;
     }
 
     ////////////////////////////геттеры////////////////////////////

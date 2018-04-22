@@ -13,7 +13,7 @@ public class WeatherAPI
 {
     private static Retrofit retrofit = null;
 
-    //! Интерфейс запроса текущей погоды
+    //! Интерфейс запроса погоды
     public interface InterfaceAPI
     {
         //! Запрос текущей погоды по координатам

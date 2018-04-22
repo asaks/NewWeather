@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         WeatherDay weatherDay = new WeatherDay();
         weatherDay.setTestData( "Пенза", 53.2,45.0,1523385261,
                 276.1, 1006.31, 83, 4.31,
-                193.505, "Ясно");
+                193.505, "Ясно", 1524372257, 1524424277 );
 
         tvCity.setText( weatherDay.getCityName() );
         String sLatitude = String.valueOf( weatherDay.getLatitude() ) + getString(R.string.strGradus)
@@ -146,6 +146,10 @@ public class MainActivity extends AppCompatActivity {
         tvHumidity.setText( String.valueOf( weatherDay.getHumidity() ) + getString(R.string.strProcent) );
         tvWindSpeed.setText( String.valueOf( weatherDay.getWindSpeed() ) + " " + getString(R.string.strMeterPerSec) );
         tvWeatherConditions.setText( weatherDay.getWeatherDesc() );
+        tvSunrise.setText( new SimpleDateFormat("HH:mm")
+                            .format( new Date( weatherDay.getTimeSunrise() * 1000 ) ) );
+        tvSunset.setText( new SimpleDateFormat("HH:mm")
+                            .format( new Date( weatherDay.getTimeSunset() * 1000 ) ) );
         ////////////////////////////////////////////////////////////
 
 
@@ -315,7 +319,8 @@ public class MainActivity extends AppCompatActivity {
         //TODO сделать настройку градусов, пока всегда переводится в градусы Цельсия
         tvCurrentTemp.setText( String.valueOf( toCelsius( weatherDay.getCurrentTemp() ) )
                 + " " + getString(R.string.strGradus) + getString(R.string.strCelcius) );
-        tvHumidity.setText( String.valueOf( weatherDay.getHumidity() ) + getString( R.string.strProcent ) );
+
+        tvHumidity.setText( String.format( "%.1f", weatherDay.getHumidity() ) + getString( R.string.strProcent ) );
 
         double dPressure =  toMmHg( weatherDay.getPressure() );
         tvPressure.setText( String.format("%.2f", dPressure ) + " " + getString( R.string.strMmHg ) );

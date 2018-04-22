@@ -12,7 +12,7 @@
     <string name="strPrognoz">Прогноз погоды</string>
     <string name="strAboutApp">О приложении...</string>
     <string name="strExit">Выход</string>
-    <string name="sunrise">Восход:</string>
+    <string name="sunrise">Рассвет:</string>
     <string name="sunset">Закат:</string>
     <string name="strOutsideWindow">За окном:</string>
 

@@ -278,8 +278,8 @@
 
                                     <ImageView
                                         android:id="@+id/ivWind"
-                                        android:layout_width="48dp"
-                                        android:layout_height="48dp"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
                                         android:src="@mipmap/ic_launcher" />
 
                                     <TextView
@@ -330,8 +330,8 @@
 
                                     <ImageView
                                         android:id="@+id/ivWeatherCondition"
-                                        android:layout_width="48dp"
-                                        android:layout_height="48dp"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
                                         android:src="@mipmap/ic_launcher" />
 
                                     <TextView
@@ -362,21 +362,51 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent">
 
-                                <TextView
-                                    android:id="@+id/tvStrSunrise"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="@string/sunrise"
-                                    android:textSize="18sp" />
+                                <android.support.constraint.ConstraintLayout
+                                    android:id="@+id/clStrSunrise"
+                                    android:layout_height="match_parent">
 
-                                <TextView
-                                    android:id="@+id/tvSunrise"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="TextView"
-                                    android:textSize="18sp" />
+                                    <TextView
+                                        android:id="@+id/tvStrSunrise"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1"
+                                        android:text="@string/sunrise"
+                                        android:textSize="18sp"
+                                        android:gravity="center"/>
+
+                                </android.support.constraint.ConstraintLayout>
+
+                                <android.support.constraint.ConstraintLayout
+                                    android:id="@+id/clSunrise">
+
+                                    <ImageView
+                                        android:id="@+id/ivSunrise"
+                                        android:layout_height="wrap_content"
+                                        android:layout_width="wrap_content"
+                                        android:src="@mipmap/ic_sunrise"/>
+
+                                    <TextView
+                                        android:id="@+id/tvSunrise"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_centerVertical="true"
+                                        android:layout_marginBottom="8dp"
+                                        android:layout_marginLeft="8dp"
+                                        android:layout_marginStart="8dp"
+                                        android:layout_marginTop="8dp"
+                                        android:layout_weight="1"
+                                        android:gravity="center"
+                                        android:text="TextView"
+                                        android:textSize="18sp"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintStart_toEndOf="@+id/ivSunrise"
+                                        app:layout_constraintTop_toTopOf="parent"/>
+                                </android.support.constraint.ConstraintLayout>
+
+
 
                             </TableRow>
 
@@ -385,21 +415,49 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent">
 
-                                <TextView
-                                    android:id="@+id/tvStrSunset"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="@string/sunset"
-                                    android:textSize="18sp" />
+                                <android.support.constraint.ConstraintLayout
+                                    android:id="@+id/clStrSunsets"
+                                    android:layout_height="match_parent">
 
-                                <TextView
-                                    android:id="@+id/tvSunset"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="TextView"
-                                    android:textSize="18sp" />
+                                    <TextView
+                                        android:id="@+id/tvStrSunset"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1"
+                                        android:text="@string/sunset"
+                                        android:gravity="center"
+                                        android:textSize="18sp" />
+                                </android.support.constraint.ConstraintLayout>
+
+                                <android.support.constraint.ConstraintLayout
+                                    android:id="@+id/clSunset">
+
+                                    <ImageView
+                                        android:id="@+id/ivSunset"
+                                        android:layout_height="wrap_content"
+                                        android:layout_width="wrap_content"
+                                        android:src="@mipmap/ic_sunset"/>
+
+                                    <TextView
+                                        android:id="@+id/tvSunset"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_centerVertical="true"
+                                        android:layout_marginBottom="8dp"
+                                        android:layout_marginLeft="8dp"
+                                        android:layout_marginStart="8dp"
+                                        android:layout_marginTop="8dp"
+                                        android:layout_weight="1"
+                                        android:gravity="center"
+                                        android:text="TextView"
+                                        android:textSize="18sp"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintStart_toEndOf="@+id/ivSunset"
+                                        app:layout_constraintTop_toTopOf="parent"/>
+                                </android.support.constraint.ConstraintLayout>
+
 
                             </TableRow>
 
