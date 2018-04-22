@@ -261,11 +261,15 @@ public class MainActivity extends AppCompatActivity {
         //TODO В city.list.json перечислены города с id и координатами, но как быть с одинаковыми названиями городов?
         double dLat = 53.2;
         double dLon = 45.0;
+        long idCity = 511565;
 
         Log.d( TAG, "update weather" );
 
         //TODO прикрутить анимацию ожидания ответа при долгом выполнении запроса
-        Call<WeatherDay> callCurrentWeather = api.getCurrentWeather( dLat, dLon,
+        /*Call<WeatherDay> callCurrentWeather = api.getCurrentWeather( dLat, dLon,
+                ConstantsAPI.DEFAULT_LANG, ConstantsAPI.APIKEY );*/
+
+        Call<WeatherDay> callCurrentWeather = api.getCurrentWeather( idCity,
                 ConstantsAPI.DEFAULT_LANG, ConstantsAPI.APIKEY );
 
         callCurrentWeather.enqueue(
