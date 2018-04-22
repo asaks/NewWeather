@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
         // вкладка с прогнозом погоды
         tabSpec = tabHost.newTabSpec( "forecast" );
-        tabSpec.setContent( R.id.llPrognoz );
+        tabSpec.setContent( R.id.llForecast );
         tabSpec.setIndicator( getString( R.string.strPrognoz ) );
         tabHost.addTab( tabSpec );
 
