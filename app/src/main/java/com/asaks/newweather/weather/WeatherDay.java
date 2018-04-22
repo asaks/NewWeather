@@ -13,6 +13,7 @@ import java.util.List;
 
 public class WeatherDay
 {
+    //! Класс, содержащий географические координаты города
     public class Coords
     {
         // широта города
@@ -22,7 +23,7 @@ public class WeatherDay
         @SerializedName("lon")
         double dCityLon;
     }
-    //! Класс, содержащий сведения о температуре
+    //! Класс, содержащий сведения о температуре, влажности, давлении
     public class DayTemperature
     {
         // текущая температура
@@ -55,6 +56,7 @@ public class WeatherDay
         String icon;
     }
 
+    //! Класс, содержащий сведения о ветре
     public class Wind
     {
         // скорость ветра
@@ -65,6 +67,7 @@ public class WeatherDay
         double dWindDeg;
     }
 
+    //! Класс, содержащий информацию о стране и времени восхода и заката
     public class Sys
     {
         // страна
@@ -82,7 +85,7 @@ public class WeatherDay
     @SerializedName("name")
     private String sCityName;
 
-    //
+    // id города OpenWeatherMap
     @SerializedName("id")
     private long iCityID;
 
@@ -108,10 +111,13 @@ public class WeatherDay
     private Sys sys;
 
 
-    public WeatherDay( DayTemperature temp, List<WeatherDesc> desc )
+    public WeatherDay( Coords coords, DayTemperature temp, List<WeatherDesc> desc, Wind wind, Sys sys )
     {
+        this.coords = coords;
         this.temp = temp;
         this.weatherDesc = desc;
+        this.wind = wind;
+        this.sys = sys;
     }
 
     public WeatherDay()

@@ -262,13 +262,17 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent">
 
-                                <TextView
-                                    android:id="@+id/tvStrWindSpeed"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="@string/strWind"
-                                    android:textSize="18sp" />
+                                <android.support.constraint.ConstraintLayout android:layout_height="match_parent">
+
+                                    <TextView
+                                        android:id="@+id/tvStrWindSpeed"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1"
+                                        android:text="@string/strWind"
+                                        android:textSize="18sp"
+                                        android:gravity="center"/>
+                                </android.support.constraint.ConstraintLayout>
 
                                 <android.support.constraint.ConstraintLayout android:id="@+id/clWind">
 
@@ -308,13 +312,19 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent">
 
-                                <TextView
-                                    android:id="@+id/tvStrWeatherDesc"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="@string/strWeatherConditions"
-                                    android:textSize="18sp" />
+                                <android.support.constraint.ConstraintLayout
+                                    android:id="@+id/clStrWeatherConditions"
+                                    android:layout_height="match_parent">
+
+                                    <TextView
+                                        android:id="@+id/tvStrWeatherDesc"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1"
+                                        android:text="@string/strOutsideWindow"
+                                        android:textSize="18sp"
+                                        android:gravity="center"/>
+                                </android.support.constraint.ConstraintLayout>
 
                                 <android.support.constraint.ConstraintLayout android:id="@+id/clWeatherConditions">
 
@@ -399,7 +409,8 @@
 
                 <!-- Разметка вкладки прогноза -->
                 <LinearLayout
-                    android:id="@+id/llPrognoz"
+                    android:id="@+id/llForecast"
+                    android:background="@color/colorBackground"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">

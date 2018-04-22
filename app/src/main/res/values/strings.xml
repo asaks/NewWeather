@@ -14,6 +14,7 @@
     <string name="strExit">Выход</string>
     <string name="sunrise">Восход:</string>
     <string name="sunset">Закат:</string>
+    <string name="strOutsideWindow">За окном:</string>
 
     <!-- Температура -->
     <string name="strCurrentTemp">Текущая температура:</string>

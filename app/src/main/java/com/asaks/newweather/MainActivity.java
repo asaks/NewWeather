@@ -85,8 +85,11 @@ public class MainActivity extends AppCompatActivity {
         mContext = this;
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowHomeEnabled( true );
-        actionBar.setIcon( R.mipmap.ic_launcher );
+        if ( null != actionBar )
+        {
+            actionBar.setDisplayShowHomeEnabled( true );
+            actionBar.setIcon( R.mipmap.ic_launcher );
+        }
 
         tabHost = findViewById( R.id.tabHost );
         tabHost.setup();
@@ -261,6 +264,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d( TAG, "update weather" );
 
+        //TODO прикрутить анимацию ожидания ответа при долгом выполнении запроса
         Call<WeatherDay> callCurrentWeather = api.getCurrentWeather( dLat, dLon,
                 ConstantsAPI.DEFAULT_LANG, ConstantsAPI.APIKEY );
 
@@ -289,6 +293,7 @@ public class MainActivity extends AppCompatActivity {
     //! Обновление вкладки текущей погоды
     private void updateUICurrentWeather( WeatherDay weatherDay )
     {
+        //TODO название города на русском языке
         tvCity.setText( weatherDay.getCityName() );
 
         String sLatitude = String.valueOf( weatherDay.getLatitude() ) + getString( R.string.strGradus )
@@ -299,9 +304,11 @@ public class MainActivity extends AppCompatActivity {
                 + " " + getStringDesignationCoords( weatherDay.getLongitude(), GeoCoordsConstant.COORD_LON );
         tvLon.setText( sLongitude );
 
-        Date timeUpd = new Date( weatherDay.getTimeUpdate() * 1000 );
+        //Date timeUpd = new Date( weatherDay.getTimeUpdate() * 1000 );
+        Date timeUpd = new Date();
         tvDateTime.setText( new SimpleDateFormat("dd MMMM HH:mm", russiansMonths ).format( timeUpd ) );
 
+        //TODO сделать настройку градусов, пока всегда переводится в градусы Цельсия
         tvCurrentTemp.setText( String.valueOf( toCelsius( weatherDay.getCurrentTemp() ) )
                 + " " + getString(R.string.strGradus) + getString(R.string.strCelcius) );
         tvHumidity.setText( String.valueOf( weatherDay.getHumidity() ) + getString( R.string.strProcent ) );
