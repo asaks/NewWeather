@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context="com.asaks.newweather.MainActivity">
 
+    <!--TODO слишком много layout'ов-->
+
     <TabHost
         android:id="@+id/tabHost"
         android:layout_width="0dp"
@@ -72,8 +74,8 @@
 
                                 <ImageView
                                     android:id="@+id/ivFlag"
-                                    android:layout_width="18dp"
-                                    android:layout_height="match_parent"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     app:srcCompat="@drawable/russia" />
 
