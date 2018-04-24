@@ -15,13 +15,14 @@
     <string name="sunrise">Рассвет:</string>
     <string name="sunset">Закат:</string>
     <string name="strOutsideWindow">За окном:</string>
+    <string name="save">Сохранить</string>
 
     <!-- Температура -->
     <string name="strCurrentTemp">Текущая температура:</string>
     <string name="strTemp">Температура:</string>
     <string name="strKelvin">K</string>
     <string name="strCelcius">C</string>
-    <string name="strFarengeit">F</string>
+    <string name="strFarenheit">F</string>
 
     <string name="strPressure">Давление:</string>
     <string name="strHumidity">Влажность:</string>
@@ -55,4 +56,16 @@
     <string name="strOctober">октября</string>
     <string name="strNovember">ноября</string>
     <string name="strDecember">декабря</string>
+    <string name="strErrUpdateWeather">Ошибка загрузки данных о погоде</string>
+    <string name="settings">Настройки</string>
+    <string name="share">Поделиться</string>
+    <string name="weatherInCity">Погода в городе</string>
+
+    <!-- Единицы измерения температуры -->
+    <string-array name="temperature_gradus">
+        <item>Градусы Цельсия</item>
+        <item>Градусы Фаренгейта</item>
+        <item>Кельвины</item>
+    </string-array>
+
 </resources>

@@ -49,421 +49,550 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <!-- Город, координаты -->
-                        <TableLayout
-                            android:id="@+id/tlCity"
+
+                        <ScrollView
+                            android:id="@+id/svCurrentWeather"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="10dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginTop="5dp"
-                            android:background="@color/colorTableBackground"
-                            android:shrinkColumns="*"
-                            android:stretchColumns="*"
+                            android:layout_height="match_parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
 
-                            <TableRow
-                                android:id="@+id/rowCity"
+                            <LinearLayout
+                                android:id="@+id/llScrollCurrentWeather"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent">
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical" >
 
-
-                                <ImageView
-                                    android:id="@+id/ivFlag"
-                                    android:layout_width="wrap_content"
+                                <!-- Город, координаты -->
+                                <TableLayout
+                                    android:id="@+id/tlCity"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    app:srcCompat="@drawable/russia" />
-
-                                <TextView
-                                    android:id="@+id/tvCityName"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="10dp"
                                     android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
                                     android:layout_marginStart="10dp"
-                                    android:layout_weight="1"
-                                    android:gravity="start"
-                                    android:text="TextView"
-                                    android:textAlignment="textStart"
-                                    android:textSize="24sp"
-                                    android:textStyle="bold" />
+                                    android:layout_marginTop="5dp"
+                                    android:background="@color/colorTableBackground"
+                                    android:shrinkColumns="*"
+                                    android:stretchColumns="*"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent">
 
-                            </TableRow>
+                                    <TableRow
+                                        android:id="@+id/rowCity"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
 
-                            <!-- Широта -->
-                            <TableRow
-                                android:id="@+id/rowLat"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
 
-                                <TextView
-                                    android:id="@+id/tvStrLat"
-                                    android:layout_width="wrap_content"
+                                        <ImageView
+                                            android:id="@+id/ivFlag"
+                                            android:layout_width="36dp"
+                                            android:layout_height="36dp"
+                                            android:layout_marginTop="3dp"
+                                            android:layout_weight="1"
+                                            app:srcCompat="@drawable/russia" />
+
+                                        <TextView
+                                            android:id="@+id/tvCityName"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="match_parent"
+                                            android:layout_marginLeft="10dp"
+                                            android:layout_marginStart="10dp"
+                                            android:layout_marginTop="3dp"
+                                            android:layout_weight="1"
+                                            android:gravity="start"
+                                            android:text="TextView"
+                                            android:textAlignment="textStart"
+                                            android:textSize="24sp"
+                                            android:textStyle="bold" />
+
+                                    </TableRow>
+
+                                    <!-- Широта -->
+                                    <TableRow
+                                        android:id="@+id/rowLat"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+
+                                        <TextView
+                                            android:id="@+id/tvStrLat"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:gravity="end"
+                                            android:text="@string/strLatitude"
+                                            android:textAlignment="textEnd" />
+
+                                        <TextView
+                                            android:id="@+id/tvLatitude"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="3dp"
+                                            android:layout_weight="1"
+                                            android:text="TextView" />
+                                    </TableRow>
+
+                                    <!-- Долгота -->
+                                    <TableRow
+                                        android:id="@+id/rowLon"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+
+                                        <TextView
+                                            android:id="@+id/tvStrLon"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:gravity="end"
+                                            android:text="@string/strLongitude"
+                                            android:textAlignment="textEnd" />
+
+                                        <TextView
+                                            android:id="@+id/tvLongitude"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="3dp"
+                                            android:layout_weight="1"
+                                            android:text="TextView" />
+                                    </TableRow>
+
+                                </TableLayout>
+
+                                <!-- Информация о погодных условиях -->
+                                <TableLayout
+                                    android:id="@+id/tlCurrentWeather"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:gravity="end"
-                                    android:text="@string/strLatitude"
-                                    android:textAlignment="textEnd" />
+                                    android:layout_marginEnd="10dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginTop="5dp"
+                                    android:background="@color/colorTableBackground"
+                                    android:shrinkColumns="*"
+                                    android:stretchColumns="*"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/tlCity">
 
-                                <TextView
-                                    android:id="@+id/tvLatitude"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="3dp"
-                                    android:layout_weight="1"
-                                    android:text="TextView" />
-                            </TableRow>
+                                    <!-- Время обновления -->
+                                    <TableRow
+                                        android:id="@+id/rowTimeUpdate"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
 
-                            <!-- Долгота -->
-                            <TableRow
-                                android:id="@+id/rowLon"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
+                                        <TextView
+                                            android:id="@+id/tvStrTimeUpdate"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="3dp"
+                                            android:layout_weight="1"
+                                            android:text="@string/strTimeUpd"
+                                            android:textSize="18sp" />
 
-                                <TextView
-                                    android:id="@+id/tvStrLon"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:gravity="end"
-                                    android:text="@string/strLongitude"
-                                    android:textAlignment="textEnd" />
+                                        <TextView
+                                            android:id="@+id/tvTimeUpdate"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:text="TextView"
+                                            android:textSize="18sp" />
 
-                                <TextView
-                                    android:id="@+id/tvLongitude"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="3dp"
-                                    android:layout_weight="1"
-                                    android:text="TextView" />
-                            </TableRow>
+                                    </TableRow>
 
-                        </TableLayout>
+                                    <!-- Текущая температура -->
+                                    <TableRow
+                                        android:id="@+id/rowCurrentTemp"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
 
-                        <!-- Информация о погодных условиях -->
-                        <TableLayout
-                            android:id="@+id/tlCurrentWeather"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="10dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginTop="5dp"
-                            android:background="@color/colorTableBackground"
-                            android:shrinkColumns="*"
-                            android:stretchColumns="*"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/tlCity">
+                                        <android.support.constraint.ConstraintLayout
+                                            android:id="@+id/clTempImg"
+                                            android:layout_height="match_parent"
+                                            android:layout_marginLeft="3dp">
 
-                            <!-- Время обновления -->
-                            <TableRow
-                                android:id="@+id/rowTimeUpdate"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
+                                            <TextView
+                                                android:id="@+id/tvStrCurTemp"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="match_parent"
+                                                android:gravity="center"
+                                                android:layout_weight="1"
+                                                android:text="@string/strTemp"
+                                                android:textSize="18sp" />
 
-                                <TextView
-                                    android:id="@+id/tvStrTimeUpdate"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="@string/strTimeUpd"
-                                    android:textSize="18sp" />
+                                        </android.support.constraint.ConstraintLayout>
 
-                                <TextView
-                                    android:id="@+id/tvTimeUpdate"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="TextView"
-                                    android:textSize="18sp" />
+                                        <android.support.constraint.ConstraintLayout
+                                            android:id="@+id/clThemperature">
 
-                            </TableRow>
+                                            <ImageView
+                                                android:id="@+id/ivThermometer"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:src="@mipmap/ic_thermometer" />
 
-                            <!-- Текущая температура -->
-                            <TableRow
-                                android:id="@+id/rowCurrentTemp"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
+                                            <TextView
+                                                android:id="@+id/tvCurrentTemp"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_alignParentEnd="true"
+                                                android:layout_alignParentRight="true"
+                                                android:layout_centerVertical="true"
+                                                android:layout_marginBottom="8dp"
+                                                android:layout_marginLeft="8dp"
+                                                android:layout_marginStart="8dp"
+                                                android:layout_marginTop="8dp"
+                                                android:layout_weight="1"
+                                                android:gravity="center"
+                                                android:text="TextView"
+                                                android:textSize="20sp"
+                                                android:textStyle="bold"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintStart_toEndOf="@+id/ivThermometer"
+                                                app:layout_constraintTop_toTopOf="parent"/>
 
-                                <TextView
-                                    android:id="@+id/tvStrCurTemp"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="@string/strTemp"
-                                    android:textSize="18sp" />
-
-                                <TextView
-                                    android:id="@+id/tvCurrentTemp"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="TextView"
-                                    android:textSize="20sp"
-                                    android:textStyle="bold" />
-
-                            </TableRow>
-
-                            <!-- Давление -->
-                            <TableRow
-                                android:id="@+id/rowPressure"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
-
-                                <TextView
-                                    android:id="@+id/tvStrPressure"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="@string/strPressure"
-                                    android:textSize="18sp" />
-
-                                <TextView
-                                    android:id="@+id/tvPressure"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="TextView"
-                                    android:textSize="18sp" />
-
-                            </TableRow>
-
-                            <!-- Влажность -->
-                            <TableRow
-                                android:id="@+id/rowHumidity"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
-
-                                <TextView
-                                    android:id="@+id/tvStrHumidity"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="@string/strHumidity"
-                                    android:textSize="18sp" />
-
-                                <TextView
-                                    android:id="@+id/tvHumidity"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="TextView"
-                                    android:textSize="18sp" />
-
-                            </TableRow>
-
-                            <!-- Ветер -->
-                            <TableRow
-                                android:id="@+id/rowWind"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
-
-                                <android.support.constraint.ConstraintLayout android:layout_height="match_parent">
-
-                                    <TextView
-                                        android:id="@+id/tvStrWindSpeed"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="match_parent"
-                                        android:layout_weight="1"
-                                        android:text="@string/strWind"
-                                        android:textSize="18sp"
-                                        android:gravity="center"/>
-                                </android.support.constraint.ConstraintLayout>
-
-                                <android.support.constraint.ConstraintLayout android:id="@+id/clWind">
-
-                                    <ImageView
-                                        android:id="@+id/ivWind"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:src="@mipmap/ic_launcher" />
-
-                                    <TextView
-                                        android:id="@+id/tvWindSpeed"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_alignParentEnd="true"
-                                        android:layout_alignParentRight="true"
-                                        android:layout_centerVertical="true"
-                                        android:layout_marginBottom="8dp"
-                                        android:layout_marginLeft="8dp"
-                                        android:layout_marginStart="8dp"
-                                        android:layout_marginTop="8dp"
-                                        android:layout_weight="1"
-                                        android:gravity="center"
-                                        android:text="TextView"
-                                        android:textSize="18sp"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintStart_toEndOf="@+id/ivWind"
-                                        app:layout_constraintTop_toTopOf="parent" />
-
-                                </android.support.constraint.ConstraintLayout>
-
-
-                            </TableRow>
-
-                            <!-- Описание погодных условий -->
-                            <TableRow
-                                android:id="@+id/rowWeatherConditions"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
-
-                                <android.support.constraint.ConstraintLayout
-                                    android:id="@+id/clStrWeatherConditions"
-                                    android:layout_height="match_parent">
-
-                                    <TextView
-                                        android:id="@+id/tvStrWeatherDesc"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="match_parent"
-                                        android:layout_weight="1"
-                                        android:text="@string/strOutsideWindow"
-                                        android:textSize="18sp"
-                                        android:gravity="center"/>
-                                </android.support.constraint.ConstraintLayout>
-
-                                <android.support.constraint.ConstraintLayout android:id="@+id/clWeatherConditions">
-
-                                    <ImageView
-                                        android:id="@+id/ivWeatherCondition"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:src="@mipmap/ic_launcher" />
-
-                                    <TextView
-                                        android:id="@+id/tvWeatherDesc"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_alignParentEnd="true"
-                                        android:layout_alignParentRight="true"
-                                        android:layout_centerVertical="true"
-                                        android:layout_marginBottom="8dp"
-                                        android:layout_marginLeft="8dp"
-                                        android:layout_marginStart="8dp"
-                                        android:layout_marginTop="8dp"
-                                        android:layout_weight="1"
-                                        android:gravity="center"
-                                        android:text="TextView"
-                                        android:textSize="18sp"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintStart_toEndOf="@+id/ivWeatherCondition"
-                                        app:layout_constraintTop_toTopOf="parent" />
-
-                                </android.support.constraint.ConstraintLayout>
-
-                            </TableRow>
-
-                            <TableRow
-                                android:id="@+id/rowSunrise"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
-
-                                <android.support.constraint.ConstraintLayout
-                                    android:id="@+id/clStrSunrise"
-                                    android:layout_height="match_parent">
-
-                                    <TextView
-                                        android:id="@+id/tvStrSunrise"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="match_parent"
-                                        android:layout_weight="1"
-                                        android:text="@string/sunrise"
-                                        android:textSize="18sp"
-                                        android:gravity="center"/>
-
-                                </android.support.constraint.ConstraintLayout>
-
-                                <android.support.constraint.ConstraintLayout
-                                    android:id="@+id/clSunrise">
-
-                                    <ImageView
-                                        android:id="@+id/ivSunrise"
-                                        android:layout_height="wrap_content"
-                                        android:layout_width="wrap_content"
-                                        android:src="@mipmap/ic_sunrise"/>
-
-                                    <TextView
-                                        android:id="@+id/tvSunrise"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_alignParentEnd="true"
-                                        android:layout_alignParentRight="true"
-                                        android:layout_centerVertical="true"
-                                        android:layout_marginBottom="8dp"
-                                        android:layout_marginLeft="8dp"
-                                        android:layout_marginStart="8dp"
-                                        android:layout_marginTop="8dp"
-                                        android:layout_weight="1"
-                                        android:gravity="center"
-                                        android:text="TextView"
-                                        android:textSize="18sp"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintStart_toEndOf="@+id/ivSunrise"
-                                        app:layout_constraintTop_toTopOf="parent"/>
-                                </android.support.constraint.ConstraintLayout>
+                                        </android.support.constraint.ConstraintLayout>
 
 
 
-                            </TableRow>
+                                    </TableRow>
 
-                            <TableRow
-                                android:id="@+id/rowSunset"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
+                                    <!-- Давление -->
+                                    <TableRow
+                                        android:id="@+id/rowPressure"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
 
-                                <android.support.constraint.ConstraintLayout
-                                    android:id="@+id/clStrSunsets"
-                                    android:layout_height="match_parent">
+                                        <android.support.constraint.ConstraintLayout
+                                            android:id="@+id/clPressure"
+                                            android:layout_height="match_parent"
+                                            android:layout_marginLeft="3dp">
 
-                                    <TextView
-                                        android:id="@+id/tvStrSunset"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="match_parent"
-                                        android:layout_weight="1"
-                                        android:text="@string/sunset"
-                                        android:gravity="center"
-                                        android:textSize="18sp" />
-                                </android.support.constraint.ConstraintLayout>
+                                            <TextView
+                                                android:id="@+id/tvStrPressure"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="match_parent"
+                                                android:gravity="center"
+                                                android:layout_weight="1"
+                                                android:text="@string/strPressure"
+                                                android:textSize="18sp" />
 
-                                <android.support.constraint.ConstraintLayout
-                                    android:id="@+id/clSunset">
+                                        </android.support.constraint.ConstraintLayout>
 
-                                    <ImageView
-                                        android:id="@+id/ivSunset"
-                                        android:layout_height="wrap_content"
-                                        android:layout_width="wrap_content"
-                                        android:src="@mipmap/ic_sunset"/>
+                                        <android.support.constraint.ConstraintLayout
+                                            android:id="@+id/clPressureImg"
+                                            android:layout_height="match_parent"
+                                            android:layout_marginLeft="3dp">
 
-                                    <TextView
-                                        android:id="@+id/tvSunset"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_alignParentEnd="true"
-                                        android:layout_alignParentRight="true"
-                                        android:layout_centerVertical="true"
-                                        android:layout_marginBottom="8dp"
-                                        android:layout_marginLeft="8dp"
-                                        android:layout_marginStart="8dp"
-                                        android:layout_marginTop="8dp"
-                                        android:layout_weight="1"
-                                        android:gravity="center"
-                                        android:text="TextView"
-                                        android:textSize="18sp"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintStart_toEndOf="@+id/ivSunset"
-                                        app:layout_constraintTop_toTopOf="parent"/>
-                                </android.support.constraint.ConstraintLayout>
+                                            <ImageView
+                                                android:id="@+id/ivPressure"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:src="@mipmap/ic_pressure"/>
+
+                                            <TextView
+                                                android:id="@+id/tvPressure"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_alignParentEnd="true"
+                                                android:layout_alignParentRight="true"
+                                                android:layout_centerVertical="true"
+                                                android:layout_marginBottom="8dp"
+                                                android:layout_marginLeft="8dp"
+                                                android:layout_marginStart="8dp"
+                                                android:layout_marginTop="8dp"
+                                                android:layout_weight="1"
+                                                android:gravity="center"
+                                                android:text="TextView"
+                                                android:textSize="18sp"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintStart_toEndOf="@+id/ivPressure"
+                                                app:layout_constraintTop_toTopOf="parent"/>
+
+                                        </android.support.constraint.ConstraintLayout>
 
 
-                            </TableRow>
+                                    </TableRow>
 
-                        </TableLayout>
+                                    <!-- Влажность -->
+                                    <TableRow
+                                        android:id="@+id/rowHumidity"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+
+                                        <android.support.constraint.ConstraintLayout
+                                            android:id="@+id/clHumidity"
+                                            android:layout_height="match_parent"
+                                            android:layout_marginLeft="3dp">
+
+                                            <TextView
+                                                android:id="@+id/tvStrHumidity"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="match_parent"
+                                                android:layout_alignParentEnd="true"
+                                                android:layout_alignParentRight="true"
+                                                android:layout_centerVertical="true"
+                                                android:layout_weight="1"
+                                                android:gravity="center"
+                                                android:text="@string/strHumidity"
+                                                android:textSize="18sp" />
+
+                                        </android.support.constraint.ConstraintLayout>
+
+                                        <android.support.constraint.ConstraintLayout
+                                            android:id="@+id/clHumidityImg"
+                                            android:layout_height="match_parent">
+
+                                            <ImageView
+                                                android:id="@+id/ivHumidity"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:src="@mipmap/ic_humidity"/>
+
+                                            <TextView
+                                                android:id="@+id/tvHumidity"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_alignParentEnd="true"
+                                                android:layout_alignParentRight="true"
+                                                android:layout_centerVertical="true"
+                                                android:layout_marginBottom="8dp"
+                                                android:layout_marginLeft="8dp"
+                                                android:layout_marginStart="8dp"
+                                                android:layout_marginTop="8dp"
+                                                android:layout_weight="1"
+                                                android:gravity="center"
+                                                android:text="TextView"
+                                                android:textSize="18sp"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintStart_toEndOf="@+id/ivHumidity"
+                                                app:layout_constraintTop_toTopOf="parent"/>
+
+                                        </android.support.constraint.ConstraintLayout>
+
+
+                                    </TableRow>
+
+                                    <!-- Ветер -->
+                                    <TableRow
+                                        android:id="@+id/rowWind"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+
+                                        <android.support.constraint.ConstraintLayout
+                                            android:id="@+id/clWindDir"
+                                            android:layout_height="match_parent"
+                                            android:layout_marginLeft="3dp">
+
+                                            <TextView
+                                                android:id="@+id/tvStrWindSpeed"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="match_parent"
+                                                android:layout_weight="1"
+                                                android:gravity="center"
+                                                android:text="@string/strWind"
+                                                android:textSize="18sp" />
+                                        </android.support.constraint.ConstraintLayout>
+
+                                        <android.support.constraint.ConstraintLayout
+                                            android:id="@+id/clWind">
+
+                                            <ImageView
+                                                android:id="@+id/ivWind"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:src="@mipmap/ic_launcher" />
+
+                                            <TextView
+                                                android:id="@+id/tvWindSpeed"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_alignParentEnd="true"
+                                                android:layout_alignParentRight="true"
+                                                android:layout_centerVertical="true"
+                                                android:layout_marginBottom="8dp"
+                                                android:layout_marginLeft="8dp"
+                                                android:layout_marginStart="8dp"
+                                                android:layout_marginTop="8dp"
+                                                android:layout_weight="1"
+                                                android:gravity="center"
+                                                android:text="TextView"
+                                                android:textSize="18sp"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintStart_toEndOf="@+id/ivWind"
+                                                app:layout_constraintTop_toTopOf="parent" />
+
+                                        </android.support.constraint.ConstraintLayout>
+
+
+                                    </TableRow>
+
+                                    <!-- Описание погодных условий -->
+                                    <TableRow
+                                        android:id="@+id/rowWeatherConditions"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+
+                                        <android.support.constraint.ConstraintLayout
+                                            android:id="@+id/clStrWeatherConditions"
+                                            android:layout_height="match_parent"
+                                            android:layout_marginLeft="3dp">
+
+                                            <TextView
+                                                android:id="@+id/tvStrWeatherDesc"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="match_parent"
+                                                android:layout_weight="1"
+                                                android:gravity="center"
+                                                android:text="@string/strOutsideWindow"
+                                                android:textSize="18sp" />
+                                        </android.support.constraint.ConstraintLayout>
+
+                                        <android.support.constraint.ConstraintLayout android:id="@+id/clWeatherConditions">
+
+                                            <ImageView
+                                                android:id="@+id/ivWeatherCondition"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:src="@mipmap/ic_launcher" />
+
+                                            <TextView
+                                                android:id="@+id/tvWeatherDesc"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_alignParentEnd="true"
+                                                android:layout_alignParentRight="true"
+                                                android:layout_centerVertical="true"
+                                                android:layout_marginBottom="8dp"
+                                                android:layout_marginLeft="8dp"
+                                                android:layout_marginStart="8dp"
+                                                android:layout_marginTop="8dp"
+                                                android:layout_weight="1"
+                                                android:gravity="center"
+                                                android:text="TextView"
+                                                android:textSize="18sp"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintStart_toEndOf="@+id/ivWeatherCondition"
+                                                app:layout_constraintTop_toTopOf="parent" />
+
+                                        </android.support.constraint.ConstraintLayout>
+
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:id="@+id/rowSunrise"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+
+                                        <android.support.constraint.ConstraintLayout
+                                            android:id="@+id/clStrSunrise"
+                                            android:layout_height="match_parent"
+                                            android:layout_marginLeft="3dp">
+
+                                            <TextView
+                                                android:id="@+id/tvStrSunrise"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="match_parent"
+                                                android:layout_weight="1"
+                                                android:gravity="center"
+                                                android:text="@string/sunrise"
+                                                android:textSize="18sp" />
+
+                                        </android.support.constraint.ConstraintLayout>
+
+                                        <android.support.constraint.ConstraintLayout
+                                            android:id="@+id/clSunrise">
+
+                                            <ImageView
+                                                android:id="@+id/ivSunrise"
+                                                android:layout_height="wrap_content"
+                                                android:layout_width="wrap_content"
+                                                android:src="@mipmap/ic_sunrise"/>
+
+                                            <TextView
+                                                android:id="@+id/tvSunrise"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_alignParentEnd="true"
+                                                android:layout_alignParentRight="true"
+                                                android:layout_centerVertical="true"
+                                                android:layout_marginBottom="8dp"
+                                                android:layout_marginLeft="8dp"
+                                                android:layout_marginStart="8dp"
+                                                android:layout_marginTop="8dp"
+                                                android:layout_weight="1"
+                                                android:gravity="center"
+                                                android:text="TextView"
+                                                android:textSize="18sp"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintStart_toEndOf="@+id/ivSunrise"
+                                                app:layout_constraintTop_toTopOf="parent"/>
+                                        </android.support.constraint.ConstraintLayout>
+
+
+
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:id="@+id/rowSunset"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+
+                                        <android.support.constraint.ConstraintLayout
+                                            android:id="@+id/clStrSunsets"
+                                            android:layout_height="match_parent"
+                                            android:layout_marginLeft="3dp">
+
+                                            <TextView
+                                                android:id="@+id/tvStrSunset"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="match_parent"
+                                                android:layout_weight="1"
+                                                android:gravity="center"
+                                                android:text="@string/sunset"
+                                                android:textSize="18sp" />
+                                        </android.support.constraint.ConstraintLayout>
+
+                                        <android.support.constraint.ConstraintLayout
+                                            android:id="@+id/clSunset">
+
+                                            <ImageView
+                                                android:id="@+id/ivSunset"
+                                                android:layout_height="wrap_content"
+                                                android:layout_width="wrap_content"
+                                                android:src="@mipmap/ic_sunset"/>
+
+                                            <TextView
+                                                android:id="@+id/tvSunset"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_alignParentEnd="true"
+                                                android:layout_alignParentRight="true"
+                                                android:layout_centerVertical="true"
+                                                android:layout_marginBottom="8dp"
+                                                android:layout_marginLeft="8dp"
+                                                android:layout_marginStart="8dp"
+                                                android:layout_marginTop="8dp"
+                                                android:layout_weight="1"
+                                                android:gravity="center"
+                                                android:text="TextView"
+                                                android:textSize="18sp"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintStart_toEndOf="@+id/ivSunset"
+                                                app:layout_constraintTop_toTopOf="parent"/>
+                                        </android.support.constraint.ConstraintLayout>
+
+
+                                    </TableRow>
+
+                                </TableLayout>
+
+                            </LinearLayout>
+                        </ScrollView>
                     </android.support.constraint.ConstraintLayout>
                 </LinearLayout>
 
