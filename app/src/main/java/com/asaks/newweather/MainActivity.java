@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.asaks.newweather.api.ConstantsAPI;
 import com.asaks.newweather.api.WeatherAPI;
-import com.asaks.newweather.weather.ApplicationSettings;
+import com.asaks.newweather.ApplicationSettings;
 
 import com.asaks.newweather.weather.WeatherDay;
 import com.bumptech.glide.Glide;
