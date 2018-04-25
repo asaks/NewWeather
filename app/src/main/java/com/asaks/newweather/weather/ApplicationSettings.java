@@ -1,4 +1,4 @@
-package com.asaks.newweather.weather;
+package com.asaks.newweather;
 
 import com.asaks.newweather.Constants;
 
