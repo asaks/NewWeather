@@ -1,71 +1,94 @@
 <resources>
     <string name="app_name">NewWeather</string>
-    <string name="strGradus">°</string>
-    <string name="strProcent">%</string>
-    <string name="strDateAndTime">Дата и время:</string>
-    <string name="strTimeUpd">Обновлено:</string>
-    <string name="strClouds">Облачность:</string>
-    <string name="strWeatherConditions">Погодные условия:</string>
-    <string name="strUpdate">Обновить</string>
-    <string name="strSettings">Настройки</string>
-    <string name="strWeatherNow">Погода сейчас</string>
-    <string name="strPrognoz">Прогноз погоды</string>
-    <string name="strAboutApp">О приложении...</string>
-    <string name="strExit">Выход</string>
-    <string name="sunrise">Рассвет:</string>
-    <string name="sunset">Закат:</string>
-    <string name="strOutsideWindow">За окном:</string>
+    <string name="gradus">°</string>
+    <string name="procent">%</string>
+    <string name="datetime">Дата и время</string>
+    <string name="updated">Обновлено</string>
+    <string name="cloudiness">Облачность</string>
+    <string name="weather_conditions">Погодные условия</string>
+    <string name="update">Обновить</string>
+    <string name="weather_now">Погода сейчас</string>
+    <string name="weather_forecast">Прогноз погоды</string>
+    <string name="about_app">О приложении...</string>
+    <string name="exit">Выход</string>
+    <string name="sunrise">Рассвет</string>
+    <string name="sunset">Закат</string>
+    <string name="outside_window">За окном</string>
     <string name="save">Сохранить</string>
+    <string name="message_about">Приложение погоды с использованием API OpenWeatherMap</string>
+    <string name="version">Версия</string>
+    <string name="OK">ОК</string>
 
     <!-- Температура -->
-    <string name="strCurrentTemp">Текущая температура:</string>
-    <string name="strTemp">Температура:</string>
-    <string name="strKelvin">K</string>
-    <string name="strCelcius">C</string>
-    <string name="strFarenheit">F</string>
+    <string name="current_temp">Текущая температура</string>
+    <string name="temperature">Температура</string>
+    <string name="Kelvin">K</string>
+    <string name="Celcius">C</string>
+    <string name="Farenheit">F</string>
 
-    <string name="strPressure">Давление:</string>
-    <string name="strHumidity">Влажность:</string>
-    <string name="strGektoPascal">гПа</string>
-    <string name="strMmHg">мм.рт.ст.</string>
+    <string name="pressure">Давление</string>
+    <string name="humidity">Влажность</string>
+    <string name="gektopascal">гПа</string>
+    <string name="mmHg">мм рт.ст.</string>
 
     <!-- Ветер -->
-    <string name="strWindSpeed">Скорость ветра:</string>
-    <string name="strMeterPerSec">м/с</string>
-    <string name="strWindDir">Направление ветра:</string>
-    <string name="strWind">Ветер:</string>
+    <string name="wind_speed">Скорость ветра</string>
+    <string name="meter_per_sec">м/с</string>
+    <string name="wind_direction">Направление ветра</string>
+    <string name="wind">Ветер</string>
+    <string name="north">северный</string>
+    <string name="south">южный</string>
+    <string name="west">западный</string>
+    <string name="east">восточный</string>
+    <string name="north_east">северо-восточный</string>
+    <string name="south_east">юго-восточный</string>
+    <string name="south_west">юго-западный</string>
+    <string name="north_west">северо-западный</string>
 
     <!-- Координаты -->
-    <string name="strLatitude">Широта:</string>
-    <string name="strLongitude">Долгота:</string>
-    <string name="strNorthLat">с.ш.</string>
-    <string name="strSouthLat">ю.ш.</string>
-    <string name="strEastLon">в.д.</string>
-    <string name="strWestLon">з.д.</string>
+    <string name="latitude">Широта</string>
+    <string name="longitude">Долгота</string>
+    <string name="north_lat">с.ш.</string>
+    <string name="south_lat">ю.ш.</string>
+    <string name="east_lon">в.д.</string>
+    <string name="west_lon">з.д.</string>
 
     <!-- Названия месяцев в родительном падеже -->
-    <string name="strJanuary">января</string>
-    <string name="strFebruary">февраля</string>
-    <string name="strMarch">марта</string>
-    <string name="strApril">апреля</string>
-    <string name="strMay">мая</string>
-    <string name="strJune">июня</string>
-    <string name="strJuly">июля</string>
-    <string name="strAugust">августа</string>
-    <string name="strSeptember">сентября</string>
-    <string name="strOctober">октября</string>
-    <string name="strNovember">ноября</string>
-    <string name="strDecember">декабря</string>
-    <string name="strErrUpdateWeather">Ошибка загрузки данных о погоде</string>
+    <string name="january">января</string>
+    <string name="february">февраля</string>
+    <string name="march">марта</string>
+    <string name="april">апреля</string>
+    <string name="may">мая</string>
+    <string name="june">июня</string>
+    <string name="july">июля</string>
+    <string name="august">августа</string>
+    <string name="september">сентября</string>
+    <string name="october">октября</string>
+    <string name="november">ноября</string>
+    <string name="december">декабря</string>
+    <string name="err_update_weather">Ошибка загрузки данных о погоде</string>
     <string name="settings">Настройки</string>
     <string name="share">Поделиться</string>
-    <string name="weatherInCity">Погода в городе</string>
+    <string name="weather_in_city">Погода в городе</string>
+    <string name="more">Подробнее:</string>
+
+    <string name="tag_settings">settings</string>
+    <string name="tag_temp_units">tempUnits</string>
+    <string name="tag_press_units">pressUnits</string>
+    <string name="tag_about_app">aboutapp</string>
+    <string name="temp_units">Единицы измерения температуры</string>
+    <string name="pressure_units">Единицы измерения давления</string>
 
     <!-- Единицы измерения температуры -->
-    <string-array name="temperature_gradus">
+    <string-array name="temperature_units">
         <item>Градусы Цельсия</item>
         <item>Градусы Фаренгейта</item>
         <item>Кельвины</item>
+    </string-array>
+
+    <string-array name="pressure_units">
+        <item>гектопаскали</item>
+        <item>мм ртутного столба</item>
     </string-array>
 
 </resources>

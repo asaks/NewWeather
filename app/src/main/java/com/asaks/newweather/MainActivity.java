@@ -4,7 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Matrix;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,19 +22,20 @@ import android.widget.Toast;
 
 import com.asaks.newweather.api.ConstantsAPI;
 import com.asaks.newweather.api.WeatherAPI;
-import com.asaks.newweather.ApplicationSettings;
 
 import com.asaks.newweather.weather.WeatherDay;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,12 +57,13 @@ public class MainActivity extends AppCompatActivity {
     TextView tvSunrise;
     TextView tvSunset;
     ImageView ivThermometer;
+    ImageView ivArrow;
 
     WeatherAPI.InterfaceAPI api;
     ApplicationSettings applicationSettings;
     SharedPreferences sharedPreferences;
+    RequestOptions requestOptionsGlide;
 
-    long cityID;
     //TODO во время отрисовки могут придти новые данные и возможно половина отрисуется старых данных, а половина новых
     WeatherDay weatherDay;
 
@@ -80,18 +85,18 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public String[] getMonths()
         {
-            return new String[]{MainActivity.getContext().getString(R.string.strJanuary),
-                    MainActivity.getContext().getString(R.string.strFebruary),
-                    MainActivity.getContext().getString(R.string.strMarch),
-                    MainActivity.getContext().getString(R.string.strApril),
-                    MainActivity.getContext().getString(R.string.strMay),
-                    MainActivity.getContext().getString(R.string.strJune),
-                    MainActivity.getContext().getString(R.string.strJuly),
-                    MainActivity.getContext().getString(R.string.strAugust),
-                    MainActivity.getContext().getString(R.string.strSeptember),
-                    MainActivity.getContext().getString(R.string.strOctober),
-                    MainActivity.getContext().getString(R.string.strNovember),
-                    MainActivity.getContext().getString(R.string.strDecember)};
+            return new String[]{MainActivity.getContext().getString(R.string.january),
+                    MainActivity.getContext().getString(R.string.february),
+                    MainActivity.getContext().getString(R.string.march),
+                    MainActivity.getContext().getString(R.string.april),
+                    MainActivity.getContext().getString(R.string.may),
+                    MainActivity.getContext().getString(R.string.june),
+                    MainActivity.getContext().getString(R.string.july),
+                    MainActivity.getContext().getString(R.string.august),
+                    MainActivity.getContext().getString(R.string.september),
+                    MainActivity.getContext().getString(R.string.october),
+                    MainActivity.getContext().getString(R.string.november),
+                    MainActivity.getContext().getString(R.string.december)};
         }
     };
 
@@ -115,13 +120,13 @@ public class MainActivity extends AppCompatActivity {
         // вкладка с текущей погодой
         TabHost.TabSpec tabSpec = tabHost.newTabSpec("current");
         tabSpec.setContent( R.id.llCurrentWeather );
-        tabSpec.setIndicator( getString(R.string.strWeatherNow) );
+        tabSpec.setIndicator( getString(R.string.weather_now) );
         tabHost.addTab( tabSpec );
 
         // вкладка с прогнозом погоды
         tabSpec = tabHost.newTabSpec( "forecast" );
         tabSpec.setContent( R.id.llForecast );
-        tabSpec.setIndicator( getString( R.string.strPrognoz ) );
+        tabSpec.setIndicator( getString( R.string.weather_forecast) );
         tabHost.addTab( tabSpec );
 
         // по умолчанию открывается вкладка с текущей погодой
@@ -141,44 +146,54 @@ public class MainActivity extends AppCompatActivity {
         tvSunrise = findViewById( R.id.tvSunrise );
         tvSunset = findViewById( R.id.tvSunset );
         ivThermometer = findViewById( R.id.ivThermometer );
+        ivArrow = findViewById( R.id.ivArrow );
 
         api = WeatherAPI.getClient().create(WeatherAPI.InterfaceAPI.class);
+        requestOptionsGlide = new RequestOptions();
+        requestOptionsGlide.diskCacheStrategy( DiskCacheStrategy.ALL );
 
         applicationSettings = new ApplicationSettings();
         sharedPreferences = getPreferences( Context.MODE_PRIVATE );
         if ( null != sharedPreferences )
         {
-            applicationSettings.setUnitTempPos( sharedPreferences.getInt("tempGradus", Constants.TEMP_KELVIN ) );
+            applicationSettings.setUnitTemp( sharedPreferences.getInt( getString(R.string.tag_temp_units), Constants.TEMP_KELVIN ) );
+            applicationSettings.setUnitPress( sharedPreferences.getInt( getString(R.string.tag_press_units), Constants.PRESS_MM_HG ) );
         }
 
+        //TODO при первом запуске приложения запрашивать город
         ///////////////////////ТЕСТОВЫЕ ДАННЫЕ//////////////////////
         weatherDay = new WeatherDay();
         weatherDay.setTestData( "Пенза", 53.2,45.0,1523385261,
                 276.1, 1006.31, 83, 4.31,
                 193.505, "Ясно", 1524372257, 1524424277 );
+        weatherDay.setWindDeg(153f);
 
         tvCity.setText( weatherDay.getCityName() );
-        String sLatitude = String.valueOf( weatherDay.getLatitude() ) + getString(R.string.strGradus)
+        String sLatitude = String.valueOf( weatherDay.getLatitude() ) + getString(R.string.gradus)
                 + " " + getStringDesignationCoords( weatherDay.getLatitude(), GeoCoordsConstant.COORD_LAT );
         tvLat.setText( sLatitude );
-        String sLongitude = String.valueOf( weatherDay.getLongitude() ) + getString(R.string.strGradus)
+        String sLongitude = String.valueOf( weatherDay.getLongitude() ) + getString(R.string.gradus)
                 + " " + getStringDesignationCoords( weatherDay.getLongitude(), GeoCoordsConstant.COORD_LON );
         tvLon.setText( sLongitude );
         Date timeUpd = new Date( weatherDay.getTimeUpdate() * 1000 );
         tvDateTime.setText( new SimpleDateFormat("dd MMMM HH:mm", russiansMonths).format(timeUpd) );
-        tvCurrentTemp.setText( String.valueOf( toCelsius( weatherDay.getCurrentTemp() ) ) + " " + getString(R.string.strGradus) + getString(R.string.strCelcius) );
+        tvCurrentTemp.setText( String.valueOf( toCelsius( weatherDay.getCurrentTemp() ) ) + " " + getString(R.string.gradus) + getString(R.string.Celcius) );
         double dPressure =  toMmHg( weatherDay.getPressure() );
-        tvPressure.setText( String.format("%.2f", dPressure ) + " " + getString(R.string.strMmHg) );
-        tvHumidity.setText( String.valueOf( Math.round( weatherDay.getHumidity() ) ) + getString(R.string.strProcent) );
-        tvWindSpeed.setText( String.valueOf( weatherDay.getWindSpeed() ) + " " + getString(R.string.strMeterPerSec) );
+        tvPressure.setText( String.format("%.2f", dPressure ) + " " + getString(R.string.mmHg) );
+        tvHumidity.setText( String.valueOf( Math.round( weatherDay.getHumidity() ) ) + getString(R.string.procent) );
+        tvWindSpeed.setText( String.valueOf( weatherDay.getWindSpeed() ) + " " + getString(R.string.meter_per_sec) );
         tvWeatherConditions.setText( weatherDay.getWeatherDesc() );
         tvSunrise.setText( new SimpleDateFormat("HH:mm")
                             .format( new Date( weatherDay.getTimeSunrise() * 1000 ) ) );
         tvSunset.setText( new SimpleDateFormat("HH:mm")
                             .format( new Date( weatherDay.getTimeSunset() * 1000 ) ) );
+
+        float angle = 180 + (float)weatherDay.getWindDeg();
+        ivArrow.setRotation( angle );
         ////////////////////////////////////////////////////////////
 
-        convertTemperature( applicationSettings.getUnitTempPos() );
+        convertTemperature( applicationSettings.getUnitTemp(), weatherDay.getCurrentTemp() );
+        convertPressure( applicationSettings.getUnitPress(), weatherDay.getPressure() );
     }
 
     //! Функция возвращает контекст
@@ -203,8 +218,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected( MenuItem item )
     {
-        //TODO
-
         switch( item.getItemId() )
         {
             case R.id.action_update: // обновить
@@ -215,30 +228,33 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_settings: // настройки
             {
                 Intent intentSettings = new Intent( this, SettingsActivity.class );
-                intentSettings.putExtra( "tempGradus", applicationSettings.getUnitTempPos() );
+                intentSettings.putExtra( getString(R.string.tag_settings), applicationSettings );
                 startActivityForResult( intentSettings, REQUEST_CODE_SETTINGS );
 
                 return true;
             }
             case R.id.action_share: // поделиться
             {
-                //TODO дополнить данными о температуре, давлении, влажности
-                //TODO и добавить к ссылке "Подробнее"
-                String textMessage = getString(R.string.weatherInCity) +" " + tvCity.getText() + "\n";
-                textMessage += ConstantsAPI.URL_CITY_WEATHER_FORECAST + cityID;
-
-                Intent intentShare = new Intent();
-                intentShare.setAction( Intent.ACTION_SEND );
-                intentShare.putExtra( Intent.EXTRA_TEXT, textMessage );
-                intentShare.setType( "text/plain" );
-
-                if ( null != intentShare.resolveActivity( getPackageManager() ) )
-                    startActivity( intentShare );
+                shareWeather();
 
                 return true;
             }
             case R.id.action_about: // о приложении
+            {
+                String strAbout = getString( R.string.message_about) + "\n\n";
+                strAbout += getString( R.string.version ) + ": ";
+                try {
+                    PackageInfo pinfo = getPackageManager().getPackageInfo( getPackageName(),0 );
+                    strAbout += this.getPackageManager().getPackageInfo( getPackageName(),0 ).versionName + "-"
+                        + pinfo.versionCode;
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+                DialogAbout dlgAbout = DialogAbout.newInstance( strAbout );
+
+                dlgAbout.show( getSupportFragmentManager(), getString(R.string.tag_about_app) );
                 return true;
+            }
             case R.id.action_exit: // выход
             {
                 this.finishAffinity();
@@ -251,27 +267,57 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed()
+    {
+        this.finishAffinity();
+    }
+
+    @Override
     protected void onActivityResult( int requestCode, int resultCode, Intent data )
     {
         if ( resultCode == RESULT_OK )
         {
             if ( requestCode == REQUEST_CODE_SETTINGS )
             {
-                //TODO пока смотрю только единицы измерения температуры
-                int t = data.getIntExtra("tempGradus", Constants.TEMP_KELVIN );
-                convertTemperature( t );
+                //TODO пока смотрю только единицы измерения температуры и давления
+                //TODO используется глобальный объект weatherDay
+                //int t = data.getIntExtra("tempGradus", Constants.TEMP_KELVIN );
+                applicationSettings = data.getParcelableExtra(getString(R.string.tag_settings));
+                convertTemperature( applicationSettings.getUnitTemp(), weatherDay.getCurrentTemp() );
+                convertPressure( applicationSettings.getUnitPress(), weatherDay.getPressure() );
 
                 // записываем установленные настройки единиц температуры
-                applicationSettings.setUnitTempPos( t );
+                //applicationSettings.setUnitTemp( t );
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt( "tempGradus", t );
+                editor.putInt( getString(R.string.tag_temp_units), applicationSettings.getUnitTemp() );
+                editor.putInt( getString(R.string.tag_press_units), applicationSettings.getUnitPress() );
                 editor.commit();
             }
         }
     }
 
+    //! "Поделиться погодой"
+    private void shareWeather()
+    {
+        //TODO используется глобальный объект weatherDay
+        String textMessage = getString(R.string.weather_in_city) +" " + tvCity.getText() + "\n";
+        textMessage += getString(R.string.current_temp) + " " + tvCurrentTemp.getText() + "\n";
+        textMessage += getString(R.string.pressure) + " " + tvPressure.getText() + "\n";
+        textMessage += getString(R.string.humidity) + " " + tvHumidity.getText() + "\n";
+        textMessage += getString(R.string.more) + " ";
+        textMessage += ConstantsAPI.URL_CITY_WEATHER_FORECAST + weatherDay.getCityID();
+
+        Intent intentShare = new Intent();
+        intentShare.setAction( Intent.ACTION_SEND );
+        intentShare.putExtra( Intent.EXTRA_TEXT, textMessage );
+        intentShare.setType( "text/plain" );
+
+        if ( null != intentShare.resolveActivity( getPackageManager() ) )
+            startActivity( intentShare );
+    }
+
     //! Отображает температуру в указанных единицах измерения
-    private void convertTemperature( int unit )
+    private void convertTemperature(int unit, double temp)
     {
         Resources resources = getResources();
 
@@ -279,26 +325,37 @@ public class MainActivity extends AppCompatActivity {
         {
             case Constants.TEMP_CELSIUS: // градусы Цельсия
             {
+                // если грузить Glide'ом , то нужно делать ресайз изображения, иначе оно слишком большое
+                //Glide.with(this).load( R.mipmap.ic_thermometer_celsius ).into(ivThermometer);
                 ivThermometer.setImageDrawable( resources.getDrawable(R.mipmap.ic_thermometer_celsius) );
-                tvCurrentTemp.setText( String.valueOf( toCelsius(weatherDay.getCurrentTemp()) )
-                        + getString(R.string.strGradus) + getString(R.string.strCelcius) );
+                tvCurrentTemp.setText( String.format( Locale.getDefault(), "%d %s%s", toCelsius(temp),
+                        getString(R.string.gradus), getString(R.string.Celcius) ) );
                 break;
             }
             case Constants.TEMP_FARENHEIT: // градусы Фаренгейта
             {
                 ivThermometer.setImageDrawable( resources.getDrawable(R.mipmap.ic_thermometer_farenheit) );
-                tvCurrentTemp.setText( String.valueOf( toFarenheit(weatherDay.getCurrentTemp()) )
-                        + getString(R.string.strGradus) + getString(R.string.strFarenheit) );
+                tvCurrentTemp.setText( String.format( Locale.getDefault(), "%d %s%s", toFarenheit(temp),
+                        getString(R.string.gradus), getString(R.string.Farenheit) ) );
                 break;
             }
             case Constants.TEMP_KELVIN: // Кельвины
             default:
             {
                 ivThermometer.setImageDrawable(resources.getDrawable(R.mipmap.ic_thermometer));
-                tvCurrentTemp.setText( String.valueOf( Math.round( weatherDay.getCurrentTemp() ) )
-                        + getString(R.string.strKelvin) );
+                tvCurrentTemp.setText( String.format( Locale.getDefault(), "%d %s", Math.round(temp),
+                        getString(R.string.Kelvin) ) );
             }
         }
+    }
+
+    //! Отображает давление в указанных единицах измерения
+    private void convertPressure( int unit, double press )
+    {
+        if ( Constants.PRESS_HPA == unit )
+            tvPressure.setText( String.format( Locale.getDefault(), "%.2f %s", press, getString(R.string.gektopascal) ) );
+        else if ( Constants.PRESS_MM_HG == unit )
+            tvPressure.setText( String.format( Locale.getDefault(), "%.2f %s", toMmHg( press ), getString(R.string.mmHg) ) );
     }
 
     //! Функция конвертации температуры из Кельвинов в градусы Цельсия
@@ -333,18 +390,18 @@ public class MainActivity extends AppCompatActivity {
             case GeoCoordsConstant.COORD_LAT: // широта
             {
                 if ( 0 > dCoord )
-                    sDesignation = getString( R.string.strSouthLat ); // ю.ш.
+                    sDesignation = getString( R.string.south_lat); // ю.ш.
                 else
-                    sDesignation = getString( R.string.strNorthLat ); // с.ш.
+                    sDesignation = getString( R.string.north_lat); // с.ш.
 
                 break;
             }
             case GeoCoordsConstant.COORD_LON: // долгота
             {
                 if ( 0 > dCoord )
-                    sDesignation = getString( R.string.strWestLon ); // з.д.
+                    sDesignation = getString( R.string.west_lon); // з.д.
                 else
-                    sDesignation = getString( R.string.strEastLon ); // в.д.
+                    sDesignation = getString( R.string.east_lon); // в.д.
 
                 break;
             }
@@ -372,8 +429,6 @@ public class MainActivity extends AppCompatActivity {
         double dLat = 53.2;
         double dLon = 45.0;
         long idCity = 511565;
-        //TODO сохранять id города для отправки ссылки на погоду
-        cityID = idCity;
 
         Log.d( TAG, "update weather" );
 
@@ -405,7 +460,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.e( TAG, t.toString() );
 
                         Toast toast = Toast.makeText( getBaseContext(),
-                                getString( R.string.strErrUpdateWeather ) + "\n"
+                                getString( R.string.err_update_weather) + "\n"
                                         + t.toString(), Toast.LENGTH_SHORT );
                         toast.setGravity( Gravity.BOTTOM, 0, 100 );
                         toast.show();
@@ -417,7 +472,7 @@ public class MainActivity extends AppCompatActivity {
     //! Обновить прогноз погоды
     private void updateWeatherForecast()
     {
-        //TODO
+        //TODO прогноз погоды
     }
 
     //! Обновление вкладки текущей погоды
@@ -426,11 +481,11 @@ public class MainActivity extends AppCompatActivity {
         //TODO название города на русском языке
         tvCity.setText( weatherDay.getCityName() );
 
-        String sLatitude = String.valueOf( weatherDay.getLatitude() ) + getString( R.string.strGradus )
+        String sLatitude = String.valueOf( weatherDay.getLatitude() ) + getString( R.string.gradus)
                 + " " + getStringDesignationCoords( weatherDay.getLatitude(), GeoCoordsConstant.COORD_LAT );
         tvLat.setText( sLatitude );
 
-        String sLongitude = String.valueOf( weatherDay.getLongitude() ) + getString( R.string.strGradus )
+        String sLongitude = String.valueOf( weatherDay.getLongitude() ) + getString( R.string.gradus)
                 + " " + getStringDesignationCoords( weatherDay.getLongitude(), GeoCoordsConstant.COORD_LON );
         tvLon.setText( sLongitude );
 
@@ -438,32 +493,35 @@ public class MainActivity extends AppCompatActivity {
         Date timeUpd = new Date();
         tvDateTime.setText( new SimpleDateFormat("dd MMMM HH:mm", russiansMonths ).format( timeUpd ) );
 
-        //TODO сделать настройку градусов, пока всегда переводится в градусы Цельсия
-        tvCurrentTemp.setText( String.valueOf( toCelsius( weatherDay.getCurrentTemp() ) )
-                + " " + getString(R.string.strGradus) + getString(R.string.strCelcius) );
+        convertTemperature( applicationSettings.getUnitTemp(), weatherDay.getCurrentTemp() );
 
-        tvHumidity.setText( String.valueOf( Math.round( weatherDay.getHumidity() ) ) + getString( R.string.strProcent ) );
+        tvHumidity.setText( String.format( Locale.getDefault(), "%d %s", Math.round( weatherDay.getHumidity() ),
+                getString( R.string.procent) ) );
 
-        double dPressure =  toMmHg( weatherDay.getPressure() );
-        tvPressure.setText( String.format("%.2f", dPressure ) + " " + getString( R.string.strMmHg ) );
+        convertPressure( applicationSettings.getUnitPress(), weatherDay.getPressure() );
 
-        tvWindSpeed.setText( String.valueOf( weatherDay.getWindSpeed() ) + " " + getString( R.string.strMeterPerSec ) );
+        tvWindSpeed.setText( String.format( Locale.getDefault(), "%.2f %s", weatherDay.getWindSpeed(),
+                getString( R.string.meter_per_sec) ) );
+
+        // угол, приходящий по запросу показывает куда дует ветер, а не откуда
+        // поэтому такие манипуляции
+        float angle = 180 + (float)weatherDay.getWindDeg();
+        ivArrow.setRotation( angle );
 
         tvWeatherConditions.setText( weatherDay.getWeatherDesc() );
 
         Date timeSunrise = new Date( weatherDay.getTimeSunrise() * 1000 );
-        tvSunrise.setText( new SimpleDateFormat( "HH:mm" ).format( timeSunrise ) );
+        tvSunrise.setText( new SimpleDateFormat( "HH:mm", Locale.getDefault() ).format( timeSunrise ) );
 
         Date timeSunset = new Date( weatherDay.getTimeSunset() * 1000 );
-        tvSunset.setText( new SimpleDateFormat( "HH:mm" ).format( timeSunset ) );
+        tvSunset.setText( new SimpleDateFormat( "HH:mm", Locale.getDefault() ).format( timeSunset ) );
 
-        Glide.with( this ).load( weatherDay.getWeatherIconUrl() ).into( ivWeatherCondition );
-        Glide.with( this ).load( weatherDay.getCountryFlagUrl() ).into( ivFlag );
+        Glide.with( this ).load( weatherDay.getWeatherIconUrl() )
+                .apply(requestOptionsGlide)
+                .into( ivWeatherCondition );
+        Glide.with( this ).load( weatherDay.getCountryFlagUrl() )
+                .apply(requestOptionsGlide)
+                .into( ivFlag );
     }
 
-    @Override
-    public void onBackPressed()
-    {
-        this.finishAffinity();
-    }
 }

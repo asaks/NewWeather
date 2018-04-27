@@ -1,6 +1,5 @@
 package com.asaks.newweather;
 
-//import android.support.v4.app.NavUtils;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +12,8 @@ import android.widget.Spinner;
 public class SettingsActivity extends AppCompatActivity {
 
     Spinner spinnerTemperature;
+    Spinner spinnerPressure;
+    ApplicationSettings applicationSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,17 +28,26 @@ public class SettingsActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled( true );
 
         spinnerTemperature = findViewById( R.id.spinnerTemp );
+        spinnerPressure = findViewById( R.id.spinnerPressure );
+
         ArrayAdapter<CharSequence> adapterTemp = ArrayAdapter.createFromResource( this,
-                R.array.temperature_gradus, android.R.layout.simple_spinner_item );
+                R.array.temperature_units, android.R.layout.simple_spinner_item );
         adapterTemp.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
         spinnerTemperature.setAdapter( adapterTemp );
-        spinnerTemperature.setPrompt( "Единицы измерения температуры" );
+        spinnerTemperature.setPrompt( getString(R.string.temp_units) );
+
+        ArrayAdapter<CharSequence> adapterPress = ArrayAdapter.createFromResource( this,
+                R.array.pressure_units, android.R.layout.simple_spinner_item );
+        adapterPress.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
+        spinnerPressure.setAdapter( adapterPress );
+        spinnerPressure.setPrompt( getString(R.string.pressure_units) );
 
         Intent intent = getIntent();
         if ( null != intent )
         {
-            int unitTemp = intent.getIntExtra( "tempGradus", Constants.TEMP_KELVIN );
-            spinnerTemperature.setSelection( unitTemp );
+            applicationSettings = intent.getParcelableExtra( getString(R.string.tag_settings) );
+            spinnerTemperature.setSelection( applicationSettings.getUnitTemp() );
+            spinnerPressure.setSelection( applicationSettings.getUnitPress() );
         }
     }
 
@@ -59,16 +69,18 @@ public class SettingsActivity extends AppCompatActivity {
     {
         switch ( item.getItemId() )
         {
-            case android.R.id.home:
+            case android.R.id.home: // назад
             {
                 this.finish();
 
                 return true;
             }
-            case R.id.action_save:
+            case R.id.action_save: // сохранить
             {
                 Intent intent = new Intent();
-                intent.putExtra( "tempGradus", spinnerTemperature.getSelectedItemPosition() );
+                applicationSettings.setUnitTemp( spinnerTemperature.getSelectedItemPosition() );
+                applicationSettings.setUnitPress( spinnerPressure.getSelectedItemPosition() );
+                intent.putExtra( getString(R.string.tag_settings), applicationSettings );
                 setResult( RESULT_OK, intent );
 
                 this.finish();

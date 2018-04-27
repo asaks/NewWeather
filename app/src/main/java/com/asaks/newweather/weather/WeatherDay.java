@@ -169,6 +169,16 @@ public class WeatherDay
         return "http://openweathermap.org/images/flags/" + sys.sCountry.toLowerCase() + ".png";
     }
 
+    public int getWeatherID()
+    {
+        return weatherDesc.get(0).id;
+    }
+
+    public String getWeatherMain()
+    {
+        return weatherDesc.get(0).main;
+    }
+
     //! Возвращает название города
     public String getCityName()
     {
@@ -247,7 +257,29 @@ public class WeatherDay
         return sys.iTimeSunset;
     }
 
+    //! Возвращает id города OpenWeatherMap
+    public long getCityID()
+    {
+        return iCityID;
+    }
+
     ////////////////////////////сеттеры////////////////////////////
+
+    //! Записывает id города OpenWeatherMap
+    public void setCityID( long iCityID )
+    {
+        this.iCityID = iCityID;
+    }
+
+    public void setWeatherID( int id )
+    {
+        weatherDesc.get(0).id = id;
+    }
+
+    public void setWeatherMain( String main )
+    {
+        weatherDesc.get(0).main = main;
+    }
 
     //! Записывает название города
     public void setCityName( String sCity )

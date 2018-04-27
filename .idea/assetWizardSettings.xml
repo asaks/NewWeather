@@ -93,8 +93,8 @@
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
                                       <entry key="iconShape" value="NONE" />
-                                      <entry key="imageAsset" value="$PROJECT_DIR$/../thermometer.png" />
-                                      <entry key="outputName" value="ic_thermometer_celsius" />
+                                      <entry key="imageAsset" value="$PROJECT_DIR$/../wind.png" />
+                                      <entry key="outputName" value="ic_wind" />
                                     </map>
                                   </option>
                                 </PersistentState>

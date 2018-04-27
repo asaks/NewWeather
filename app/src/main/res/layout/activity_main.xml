@@ -90,8 +90,8 @@
 
                                         <ImageView
                                             android:id="@+id/ivFlag"
-                                            android:layout_width="36dp"
-                                            android:layout_height="36dp"
+                                            android:layout_width="24dp"
+                                            android:layout_height="24dp"
                                             android:layout_marginTop="3dp"
                                             android:layout_weight="1"
                                             app:srcCompat="@drawable/russia" />
@@ -99,7 +99,7 @@
                                         <TextView
                                             android:id="@+id/tvCityName"
                                             android:layout_width="wrap_content"
-                                            android:layout_height="match_parent"
+                                            android:layout_height="wrap_content"
                                             android:layout_marginLeft="10dp"
                                             android:layout_marginStart="10dp"
                                             android:layout_marginTop="3dp"
@@ -124,7 +124,7 @@
                                             android:layout_height="wrap_content"
                                             android:layout_weight="1"
                                             android:gravity="end"
-                                            android:text="@string/strLatitude"
+                                            android:text="@string/latitude"
                                             android:textAlignment="textEnd" />
 
                                         <TextView
@@ -148,7 +148,7 @@
                                             android:layout_height="wrap_content"
                                             android:layout_weight="1"
                                             android:gravity="end"
-                                            android:text="@string/strLongitude"
+                                            android:text="@string/longitude"
                                             android:textAlignment="textEnd" />
 
                                         <TextView
@@ -191,7 +191,7 @@
                                             android:layout_height="wrap_content"
                                             android:layout_marginLeft="3dp"
                                             android:layout_weight="1"
-                                            android:text="@string/strTimeUpd"
+                                            android:text="@string/updated"
                                             android:textSize="18sp" />
 
                                         <TextView
@@ -221,7 +221,7 @@
                                                 android:layout_height="match_parent"
                                                 android:gravity="center"
                                                 android:layout_weight="1"
-                                                android:text="@string/strTemp"
+                                                android:text="@string/temperature"
                                                 android:textSize="18sp" />
 
                                         </android.support.constraint.ConstraintLayout>
@@ -278,7 +278,7 @@
                                                 android:layout_height="match_parent"
                                                 android:gravity="center"
                                                 android:layout_weight="1"
-                                                android:text="@string/strPressure"
+                                                android:text="@string/pressure"
                                                 android:textSize="18sp" />
 
                                         </android.support.constraint.ConstraintLayout>
@@ -338,7 +338,7 @@
                                                 android:layout_centerVertical="true"
                                                 android:layout_weight="1"
                                                 android:gravity="center"
-                                                android:text="@string/strHumidity"
+                                                android:text="@string/humidity"
                                                 android:textSize="18sp" />
 
                                         </android.support.constraint.ConstraintLayout>
@@ -394,18 +394,44 @@
                                                 android:layout_height="match_parent"
                                                 android:layout_weight="1"
                                                 android:gravity="center"
-                                                android:text="@string/strWind"
+                                                android:text="@string/wind"
                                                 android:textSize="18sp" />
                                         </android.support.constraint.ConstraintLayout>
 
                                         <android.support.constraint.ConstraintLayout
                                             android:id="@+id/clWind">
 
-                                            <ImageView
-                                                android:id="@+id/ivWind"
-                                                android:layout_width="wrap_content"
-                                                android:layout_height="wrap_content"
-                                                android:src="@mipmap/ic_launcher" />
+                                            <android.support.constraint.ConstraintLayout
+                                                android:id="@+id/clWindIco"
+                                                android:layout_width="48dp"
+                                                android:layout_height="48dp">
+
+                                                <ImageView
+                                                    android:id="@+id/ivWind"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:src="@drawable/compass" />
+
+                                                <ImageView
+                                                    android:id="@+id/ivArrow"
+                                                    android:layout_width="24dp"
+                                                    android:layout_height="24dp"
+                                                    android:layout_centerInParent="true"
+                                                    android:layout_centerVertical="true"
+                                                    android:layout_gravity="center"
+                                                    android:layout_marginBottom="8dp"
+                                                    android:layout_marginEnd="8dp"
+                                                    android:layout_marginLeft="8dp"
+                                                    android:layout_marginRight="8dp"
+                                                    android:layout_marginStart="8dp"
+                                                    android:layout_marginTop="8dp"
+                                                    android:src="@drawable/arrow"
+                                                    app:layout_constraintBottom_toBottomOf="@+id/ivWind"
+                                                    app:layout_constraintEnd_toEndOf="@+id/ivWind"
+                                                    app:layout_constraintStart_toStartOf="@+id/ivWind"
+                                                    app:layout_constraintTop_toTopOf="@+id/ivWind" />
+
+                                            </android.support.constraint.ConstraintLayout>
 
                                             <TextView
                                                 android:id="@+id/tvWindSpeed"
@@ -423,7 +449,7 @@
                                                 android:text="TextView"
                                                 android:textSize="18sp"
                                                 app:layout_constraintBottom_toBottomOf="parent"
-                                                app:layout_constraintStart_toEndOf="@+id/ivWind"
+                                                app:layout_constraintStart_toEndOf="@+id/clWindIco"
                                                 app:layout_constraintTop_toTopOf="parent" />
 
                                         </android.support.constraint.ConstraintLayout>
@@ -448,7 +474,7 @@
                                                 android:layout_height="match_parent"
                                                 android:layout_weight="1"
                                                 android:gravity="center"
-                                                android:text="@string/strOutsideWindow"
+                                                android:text="@string/outside_window"
                                                 android:textSize="18sp" />
                                         </android.support.constraint.ConstraintLayout>
 
@@ -456,9 +482,9 @@
 
                                             <ImageView
                                                 android:id="@+id/ivWeatherCondition"
-                                                android:layout_width="wrap_content"
-                                                android:layout_height="wrap_content"
-                                                android:src="@mipmap/ic_launcher" />
+                                                android:layout_width="48dp"
+                                                android:layout_height="48dp"
+                                                android:src="@mipmap/ic_launcher"/>
 
                                             <TextView
                                                 android:id="@+id/tvWeatherDesc"
