@@ -9,7 +9,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-//! Класс "общения" с OpenWeatherMap
+/**
+ * Класс, реализующий взаимодействие с API OpenWeatherMap
+ */
+
 public class WeatherAPI
 {
     private static Retrofit retrofit = null;

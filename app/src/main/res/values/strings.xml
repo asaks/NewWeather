@@ -18,6 +18,8 @@
     <string name="message_about">Приложение погоды с использованием API OpenWeatherMap</string>
     <string name="version">Версия</string>
     <string name="OK">ОК</string>
+    <string name="cancel">Отмена</string>
+    <string name="change_city">Сменить город</string>
 
     <!-- Температура -->
     <string name="current_temp">Текущая температура</string>
@@ -78,6 +80,9 @@
     <string name="tag_about_app">aboutapp</string>
     <string name="temp_units">Единицы измерения температуры</string>
     <string name="pressure_units">Единицы измерения давления</string>
+    <string name="enter_city_name">Введите название города</string>
+    <string name="tag_city">city</string>
+    <string name="hint_double_press_exit">Нажмите еще раз для выхода</string>
 
     <!-- Единицы измерения температуры -->
     <string-array name="temperature_units">

@@ -66,7 +66,7 @@ public class WeatherDay
         // скорость ветра
         @SerializedName("speed")
         double dWindSpeed;
-        // направление ветра, в градусах
+        // направление (метеорологическое) ветра, в градусах
         @SerializedName("deg")
         double dWindDeg;
     }
@@ -239,7 +239,7 @@ public class WeatherDay
         return wind.dWindSpeed;
     }
 
-    //! Возвращает направление ветра в градусах
+    //! Возвращает направление ветра в градусах (метеорологическое направление)
     public double getWindDeg()
     {
         return wind.dWindDeg;
@@ -341,7 +341,7 @@ public class WeatherDay
         wind.dWindSpeed = dWindSpeed;
     }
 
-    //! Записывает направление ветра в градусах
+    //! Записывает направление ветра в градусах (метеорологическое направление)
     public void setWindDeg(double dWindDeg) {
         wind.dWindDeg = dWindDeg;
     }

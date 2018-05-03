@@ -9,18 +9,23 @@ import android.os.Parcelable;
 
 public class ApplicationSettings implements Parcelable
 {
-
+    // город
+    private String city;
     // позиция выбранной единицы измерения температуры
     private int unitTempPos;
     // позиция выбранной единицы измерения давления
     private int unitPressPos;
+    //
 
     public ApplicationSettings()
     {
+        this.city = "";
         this.unitTempPos = Constants.TEMP_KELVIN;
+        this.unitPressPos = Constants.PRESS_MM_HG;
     }
 
     protected ApplicationSettings(Parcel in) {
+        city = in.readString();
         unitTempPos = in.readInt();
         unitPressPos = in.readInt();
     }
@@ -44,8 +49,19 @@ public class ApplicationSettings implements Parcelable
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(city);
         parcel.writeInt(unitTempPos);
         parcel.writeInt(unitPressPos);
+    }
+
+    public String getCity()
+    {
+        return city;
+    }
+
+    public void setCity( String city )
+    {
+        this.city = city;
     }
 
     public int getUnitTemp()
