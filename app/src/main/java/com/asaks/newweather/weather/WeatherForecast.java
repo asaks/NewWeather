@@ -1,5 +1,7 @@
 package com.asaks.newweather.weather;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +10,7 @@ import java.util.List;
  */
 public class WeatherForecast
 {
+    @SerializedName("list")
     private List<WeatherDay> weatherItems;
 
     public WeatherForecast()

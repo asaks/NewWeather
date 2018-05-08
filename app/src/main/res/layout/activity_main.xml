@@ -94,7 +94,8 @@
                                             android:layout_height="24dp"
                                             android:layout_marginTop="3dp"
                                             android:layout_weight="1"
-                                            app:srcCompat="@drawable/russia" />
+                                            app:srcCompat="@drawable/russia"
+                                            android:contentDescription="@string/land" />
 
                                         <TextView
                                             android:id="@+id/tvCityName"
@@ -105,7 +106,6 @@
                                             android:layout_marginTop="3dp"
                                             android:layout_weight="1"
                                             android:gravity="start"
-                                            android:text="TextView"
                                             android:textAlignment="textStart"
                                             android:textSize="24sp"
                                             android:textStyle="bold" />
@@ -132,8 +132,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_marginLeft="3dp"
-                                            android:layout_weight="1"
-                                            android:text="TextView" />
+                                            android:layout_weight="1" />
                                     </TableRow>
 
                                     <!-- Долгота -->
@@ -156,8 +155,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_marginLeft="3dp"
-                                            android:layout_weight="1"
-                                            android:text="TextView" />
+                                            android:layout_weight="1" />
                                     </TableRow>
 
                                 </TableLayout>
@@ -199,7 +197,6 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_weight="1"
-                                            android:text="TextView"
                                             android:textSize="18sp" />
 
                                     </TableRow>
@@ -233,7 +230,8 @@
                                                 android:id="@+id/ivThermometer"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:src="@mipmap/ic_thermometer" />
+                                                android:src="@mipmap/ic_thermometer"
+                                                android:contentDescription="@string/temperature" />
 
                                             <TextView
                                                 android:id="@+id/tvCurrentTemp"
@@ -248,12 +246,11 @@
                                                 android:layout_marginTop="8dp"
                                                 android:layout_weight="1"
                                                 android:gravity="center"
-                                                android:text="TextView"
                                                 android:textSize="20sp"
                                                 android:textStyle="bold"
                                                 app:layout_constraintBottom_toBottomOf="parent"
                                                 app:layout_constraintStart_toEndOf="@+id/ivThermometer"
-                                                app:layout_constraintTop_toTopOf="parent"/>
+                                                app:layout_constraintTop_toTopOf="parent" />
 
                                         </android.support.constraint.ConstraintLayout>
 
@@ -292,7 +289,8 @@
                                                 android:id="@+id/ivPressure"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:src="@mipmap/ic_pressure"/>
+                                                android:src="@mipmap/ic_pressure"
+                                                android:contentDescription="@string/pressure" />
 
                                             <TextView
                                                 android:id="@+id/tvPressure"
@@ -307,11 +305,10 @@
                                                 android:layout_marginTop="8dp"
                                                 android:layout_weight="1"
                                                 android:gravity="center"
-                                                android:text="TextView"
                                                 android:textSize="18sp"
                                                 app:layout_constraintBottom_toBottomOf="parent"
                                                 app:layout_constraintStart_toEndOf="@+id/ivPressure"
-                                                app:layout_constraintTop_toTopOf="parent"/>
+                                                app:layout_constraintTop_toTopOf="parent" />
 
                                         </android.support.constraint.ConstraintLayout>
 
@@ -351,7 +348,8 @@
                                                 android:id="@+id/ivHumidity"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:src="@mipmap/ic_humidity"/>
+                                                android:src="@mipmap/ic_humidity"
+                                                android:contentDescription="@string/humidity" />
 
                                             <TextView
                                                 android:id="@+id/tvHumidity"
@@ -366,11 +364,10 @@
                                                 android:layout_marginTop="8dp"
                                                 android:layout_weight="1"
                                                 android:gravity="center"
-                                                android:text="TextView"
                                                 android:textSize="18sp"
                                                 app:layout_constraintBottom_toBottomOf="parent"
                                                 app:layout_constraintStart_toEndOf="@+id/ivHumidity"
-                                                app:layout_constraintTop_toTopOf="parent"/>
+                                                app:layout_constraintTop_toTopOf="parent" />
 
                                         </android.support.constraint.ConstraintLayout>
 
@@ -410,7 +407,8 @@
                                                     android:id="@+id/ivWind"
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
-                                                    android:src="@drawable/compass" />
+                                                    android:src="@drawable/compass"
+                                                    android:contentDescription="@string/wind" />
 
                                                 <ImageView
                                                     android:id="@+id/ivArrow"
@@ -429,7 +427,8 @@
                                                     app:layout_constraintBottom_toBottomOf="@+id/ivWind"
                                                     app:layout_constraintEnd_toEndOf="@+id/ivWind"
                                                     app:layout_constraintStart_toStartOf="@+id/ivWind"
-                                                    app:layout_constraintTop_toTopOf="@+id/ivWind" />
+                                                    app:layout_constraintTop_toTopOf="@+id/ivWind"
+                                                    android:contentDescription="@string/wind" />
 
                                             </android.support.constraint.ConstraintLayout>
 
@@ -446,7 +445,6 @@
                                                 android:layout_marginTop="8dp"
                                                 android:layout_weight="1"
                                                 android:gravity="center"
-                                                android:text="TextView"
                                                 android:textSize="18sp"
                                                 app:layout_constraintBottom_toBottomOf="parent"
                                                 app:layout_constraintStart_toEndOf="@+id/clWindIco"
@@ -484,7 +482,8 @@
                                                 android:id="@+id/ivWeatherCondition"
                                                 android:layout_width="48dp"
                                                 android:layout_height="48dp"
-                                                android:src="@mipmap/ic_launcher"/>
+                                                android:src="@mipmap/ic_launcher"
+                                                android:contentDescription="@string/weather_conditions" />
 
                                             <TextView
                                                 android:id="@+id/tvWeatherDesc"
@@ -499,7 +498,6 @@
                                                 android:layout_marginTop="8dp"
                                                 android:layout_weight="1"
                                                 android:gravity="center"
-                                                android:text="TextView"
                                                 android:textSize="18sp"
                                                 app:layout_constraintBottom_toBottomOf="parent"
                                                 app:layout_constraintStart_toEndOf="@+id/ivWeatherCondition"
@@ -537,7 +535,8 @@
                                                 android:id="@+id/ivSunrise"
                                                 android:layout_height="wrap_content"
                                                 android:layout_width="wrap_content"
-                                                android:src="@mipmap/ic_sunrise"/>
+                                                android:src="@mipmap/ic_sunrise"
+                                                android:contentDescription="@string/sunrise" />
 
                                             <TextView
                                                 android:id="@+id/tvSunrise"
@@ -552,11 +551,10 @@
                                                 android:layout_marginTop="8dp"
                                                 android:layout_weight="1"
                                                 android:gravity="center"
-                                                android:text="TextView"
                                                 android:textSize="18sp"
                                                 app:layout_constraintBottom_toBottomOf="parent"
                                                 app:layout_constraintStart_toEndOf="@+id/ivSunrise"
-                                                app:layout_constraintTop_toTopOf="parent"/>
+                                                app:layout_constraintTop_toTopOf="parent" />
                                         </android.support.constraint.ConstraintLayout>
 
 
@@ -590,7 +588,8 @@
                                                 android:id="@+id/ivSunset"
                                                 android:layout_height="wrap_content"
                                                 android:layout_width="wrap_content"
-                                                android:src="@mipmap/ic_sunset"/>
+                                                android:src="@mipmap/ic_sunset"
+                                                android:contentDescription="@string/sunset" />
 
                                             <TextView
                                                 android:id="@+id/tvSunset"
@@ -605,11 +604,10 @@
                                                 android:layout_marginTop="8dp"
                                                 android:layout_weight="1"
                                                 android:gravity="center"
-                                                android:text="TextView"
                                                 android:textSize="18sp"
                                                 app:layout_constraintBottom_toBottomOf="parent"
                                                 app:layout_constraintStart_toEndOf="@+id/ivSunset"
-                                                app:layout_constraintTop_toTopOf="parent"/>
+                                                app:layout_constraintTop_toTopOf="parent" />
                                         </android.support.constraint.ConstraintLayout>
 
 
@@ -634,34 +632,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <ScrollView
-                            android:id="@+id/svCForecast"
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/rvForecast"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
+                            android:layout_height="match_parent">
 
-                            <LinearLayout
-                                android:id="@+id/llScrollForecast"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical" >
+                        </android.support.v7.widget.RecyclerView>
 
-                                <TextView
-                                    android:id="@+id/textView22"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Здесь будет прогноз на 5 дней" />
-
-                            </LinearLayout>
-
-                        </ScrollView>
                     </android.support.constraint.ConstraintLayout>
                 </LinearLayout>
-
-
             </FrameLayout>
         </LinearLayout>
     </TabHost>

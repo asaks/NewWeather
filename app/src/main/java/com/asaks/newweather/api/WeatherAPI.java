@@ -45,13 +45,20 @@ public class WeatherAPI
                 @Query("appid") String appid
         );
 
-        /*
+
         @GET("forecast")
         Call<WeatherForecast> getWeatherForecast(
                 @Query("id") long id,
                 @Query("lang") String lang,
-                @Query("appid") String appid;
-        );*/
+                @Query("appid") String appid
+        );
+
+        @GET("forecast")
+        Call<WeatherForecast> getWeatherForecast(
+                @Query("q") String city,
+                @Query("lang") String lang,
+                @Query("appid") String appid
+        );
 
     }
 

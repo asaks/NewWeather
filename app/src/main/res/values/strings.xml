@@ -20,6 +20,7 @@
     <string name="OK">ОК</string>
     <string name="cancel">Отмена</string>
     <string name="change_city">Сменить город</string>
+    <string name="land">Страна</string>
 
     <!-- Температура -->
     <string name="current_temp">Текущая температура</string>

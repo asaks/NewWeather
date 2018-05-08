@@ -13,11 +13,14 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TabHost;
 import android.widget.Toast;
@@ -26,6 +29,7 @@ import com.asaks.newweather.api.ConstantsAPI;
 import com.asaks.newweather.api.WeatherAPI;
 
 import com.asaks.newweather.weather.WeatherDay;
+import com.asaks.newweather.weather.WeatherForecast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -33,7 +37,9 @@ import com.bumptech.glide.request.RequestOptions;
 import java.io.IOException;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -66,6 +72,10 @@ public class MainActivity extends AppCompatActivity
     ImageView ivThermometer;
     ImageView ivArrow;
 
+    RecyclerView mRecyclerView;
+    RecyclerView.Adapter mAdapter;
+    RecyclerView.LayoutManager mLayoutManager;
+
     WeatherAPI.InterfaceAPI api;
     ApplicationSettings applicationSettings;
     SharedPreferences sharedPreferences;
@@ -73,6 +83,7 @@ public class MainActivity extends AppCompatActivity
 
     //TODO во время отрисовки могут придти новые данные и возможно половина отрисуется старых данных, а половина новых
     WeatherDay weatherDay;
+    WeatherForecast weatherForecast;
 
     @SuppressLint("StaticFieldLeak")
     private static Context mContext;
@@ -148,26 +159,9 @@ public class MainActivity extends AppCompatActivity
         ivThermometer = findViewById( R.id.ivThermometer );
         ivArrow = findViewById( R.id.ivArrow );
 
-        api = WeatherAPI.getClient().create(WeatherAPI.InterfaceAPI.class);
-        requestOptionsGlide = new RequestOptions();
-        requestOptionsGlide = requestOptionsGlide.diskCacheStrategy( DiskCacheStrategy.ALL );
-
-        applicationSettings = new ApplicationSettings();
-        sharedPreferences = getPreferences( Context.MODE_PRIVATE );
-        if ( null != sharedPreferences )
-        {
-            applicationSettings.setUnitTemp( sharedPreferences.getInt( getString(R.string.tag_temp_units), Constants.TEMP_KELVIN ) );
-            applicationSettings.setUnitPress( sharedPreferences.getInt( getString(R.string.tag_press_units), Constants.PRESS_MM_HG ) );
-            applicationSettings.setCity( sharedPreferences.getString("city", "" ) );
-        }
-
-        //TODO при первом запуске приложения запрашивать город
-        // если нет сохраненного города, то показываем диалог
-        if ( applicationSettings.getCity().isEmpty() )
-        {
-            DialogScreen dlgInputCity = DialogScreen.newInstance( DialogScreen.IDD_SET_CITY, "" );
-            dlgInputCity.show( getSupportFragmentManager(), "DlgSetCity" );
-        }
+        mRecyclerView = findViewById( R.id.rvForecast );
+        mLayoutManager = new LinearLayoutManager( this, LinearLayoutManager.VERTICAL, false );
+        mRecyclerView.setLayoutManager( mLayoutManager );
 
         ///////////////////////ТЕСТОВЫЕ ДАННЫЕ//////////////////////
         weatherDay = new WeatherDay();
@@ -192,13 +186,41 @@ public class MainActivity extends AppCompatActivity
         tvWindSpeed.setText( String.valueOf( weatherDay.getWindSpeed() ) + " " + getString(R.string.meter_per_sec) );
         tvWeatherConditions.setText( weatherDay.getWeatherDesc() );
         tvSunrise.setText( new SimpleDateFormat("HH:mm")
-                            .format( new Date( weatherDay.getTimeSunrise() * 1000 ) ) );
+                .format( new Date( weatherDay.getTimeSunrise() * 1000 ) ) );
         tvSunset.setText( new SimpleDateFormat("HH:mm")
-                            .format( new Date( weatherDay.getTimeSunset() * 1000 ) ) );
+                .format( new Date( weatherDay.getTimeSunset() * 1000 ) ) );
 
         float angle = 180 + (float)weatherDay.getWindDeg();
         ivArrow.setRotation( angle );
+
+        List<WeatherDay> lst = new ArrayList<>();
+        lst.add(weatherDay);
+        weatherForecast = new WeatherForecast(lst);
         ////////////////////////////////////////////////////////////
+
+        mAdapter = new ForecastAdapter( weatherForecast.getWeatherItems() );
+        mRecyclerView.setAdapter( mAdapter );
+
+        api = WeatherAPI.getClient().create(WeatherAPI.InterfaceAPI.class);
+        requestOptionsGlide = new RequestOptions();
+        requestOptionsGlide = requestOptionsGlide.diskCacheStrategy( DiskCacheStrategy.ALL );
+
+        applicationSettings = new ApplicationSettings();
+        sharedPreferences = getPreferences( Context.MODE_PRIVATE );
+        if ( null != sharedPreferences )
+        {
+            applicationSettings.setUnitTemp( sharedPreferences.getInt( getString(R.string.tag_temp_units), Constants.TEMP_KELVIN ) );
+            applicationSettings.setUnitPress( sharedPreferences.getInt( getString(R.string.tag_press_units), Constants.PRESS_MM_HG ) );
+            applicationSettings.setCity( sharedPreferences.getString("city", "" ) );
+        }
+
+        //TODO при первом запуске приложения запрашивать город
+        // если нет сохраненного города, то показываем диалог
+        if ( applicationSettings.getCity().isEmpty() )
+        {
+            DialogScreen dlgInputCity = DialogScreen.newInstance( DialogScreen.IDD_SET_CITY, "" );
+            dlgInputCity.show( getSupportFragmentManager(), "DlgSetCity" );
+        }
 
         convertTemperature( applicationSettings.getUnitTemp(), weatherDay.getCurrentTemp() );
         convertPressure( applicationSettings.getUnitPress(), weatherDay.getPressure() );
@@ -284,6 +306,7 @@ public class MainActivity extends AppCompatActivity
         {
             //super.onBackPressed();
             this.finishAffinity();
+            return;
         }
 
         this.bDoubleBackPressedToExitOnce = true;
@@ -543,7 +566,7 @@ public class MainActivity extends AppCompatActivity
                 new Callback<WeatherDay>()
                 {
                     @Override
-                    public void onResponse(@NonNull Call<WeatherDay> call, @NonNull Response<WeatherDay> response )
+                    public void onResponse( @NonNull Call<WeatherDay> call, @NonNull Response<WeatherDay> response )
                     {
                         //WeatherDay weatherDay = response.body();
                         weatherDay = response.body();
@@ -554,33 +577,29 @@ public class MainActivity extends AppCompatActivity
                                 updateUICurrentWeather( weatherDay );
                         else
                         {
-                            Toast toast = null;
                             try
                             {
-                                if (response.errorBody() != null)
-                                    toast = Toast.makeText(getBaseContext(),
+                                if ( null != response.body() )
+                                {
+                                    Toast toast = Toast.makeText( getBaseContext(),
                                             getString(R.string.err_update_weather) + "\n"
-                                                    + response.errorBody().string(), Toast.LENGTH_SHORT);
+                                                    + response.errorBody().string(), Toast.LENGTH_SHORT );
+                                    toast.setGravity( Gravity.BOTTOM, 0, Constants.Y_OFFSET_TOAST );
+                                    toast.show();
+                                }
                             }
                             catch (IOException e)
                             {
                                 e.printStackTrace();
                             }
-
-                            if (toast != null)
-                            {
-                                toast.setGravity( Gravity.BOTTOM, 0, Constants.Y_OFFSET_TOAST );
-                                toast.show();
-                            }
-
                         }
                     }
 
                     @Override
-                    public void onFailure( Call<WeatherDay> call, Throwable t )
+                    public void onFailure( @NonNull Call<WeatherDay> call, @NonNull Throwable t )
                     {
-                        Log.e(TAG_MAIN_ACTIVITY,"fail update weather" );
-                        Log.e(TAG_MAIN_ACTIVITY, t.toString() );
+                        Log.e( TAG_MAIN_ACTIVITY,"fail update weather" );
+                        Log.e( TAG_MAIN_ACTIVITY, t.toString() );
 
                         Toast toast = Toast.makeText( getBaseContext(),
                                 getString( R.string.err_update_weather) + "\n"
@@ -598,6 +617,55 @@ public class MainActivity extends AppCompatActivity
     private void updateWeatherForecast()
     {
         //TODO прогноз погоды
+
+        Log.d( TAG_MAIN_ACTIVITY, "update weather forecast" );
+
+        Call<WeatherForecast> callWeatherForecast = api.getWeatherForecast( applicationSettings.getCity(),
+                ConstantsAPI.DEFAULT_LANG, ConstantsAPI.APIKEY );
+
+        callWeatherForecast.enqueue( new Callback<WeatherForecast>() {
+            @Override
+            public void onResponse( @NonNull Call<WeatherForecast> call, @NonNull Response<WeatherForecast> response )
+            {
+                weatherForecast = response.body();
+
+                if ( response.isSuccessful() )
+                    if ( null != weatherForecast )
+                        updateUIWeatherForecast( weatherForecast );
+                else
+                {
+                    try
+                    {
+                        if ( null != response.errorBody() )
+                        {
+                            Toast toast = Toast.makeText( getBaseContext(),
+                                    getString(R.string.err_update_weather) + "\n"
+                                            + response.errorBody().string(), Toast.LENGTH_SHORT);
+                            toast.setGravity( Gravity.BOTTOM, 0, Constants.Y_OFFSET_TOAST );
+                            toast.show();
+                        }
+                    }
+                    catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure( @NonNull Call<WeatherForecast> call, @NonNull Throwable t )
+            {
+                Log.e( TAG_MAIN_ACTIVITY,"fail update weather forecast" );
+                Log.e( TAG_MAIN_ACTIVITY, t.toString() );
+
+                Toast toast = Toast.makeText( getBaseContext(),
+                        getString(R.string.err_update_weather) + "\n"
+                                + t.toString(), Toast.LENGTH_SHORT );
+                toast.setGravity( Gravity.BOTTOM, 0, Constants.Y_OFFSET_TOAST );
+                toast.show();
+            }
+        });
     }
 
     /**
@@ -631,7 +699,7 @@ public class MainActivity extends AppCompatActivity
         tvWindSpeed.setText( String.format( Locale.getDefault(), "%.2f %s", weatherDay.getWindSpeed(),
                 getString( R.string.meter_per_sec) ) );
 
-        // угол, приходящий по запросу показывает куда дует ветер, а не откуда
+        // угол, приходящий по запросу показывает откуда дует ветер, а не куда
         // поэтому такие манипуляции
         float angle = 180 + (float)weatherDay.getWindDeg();
         ivArrow.setRotation( angle );
@@ -652,5 +720,12 @@ public class MainActivity extends AppCompatActivity
                 .into( ivFlag );
     }
 
-
+    /**
+     * Обновление вкладки с прогнозом погоды
+     * @param weatherForecast - объект с данными о прогнозе погоды
+     */
+    private void updateUIWeatherForecast( WeatherForecast weatherForecast )
+    {
+        mAdapter.notifyDataSetChanged();
+    }
 }
