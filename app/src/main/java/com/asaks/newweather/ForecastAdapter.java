@@ -9,12 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.asaks.newweather.weather.WeatherDay;
+import com.asaks.newweather.weather.WeatherForecast;
 import com.bumptech.glide.Glide;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -22,7 +21,7 @@ import java.util.Locale;
  */
 public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastHolder>
 {
-    private List<WeatherDay> listForecast;
+    private WeatherForecast weatherForecast;
 
     public static class ForecastHolder extends RecyclerView.ViewHolder
     {
@@ -40,13 +39,13 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         }
     }
 
-    ForecastAdapter( List<WeatherDay> listForecast )
+    ForecastAdapter( WeatherForecast weatherForecast )
     {
-        this.listForecast = listForecast;
+        this.weatherForecast = weatherForecast;
     }
 
     @Override
-    public void onAttachedToRecyclerView( RecyclerView recyclerView )
+    public void onAttachedToRecyclerView( @NonNull RecyclerView recyclerView )
     {
         super.onAttachedToRecyclerView( recyclerView );
     }
@@ -56,16 +55,15 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
     public ForecastAdapter.ForecastHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
         View view = LayoutInflater.from( parent.getContext() ).inflate( R.layout.card_forecast, parent, false );
-        ForecastHolder holder = new ForecastHolder( view );
-        return holder;
+        return new ForecastHolder( view );
     }
 
     @Override
     public void onBindViewHolder(@NonNull ForecastAdapter.ForecastHolder holder, int position)
     {
-        Date timeUpd = new Date( listForecast.get(position).getTimeUpdate() * 1000 );
+        Date timeUpd = new Date( weatherForecast.getWeatherItems().get(position).getTimeUpdate() * 1000 );
         holder.tvDay.setText( new SimpleDateFormat( "dd.MM.yyyy hh:mm", Locale.getDefault() ).format( timeUpd ) );
-        holder.tvTemp.setText( String.valueOf( listForecast.get(position).getCurrentTemp() ) );
+        holder.tvTemp.setText( String.valueOf( weatherForecast.getWeatherItems().get(position).getCurrentTemp() ) );
 
         //TODO грузить иконку с помощью Glide
     }
@@ -73,7 +71,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
     @Override
     public int getItemCount()
     {
-        return listForecast.size();
+        return weatherForecast.getWeatherItems().size();
     }
 
 }

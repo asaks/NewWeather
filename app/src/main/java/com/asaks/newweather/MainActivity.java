@@ -163,8 +163,34 @@ public class MainActivity extends AppCompatActivity
         mLayoutManager = new LinearLayoutManager( this, LinearLayoutManager.VERTICAL, false );
         mRecyclerView.setLayoutManager( mLayoutManager );
 
+        applicationSettings = new ApplicationSettings();
+        sharedPreferences = getPreferences( Context.MODE_PRIVATE );
+        if ( null != sharedPreferences )
+        {
+            applicationSettings.setUnitTemp( sharedPreferences.getInt( getString(R.string.tag_temp_units), Constants.TEMP_KELVIN ) );
+            applicationSettings.setUnitPress( sharedPreferences.getInt( getString(R.string.tag_press_units), Constants.PRESS_MM_HG ) );
+            applicationSettings.setCity( sharedPreferences.getString("city", "" ) );
+        }
+
+        //TODO при первом запуске приложения запрашивать город
+        // если нет сохраненного города, то показываем диалог
+        if ( applicationSettings.getCity().isEmpty() )
+        {
+            DialogScreen dlgInputCity = DialogScreen.newInstance( DialogScreen.IDD_SET_CITY, "" );
+            dlgInputCity.show( getSupportFragmentManager(), "DlgSetCity" );
+        }
+
+        weatherForecast = new WeatherForecast();
+        mAdapter = new ForecastAdapter( weatherForecast );
+        mRecyclerView.setAdapter( mAdapter );
+
+        api = WeatherAPI.getClient().create(WeatherAPI.InterfaceAPI.class);
+        requestOptionsGlide = new RequestOptions();
+        requestOptionsGlide = requestOptionsGlide.diskCacheStrategy( DiskCacheStrategy.ALL );
+
         ///////////////////////ТЕСТОВЫЕ ДАННЫЕ//////////////////////
         weatherDay = new WeatherDay();
+        weatherDay.setCityID( 511565 );
         weatherDay.setTestData( "Пенза", 53.2,45.0,1523385261,
                 276.1, 1006.31, 83, 4.31,
                 193.505, "Ясно", 1524372257, 1524424277 );
@@ -192,35 +218,7 @@ public class MainActivity extends AppCompatActivity
 
         float angle = 180 + (float)weatherDay.getWindDeg();
         ivArrow.setRotation( angle );
-
-        List<WeatherDay> lst = new ArrayList<>();
-        lst.add(weatherDay);
-        weatherForecast = new WeatherForecast(lst);
         ////////////////////////////////////////////////////////////
-
-        mAdapter = new ForecastAdapter( weatherForecast.getWeatherItems() );
-        mRecyclerView.setAdapter( mAdapter );
-
-        api = WeatherAPI.getClient().create(WeatherAPI.InterfaceAPI.class);
-        requestOptionsGlide = new RequestOptions();
-        requestOptionsGlide = requestOptionsGlide.diskCacheStrategy( DiskCacheStrategy.ALL );
-
-        applicationSettings = new ApplicationSettings();
-        sharedPreferences = getPreferences( Context.MODE_PRIVATE );
-        if ( null != sharedPreferences )
-        {
-            applicationSettings.setUnitTemp( sharedPreferences.getInt( getString(R.string.tag_temp_units), Constants.TEMP_KELVIN ) );
-            applicationSettings.setUnitPress( sharedPreferences.getInt( getString(R.string.tag_press_units), Constants.PRESS_MM_HG ) );
-            applicationSettings.setCity( sharedPreferences.getString("city", "" ) );
-        }
-
-        //TODO при первом запуске приложения запрашивать город
-        // если нет сохраненного города, то показываем диалог
-        if ( applicationSettings.getCity().isEmpty() )
-        {
-            DialogScreen dlgInputCity = DialogScreen.newInstance( DialogScreen.IDD_SET_CITY, "" );
-            dlgInputCity.show( getSupportFragmentManager(), "DlgSetCity" );
-        }
 
         convertTemperature( applicationSettings.getUnitTemp(), weatherDay.getCurrentTemp() );
         convertPressure( applicationSettings.getUnitPress(), weatherDay.getPressure() );
@@ -627,7 +625,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onResponse( @NonNull Call<WeatherForecast> call, @NonNull Response<WeatherForecast> response )
             {
-                weatherForecast = response.body();
+                weatherForecast.setWeatherItems( response.body().getWeatherItems() );
 
                 if ( response.isSuccessful() )
                     if ( null != weatherForecast )

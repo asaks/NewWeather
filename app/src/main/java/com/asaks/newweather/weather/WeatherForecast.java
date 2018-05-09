@@ -27,4 +27,10 @@ public class WeatherForecast
     {
         return weatherItems;
     }
+
+    public void setWeatherItems( List<WeatherDay> items )
+    {
+        this.weatherItems.clear();
+        this.weatherItems = items;
+    }
 }
