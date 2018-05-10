@@ -20,8 +20,8 @@ public class ApplicationSettings implements Parcelable
     public ApplicationSettings()
     {
         this.city = "";
-        this.unitTempPos = Constants.TEMP_KELVIN;
-        this.unitPressPos = Constants.PRESS_MM_HG;
+        this.unitTempPos = GlobalMethodsAndConstants.TEMP_KELVIN;
+        this.unitPressPos = GlobalMethodsAndConstants.PRESS_MM_HG;
     }
 
     protected ApplicationSettings(Parcel in) {

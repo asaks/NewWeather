@@ -20,7 +20,6 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TabHost;
 import android.widget.Toast;
@@ -37,9 +36,7 @@ import com.bumptech.glide.request.RequestOptions;
 import java.io.IOException;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -81,7 +78,6 @@ public class MainActivity extends AppCompatActivity
     SharedPreferences sharedPreferences;
     RequestOptions requestOptionsGlide;
 
-    //TODO во время отрисовки могут придти новые данные и возможно половина отрисуется старых данных, а половина новых
     WeatherDay weatherDay;
     WeatherForecast weatherForecast;
 
@@ -152,7 +148,7 @@ public class MainActivity extends AppCompatActivity
         tvHumidity = findViewById( R.id.tvHumidity );
         tvWindSpeed = findViewById( R.id.tvWindSpeed );
         tvWeatherConditions = findViewById( R.id.tvWeatherDesc );
-        ivWeatherCondition = findViewById( R.id.ivWeatherCondition );
+        ivWeatherCondition = findViewById( R.id.ivWeatherCondition);
         ivFlag = findViewById( R.id.ivFlag );
         tvSunrise = findViewById( R.id.tvSunrise );
         tvSunset = findViewById( R.id.tvSunset );
@@ -167,8 +163,8 @@ public class MainActivity extends AppCompatActivity
         sharedPreferences = getPreferences( Context.MODE_PRIVATE );
         if ( null != sharedPreferences )
         {
-            applicationSettings.setUnitTemp( sharedPreferences.getInt( getString(R.string.tag_temp_units), Constants.TEMP_KELVIN ) );
-            applicationSettings.setUnitPress( sharedPreferences.getInt( getString(R.string.tag_press_units), Constants.PRESS_MM_HG ) );
+            applicationSettings.setUnitTemp( sharedPreferences.getInt( getString(R.string.tag_temp_units), GlobalMethodsAndConstants.TEMP_KELVIN ) );
+            applicationSettings.setUnitPress( sharedPreferences.getInt( getString(R.string.tag_press_units), GlobalMethodsAndConstants.PRESS_MM_HG ) );
             applicationSettings.setCity( sharedPreferences.getString("city", "" ) );
         }
 
@@ -198,15 +194,15 @@ public class MainActivity extends AppCompatActivity
 
         tvCity.setText( weatherDay.getCityName() );
         String sLatitude = String.valueOf( weatherDay.getLatitude() ) + getString(R.string.gradus)
-                + " " + getStringDesignationCoords( weatherDay.getLatitude(), Constants.COORD_LAT );
+                + " " + getStringDesignationCoords( weatherDay.getLatitude(), GlobalMethodsAndConstants.COORD_LAT );
         tvLat.setText( sLatitude );
         String sLongitude = String.valueOf( weatherDay.getLongitude() ) + getString(R.string.gradus)
-                + " " + getStringDesignationCoords( weatherDay.getLongitude(), Constants.COORD_LON );
+                + " " + getStringDesignationCoords( weatherDay.getLongitude(), GlobalMethodsAndConstants.COORD_LON );
         tvLon.setText( sLongitude );
         Date timeUpd = new Date( weatherDay.getTimeUpdate() * 1000 );
         tvDateTime.setText( new SimpleDateFormat("dd MMMM HH:mm", russiansMonths).format(timeUpd) );
-        tvCurrentTemp.setText( String.valueOf( toCelsius( weatherDay.getCurrentTemp() ) ) + " " + getString(R.string.gradus) + getString(R.string.Celcius) );
-        double dPressure =  toMmHg( weatherDay.getPressure() );
+        tvCurrentTemp.setText( String.valueOf( GlobalMethodsAndConstants.toCelsius( weatherDay.getCurrentTemp() ) ) + " " + getString(R.string.gradus) + getString(R.string.Celcius) );
+        double dPressure =  GlobalMethodsAndConstants.toMmHg( weatherDay.getPressure() );
         tvPressure.setText( String.format("%.2f", dPressure ) + " " + getString(R.string.mmHg) );
         tvHumidity.setText( String.valueOf( Math.round( weatherDay.getHumidity() ) ) + getString(R.string.procent) );
         tvWindSpeed.setText( String.valueOf( weatherDay.getWindSpeed() ) + " " + getString(R.string.meter_per_sec) );
@@ -261,7 +257,7 @@ public class MainActivity extends AppCompatActivity
             {
                 Intent intentSettings = new Intent( this, SettingsActivity.class );
                 intentSettings.putExtra( getString(R.string.tag_settings), applicationSettings );
-                startActivityForResult( intentSettings, Constants.REQUEST_CODE_SETTINGS );
+                startActivityForResult( intentSettings, GlobalMethodsAndConstants.REQUEST_CODE_SETTINGS );
 
                 return true;
             }
@@ -311,7 +307,7 @@ public class MainActivity extends AppCompatActivity
         Toast toast = Toast.makeText( getBaseContext(),
                 getString( R.string.hint_double_press_exit ),
                 Toast.LENGTH_SHORT );
-        toast.setGravity( Gravity.BOTTOM, 0, Constants.Y_OFFSET_TOAST );
+        toast.setGravity( Gravity.BOTTOM, 0, GlobalMethodsAndConstants.Y_OFFSET_TOAST );
 
         toast.show();
 
@@ -330,7 +326,7 @@ public class MainActivity extends AppCompatActivity
     {
         if ( resultCode == RESULT_OK )
         {
-            if ( requestCode == Constants.REQUEST_CODE_SETTINGS )
+            if ( requestCode == GlobalMethodsAndConstants.REQUEST_CODE_SETTINGS )
             {
                 applicationSettings = data.getParcelableExtra(getString(R.string.tag_settings));
 
@@ -345,7 +341,6 @@ public class MainActivity extends AppCompatActivity
                     updateWeather();
                 else
                 {
-                    //TODO используется глобальный объект weatherDay
                     convertTemperature( applicationSettings.getUnitTemp(), weatherDay.getCurrentTemp() );
                     convertPressure( applicationSettings.getUnitPress(), weatherDay.getPressure() );
                 }
@@ -388,7 +383,6 @@ public class MainActivity extends AppCompatActivity
      */
     private void shareWeather()
     {
-        //TODO используется глобальный объект weatherDay
         String textMessage = getString(R.string.weather_in_city) + " " + tvCity.getText() + "\n";
         textMessage += getString(R.string.current_temp) + " " + tvCurrentTemp.getText() + "\n";
         textMessage += getString(R.string.pressure) + " " + tvPressure.getText() + "\n";
@@ -416,27 +410,30 @@ public class MainActivity extends AppCompatActivity
 
         switch ( unit )
         {
-            case Constants.TEMP_CELSIUS: // градусы Цельсия
+            case GlobalMethodsAndConstants.TEMP_CELSIUS: // градусы Цельсия
             {
                 // если грузить Glide'ом , то нужно делать ресайз изображения, иначе оно слишком большое
                 //Glide.with(this).load( R.mipmap.ic_thermometer_celsius ).into(ivThermometer);
                 ivThermometer.setImageDrawable( resources.getDrawable(R.mipmap.ic_thermometer_celsius) );
-                tvCurrentTemp.setText( String.format( Locale.getDefault(), "%d %s%s", toCelsius(temp),
+                tvCurrentTemp.setText( String.format( Locale.getDefault(), "%d %s%s",
+                        GlobalMethodsAndConstants.toCelsius(temp),
                         getString(R.string.gradus), getString(R.string.Celcius) ) );
                 break;
             }
-            case Constants.TEMP_FARENHEIT: // градусы Фаренгейта
+            case GlobalMethodsAndConstants.TEMP_FARENHEIT: // градусы Фаренгейта
             {
                 ivThermometer.setImageDrawable( resources.getDrawable(R.mipmap.ic_thermometer_farenheit) );
-                tvCurrentTemp.setText( String.format( Locale.getDefault(), "%d %s%s", toFarenheit(temp),
+                tvCurrentTemp.setText( String.format( Locale.getDefault(), "%d %s%s",
+                        GlobalMethodsAndConstants.toFarenheit(temp),
                         getString(R.string.gradus), getString(R.string.Farenheit) ) );
                 break;
             }
-            case Constants.TEMP_KELVIN: // Кельвины
+            case GlobalMethodsAndConstants.TEMP_KELVIN: // Кельвины
             default:
             {
                 ivThermometer.setImageDrawable(resources.getDrawable(R.mipmap.ic_thermometer));
-                tvCurrentTemp.setText( String.format( Locale.getDefault(), "%d %s", Math.round(temp),
+                tvCurrentTemp.setText( String.format( Locale.getDefault(), "%d %s",
+                        Math.round(temp),
                         getString(R.string.Kelvin) ) );
             }
         }
@@ -449,46 +446,13 @@ public class MainActivity extends AppCompatActivity
      */
     private void convertPressure( int unit, double press )
     {
-        if ( Constants.PRESS_HPA == unit )
+        if ( GlobalMethodsAndConstants.PRESS_HPA == unit )
             tvPressure.setText( String.format( Locale.getDefault(), "%.2f %s", press,
                     getString(R.string.gektopascal) ) );
-        else if ( Constants.PRESS_MM_HG == unit )
-            tvPressure.setText( String.format( Locale.getDefault(), "%.2f %s", toMmHg( press ),
+        else if ( GlobalMethodsAndConstants.PRESS_MM_HG == unit )
+            tvPressure.setText( String.format( Locale.getDefault(), "%.2f %s",
+                    GlobalMethodsAndConstants.toMmHg( press ),
                     getString(R.string.mmHg) ) );
-    }
-
-    /**
-     * Функция конвертации температуры из Кельвинов в градусы Цельсия
-     * @param dTempKelvin - температура в кельвинах
-     * @return температура в градусах Цельсия
-     */
-    private long toCelsius( double dTempKelvin )
-    {
-        double dCelsiusTemp = dTempKelvin - 273.15;
-
-        return Math.round( dCelsiusTemp );
-    }
-
-    /**
-     * Функция конвертации температуры из Кельвинов в градусы Фаренгейта
-     * @param dTempKelvin - температура в кельвинах
-     * @return температура в градусах Фаренгейта
-     */
-    private long toFarenheit( double dTempKelvin )
-    {
-        double dTempF = 1.8 * ( dTempKelvin - 273.15 ) + 32;
-
-        return Math.round( dTempF );
-    }
-
-    /**
-     * Функция конвертации гектопаскалей в мм рт. ст.
-     * @param dhPa - давление в гектопаскалях
-     * @return давление в мм рт. ст.
-     */
-    private double toMmHg( double dhPa )
-    {
-        return dhPa * 0.750064;
     }
 
     /**
@@ -503,7 +467,7 @@ public class MainActivity extends AppCompatActivity
 
         switch( coordConst )
         {
-            case Constants.COORD_LAT: // широта
+            case GlobalMethodsAndConstants.COORD_LAT: // широта
             {
                 if ( 0 > dCoord )
                     sDesignation = getString( R.string.south_lat); // ю.ш.
@@ -512,7 +476,7 @@ public class MainActivity extends AppCompatActivity
 
                 break;
             }
-            case Constants.COORD_LON: // долгота
+            case GlobalMethodsAndConstants.COORD_LON: // долгота
             {
                 if ( 0 > dCoord )
                     sDesignation = getString( R.string.west_lon); // з.д.
@@ -568,6 +532,7 @@ public class MainActivity extends AppCompatActivity
                     {
                         //WeatherDay weatherDay = response.body();
                         weatherDay = response.body();
+                        // замена английского названия города на введенное пользователем
                         weatherDay.setCityName( applicationSettings.getCity() );
 
                         if ( response.isSuccessful() )
@@ -580,9 +545,9 @@ public class MainActivity extends AppCompatActivity
                                 if ( null != response.body() )
                                 {
                                     Toast toast = Toast.makeText( getBaseContext(),
-                                            getString(R.string.err_update_weather) + "\n"
+                                            getString(R.string.err_update_current_weather) + "\n"
                                                     + response.errorBody().string(), Toast.LENGTH_SHORT );
-                                    toast.setGravity( Gravity.BOTTOM, 0, Constants.Y_OFFSET_TOAST );
+                                    toast.setGravity( Gravity.BOTTOM, 0, GlobalMethodsAndConstants.Y_OFFSET_TOAST );
                                     toast.show();
                                 }
                             }
@@ -600,9 +565,9 @@ public class MainActivity extends AppCompatActivity
                         Log.e( TAG_MAIN_ACTIVITY, t.toString() );
 
                         Toast toast = Toast.makeText( getBaseContext(),
-                                getString( R.string.err_update_weather) + "\n"
+                                getString( R.string.err_update_current_weather) + "\n"
                                         + t.toString(), Toast.LENGTH_SHORT );
-                        toast.setGravity( Gravity.BOTTOM, 0, Constants.Y_OFFSET_TOAST );
+                        toast.setGravity( Gravity.BOTTOM, 0, GlobalMethodsAndConstants.Y_OFFSET_TOAST );
                         toast.show();
                     }
                 }
@@ -614,8 +579,6 @@ public class MainActivity extends AppCompatActivity
      */
     private void updateWeatherForecast()
     {
-        //TODO прогноз погоды
-
         Log.d( TAG_MAIN_ACTIVITY, "update weather forecast" );
 
         Call<WeatherForecast> callWeatherForecast = api.getWeatherForecast( applicationSettings.getCity(),
@@ -625,11 +588,11 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onResponse( @NonNull Call<WeatherForecast> call, @NonNull Response<WeatherForecast> response )
             {
-                weatherForecast.setWeatherItems( response.body().getWeatherItems() );
-
                 if ( response.isSuccessful() )
-                    if ( null != weatherForecast )
-                        updateUIWeatherForecast( weatherForecast );
+                {
+                    weatherForecast.setWeatherItems( response.body().getWeatherItems() );
+                    mAdapter.notifyDataSetChanged();
+                }
                 else
                 {
                     try
@@ -637,9 +600,9 @@ public class MainActivity extends AppCompatActivity
                         if ( null != response.errorBody() )
                         {
                             Toast toast = Toast.makeText( getBaseContext(),
-                                    getString(R.string.err_update_weather) + "\n"
+                                    getString(R.string.err_update_forecast_weather) + "\n"
                                             + response.errorBody().string(), Toast.LENGTH_SHORT);
-                            toast.setGravity( Gravity.BOTTOM, 0, Constants.Y_OFFSET_TOAST );
+                            toast.setGravity( Gravity.BOTTOM, 0, GlobalMethodsAndConstants.Y_OFFSET_TOAST );
                             toast.show();
                         }
                     }
@@ -658,9 +621,9 @@ public class MainActivity extends AppCompatActivity
                 Log.e( TAG_MAIN_ACTIVITY, t.toString() );
 
                 Toast toast = Toast.makeText( getBaseContext(),
-                        getString(R.string.err_update_weather) + "\n"
+                        getString(R.string.err_update_forecast_weather) + "\n"
                                 + t.toString(), Toast.LENGTH_SHORT );
-                toast.setGravity( Gravity.BOTTOM, 0, Constants.Y_OFFSET_TOAST );
+                toast.setGravity( Gravity.BOTTOM, 0, GlobalMethodsAndConstants.Y_OFFSET_TOAST );
                 toast.show();
             }
         });
@@ -675,12 +638,16 @@ public class MainActivity extends AppCompatActivity
         //TODO название города на русском языке
         tvCity.setText( weatherDay.getCityName() );
 
-        String sLatitude = String.valueOf( weatherDay.getLatitude() ) + getString( R.string.gradus)
-                + " " + getStringDesignationCoords( weatherDay.getLatitude(), Constants.COORD_LAT );
+        String sLatitude = String.format( Locale.getDefault(), "%.2f %s%s",
+                weatherDay.getLatitude(), getString( R.string.gradus),
+                getStringDesignationCoords( weatherDay.getLatitude(), GlobalMethodsAndConstants.COORD_LAT ) );
+
         tvLat.setText( sLatitude );
 
-        String sLongitude = String.valueOf( weatherDay.getLongitude() ) + getString( R.string.gradus)
-                + " " + getStringDesignationCoords( weatherDay.getLongitude(), Constants.COORD_LON );
+        String sLongitude = String.format( Locale.getDefault(), "%.2f %s%s",
+                weatherDay.getLongitude(), getString( R.string.gradus),
+                getStringDesignationCoords( weatherDay.getLongitude(), GlobalMethodsAndConstants.COORD_LON ) );
+
         tvLon.setText( sLongitude );
 
         //Date timeUpd = new Date( weatherDay.getTimeUpdate() * 1000 );
@@ -689,12 +656,14 @@ public class MainActivity extends AppCompatActivity
 
         convertTemperature( applicationSettings.getUnitTemp(), weatherDay.getCurrentTemp() );
 
-        tvHumidity.setText( String.format( Locale.getDefault(), "%d %s", Math.round( weatherDay.getHumidity() ),
+        tvHumidity.setText( String.format( Locale.getDefault(), "%d %s",
+                Math.round( weatherDay.getHumidity() ),
                 getString( R.string.procent) ) );
 
         convertPressure( applicationSettings.getUnitPress(), weatherDay.getPressure() );
 
-        tvWindSpeed.setText( String.format( Locale.getDefault(), "%.2f %s", weatherDay.getWindSpeed(),
+        tvWindSpeed.setText( String.format( Locale.getDefault(), "%.2f %s",
+                weatherDay.getWindSpeed(),
                 getString( R.string.meter_per_sec) ) );
 
         // угол, приходящий по запросу показывает откуда дует ветер, а не куда
@@ -719,11 +688,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Обновление вкладки с прогнозом погоды
-     * @param weatherForecast - объект с данными о прогнозе погоды
+     * Функция возвращает объект с настройками приложения
+     * @return объект, содержащий настройки приложения
      */
-    private void updateUIWeatherForecast( WeatherForecast weatherForecast )
+    public ApplicationSettings getApplicationSettings()
     {
-        mAdapter.notifyDataSetChanged();
+        return applicationSettings;
     }
 }

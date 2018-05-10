@@ -1,7 +1,7 @@
 package com.asaks.newweather;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.asaks.newweather.weather.WeatherForecast;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,21 +23,29 @@ import java.util.Locale;
  */
 public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastHolder>
 {
+    private Context mContext;
+    private RequestOptions requestOptionsGlide = new RequestOptions();
+
     private WeatherForecast weatherForecast;
 
     public static class ForecastHolder extends RecyclerView.ViewHolder
     {
-        private CardView cardForecast;
         private TextView tvDay;
-        private TextView tvTemp;
+        private TextView tvForecastTemp;
+        private TextView tvForecastPressure;
+        private TextView tvForecastHumidity;
+        private TextView tvForecastWind;
         private ImageView ivWeatherCondition;
 
         public ForecastHolder(View itemView)
         {
             super(itemView);
-            cardForecast = itemView.findViewById( R.id.cardForecast );
             tvDay = itemView.findViewById( R.id.tvDay );
-            tvTemp = itemView.findViewById( R.id.tvTemp );
+            tvForecastTemp = itemView.findViewById( R.id.tvForecastTemp );
+            tvForecastPressure = itemView.findViewById( R.id.tvForecastPressure );
+            tvForecastHumidity = itemView.findViewById( R.id.tvForecastHumidity );
+            tvForecastWind = itemView.findViewById( R.id.tvForecastWind );
+            ivWeatherCondition = itemView.findViewById( R.id.ivWeatherCondition);
         }
     }
 
@@ -55,17 +65,42 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
     public ForecastAdapter.ForecastHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
         View view = LayoutInflater.from( parent.getContext() ).inflate( R.layout.card_forecast, parent, false );
+
+        mContext = parent.getContext();
+        requestOptionsGlide = requestOptionsGlide.diskCacheStrategy( DiskCacheStrategy.ALL );
+
         return new ForecastHolder( view );
     }
 
     @Override
     public void onBindViewHolder(@NonNull ForecastAdapter.ForecastHolder holder, int position)
     {
-        Date timeUpd = new Date( weatherForecast.getWeatherItems().get(position).getTimeUpdate() * 1000 );
-        holder.tvDay.setText( new SimpleDateFormat( "dd.MM.yyyy hh:mm", Locale.getDefault() ).format( timeUpd ) );
-        holder.tvTemp.setText( String.valueOf( weatherForecast.getWeatherItems().get(position).getCurrentTemp() ) );
+        //TODO отображение в заисимости от установленных настроек
 
-        //TODO грузить иконку с помощью Glide
+        //ApplicationSettings applicationSettings = ( (MainActivity)mContext).getApplicationSettings();
+
+        Date timeUpd = new Date( weatherForecast.getWeatherItems().get(position).getTimeUpdate() * 1000 );
+        holder.tvDay.setText( new SimpleDateFormat( "dd.MM.yyyy HH:mm", Locale.getDefault() ).format( timeUpd ) );
+
+        long temp = Math.round( weatherForecast.getWeatherItems().get(position).getCurrentTemp() );
+        holder.tvForecastTemp.setText( String.format( Locale.getDefault(), "%d %s", temp,
+                mContext.getString(R.string.Kelvin) ) );
+
+        holder.tvForecastPressure.setText( String.format( Locale.getDefault(), "%.2f %s",
+                GlobalMethodsAndConstants.toMmHg( weatherForecast.getWeatherItems().get(position).getPressure() ),
+                mContext.getString(R.string.mmHg) ) );
+
+        holder.tvForecastHumidity.setText( String.format( Locale.getDefault(), "%d %s",
+                Math.round( weatherForecast.getWeatherItems().get(position).getHumidity() ),
+                mContext.getString(R.string.procent) ) );
+
+        holder.tvForecastWind.setText( String.format( Locale.getDefault(), "%.2f %s",
+                weatherForecast.getWeatherItems().get(position).getWindSpeed(),
+                mContext.getString(R.string.meter_per_sec) ) );
+
+        Glide.with( mContext ).load( weatherForecast.getWeatherItems().get(position).getWeatherIconUrl() )
+                .apply( requestOptionsGlide )
+                .into( holder.ivWeatherCondition );
     }
 
     @Override

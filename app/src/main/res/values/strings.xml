@@ -69,7 +69,8 @@
     <string name="october">октября</string>
     <string name="november">ноября</string>
     <string name="december">декабря</string>
-    <string name="err_update_weather">Ошибка загрузки данных о погоде</string>
+    <string name="err_update_current_weather">Ошибка загрузки данных о текущей погоде</string>
+    <string name="err_update_forecast_weather">Ошибка загрузки данных прогноза погоды</string>
     <string name="settings">Настройки</string>
     <string name="share">Поделиться</string>
     <string name="weather_in_city">Погода в городе</string>
