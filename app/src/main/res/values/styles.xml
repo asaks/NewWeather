@@ -6,6 +6,12 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="cardViewStyle">@style/CustomCardViewStyle</item>
+    </style>
+
+    <style name="CustomCardViewStyle" parent="CardView">
+        <item name="cardCornerRadius">2dp</item>
+        <item name="cardBackgroundColor">@color/colorTableBackground</item>
     </style>
 
 </resources>
