@@ -80,6 +80,7 @@
     <string name="tag_temp_units">tempUnits</string>
     <string name="tag_press_units">pressUnits</string>
     <string name="tag_about_app">aboutapp</string>
+    <string name="tag_weather">weather</string>
     <string name="temp_units">Единицы измерения температуры</string>
     <string name="pressure_units">Единицы измерения давления</string>
     <string name="enter_city_name">Введите название города</string>
