@@ -1,5 +1,8 @@
 package com.asaks.newweather.weather;
 
+import android.os.Parcelable;
+import android.os.Parcel;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -11,7 +14,7 @@ import java.util.List;
  * Класс, содержащий информацию о погоде на день
  */
 
-public class WeatherDay
+public class WeatherDay implements Parcelable
 {
     //! Класс, содержащий географические координаты города
     public class Coords
@@ -113,6 +116,60 @@ public class WeatherDay
 
     @SerializedName("sys")
     private Sys sys;
+
+    protected WeatherDay(Parcel in) {
+        sCityName = in.readString();
+        iCityID = in.readLong();
+        iDateTime = in.readLong();
+        coords.dCityLat = in.readDouble();
+        coords.dCityLon = in.readDouble();
+        temp.temp = in.readDouble();
+        temp.dHumidity = in.readDouble();
+        temp.dPressure = in.readDouble();
+        weatherDesc.get(0).description = in.readString();
+        weatherDesc.get(0).icon = in.readString();
+        wind.dWindDeg = in.readDouble();
+        wind.dWindSpeed = in.readDouble();
+        sys.sCountry = in.readString();
+        sys.iTimeSunrise = in.readLong();
+        sys.iTimeSunset = in.readLong();
+    }
+
+    public static final Creator<WeatherDay> CREATOR = new Creator<WeatherDay>() {
+        @Override
+        public WeatherDay createFromParcel(Parcel in) {
+            return new WeatherDay(in);
+        }
+
+        @Override
+        public WeatherDay[] newArray(int size) {
+            return new WeatherDay[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(sCityName);
+        parcel.writeLong(iCityID);
+        parcel.writeLong(iDateTime);
+        parcel.writeDouble(coords.dCityLat);
+        parcel.writeDouble(coords.dCityLon);
+        parcel.writeDouble(temp.temp);
+        parcel.writeDouble(temp.dHumidity);
+        parcel.writeDouble(temp.dPressure);
+        parcel.writeString(weatherDesc.get(0).description);
+        parcel.writeString(weatherDesc.get(0).icon);
+        parcel.writeDouble(wind.dWindDeg);
+        parcel.writeDouble(wind.dWindSpeed);
+        parcel.writeString(sys.sCountry);
+        parcel.writeLong(sys.iTimeSunrise);
+        parcel.writeLong(sys.iTimeSunset);
+    }
 
 
     public WeatherDay( Coords coords, DayTemperature temp, List<WeatherDesc> desc, Wind wind, Sys sys )
