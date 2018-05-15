@@ -60,7 +60,8 @@ public class CurrentWeatherFragment extends Fragment
         public void onReceive(Context context, Intent intent) {
             weatherDay = intent.getParcelableExtra( getString(R.string.tag_weather) );
 
-            updateUi( weatherDay );
+            if ( null != weatherDay )
+                updateUi( weatherDay );
         }
     };
 
@@ -111,6 +112,9 @@ public class CurrentWeatherFragment extends Fragment
      */
     private void updateUi( @NonNull WeatherDay weatherDay )
     {
+        if ( weatherDay == null )
+            return;
+
         tvCity.setText( weatherDay.getCityName().toUpperCase( Locale.getDefault() ) );
 
         String sLatitude = String.format( Locale.getDefault(), "%.2f %s%s",
@@ -201,8 +205,6 @@ public class CurrentWeatherFragment extends Fragment
                     this.applicationSettings = args.getParcelable( getString(R.string.tag_settings) );
                 }
             }
-
-            updateUi( weatherDay );
         }
     }
 

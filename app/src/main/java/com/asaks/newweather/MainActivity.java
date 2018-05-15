@@ -280,7 +280,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onDialogPositiveClick( DialogFragment dialog )
     {
-
         int idDialog = ( (DialogScreen)dialog ).getDialogID();
 
         if ( DialogScreen.IDD_SET_CITY == idDialog )
@@ -295,7 +294,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onDialogNegativeClick( DialogFragment dialog )
     {
-
         int idDialog = ( (DialogScreen)dialog ).getDialogID();
 
         if ( DialogScreen.IDD_SET_CITY == idDialog && applicationSettings.getCity().isEmpty() )
