@@ -120,7 +120,7 @@ public class SettingsActivity extends AppCompatActivity
 
         if ( DialogScreen.IDD_SET_CITY == idDialog )
         {
-            applicationSettings.setCity( ( (DialogScreen)dialog ).getCity() );
+            applicationSettings.setCity( ( (DialogScreen)dialog ).getCity().trim() );
             btnSetCity.setText( String.format( "%s: %s", getString(R.string.change_city),
                     applicationSettings.getCity() ) );
         }

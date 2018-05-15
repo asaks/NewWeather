@@ -101,7 +101,9 @@ public class DialogScreen extends DialogFragment
                         .setPositiveButton(getString(R.string.OK), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                mListener.onDialogPositiveClick( DialogScreen.this );
+
+                                if ( !edCity.getText().toString().isEmpty() )
+                                    mListener.onDialogPositiveClick( DialogScreen.this );
                             }
                         })
                         .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -138,7 +140,7 @@ public class DialogScreen extends DialogFragment
     public String getCity()
     {
         if ( null != edCity )
-            return edCity.getText().toString();
+            return edCity.getText().toString().trim();
 
         return "";
     }

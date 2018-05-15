@@ -14,8 +14,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -33,6 +31,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.io.IOException;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,10 +47,6 @@ public class MainActivity extends AppCompatActivity
 
     TabHost tabHost;
 
-    RecyclerView mRecyclerView;
-    RecyclerView.Adapter mAdapter;
-    RecyclerView.LayoutManager mLayoutManager;
-
     WeatherAPI.InterfaceAPI api;
     ApplicationSettings applicationSettings;
     SharedPreferences sharedPreferences;
@@ -60,6 +55,7 @@ public class MainActivity extends AppCompatActivity
     WeatherDay weatherDay;
     WeatherForecast weatherForecast;
     CurrentWeatherFragment currentWeatherFragment;
+    ForecastFragment forecastFragment;
 
     boolean bDoubleBackPressedToExitOnce = false;
 
@@ -94,21 +90,20 @@ public class MainActivity extends AppCompatActivity
         // по умолчанию открывается вкладка с текущей погодой
         tabHost.setCurrentTab(0);
 
-        mRecyclerView = findViewById( R.id.rvForecast );
         FragmentManager fragmentManager = getSupportFragmentManager();
         //Fragment fragmentMain = fragmentManager.findFragmentById(R.id.llCurrentWeather);
 
-        if ( null == /*fragmentMain*/savedInstanceState )
-        {
-            mLayoutManager = new LinearLayoutManager( this, LinearLayoutManager.VERTICAL, false );
-            mRecyclerView.setLayoutManager( mLayoutManager );
+        weatherDay = new WeatherDay();
+        weatherForecast = new WeatherForecast();
 
-            currentWeatherFragment = CurrentWeatherFragment.newInstance( applicationSettings, weatherDay );
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.add( R.id.llScrollCurrentWeather, currentWeatherFragment );
-            fragmentTransaction.commit();
-            fragmentManager.executePendingTransactions();
-        }
+        ///////////////////////ТЕСТОВЫЕ ДАННЫЕ//////////////////////
+        weatherDay.setCityID( 511565 );
+        weatherDay.setTestData( "Пенза", 53.2,45.0,1523385261,
+                276.1, 1006.31, 83, 4.31,
+                193.505, "Ясно", 1524372257, 1524424277 );
+        weatherDay.setWindDeg(276f);
+        weatherDay.setCountry("ru");
+        ////////////////////////////////////////////////////////////
 
         applicationSettings = new ApplicationSettings();
         sharedPreferences = getPreferences( Context.MODE_PRIVATE );
@@ -127,25 +122,34 @@ public class MainActivity extends AppCompatActivity
             dlgInputCity.show( getSupportFragmentManager(), "DlgSetCity" );
         }
 
-        weatherDay = new WeatherDay();
-        weatherForecast = new WeatherForecast();
-        mAdapter = new ForecastAdapter( weatherForecast );
-        mRecyclerView.setAdapter( mAdapter );
+        if ( null == /*fragmentMain*/savedInstanceState )
+        {
+            currentWeatherFragment = CurrentWeatherFragment.newInstance( applicationSettings, weatherDay );
+            forecastFragment = ForecastFragment.newInstance( applicationSettings, weatherForecast );
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.add( R.id.llScrollCurrentWeather, currentWeatherFragment );
+            fragmentTransaction.add( R.id.llForecast, forecastFragment );
+            fragmentTransaction.commit();
+            fragmentManager.executePendingTransactions();
+        }
+        else
+        {
+            // делаем активной вкладкой прежнюю
+            tabHost.setCurrentTab( savedInstanceState.getInt( getString(R.string.tag_current_tab) ) );
+        }
 
         api = WeatherAPI.getClient().create(WeatherAPI.InterfaceAPI.class);
         requestOptionsGlide = new RequestOptions();
         requestOptionsGlide = requestOptionsGlide.diskCacheStrategy( DiskCacheStrategy.ALL );
 
-        ///////////////////////ТЕСТОВЫЕ ДАННЫЕ//////////////////////
-        weatherDay.setCityID( 511565 );
-        weatherDay.setTestData( "Пенза", 53.2,45.0,1523385261,
-                276.1, 1006.31, 83, 4.31,
-                193.505, "Ясно", 1524372257, 1524424277 );
-        weatherDay.setWindDeg(276f);
-        weatherDay.setCountry("ru");
-        ////////////////////////////////////////////////////////////
+    }
 
+    @Override
+    public void onSaveInstanceState( Bundle savedInstanceState )
+    {
+        savedInstanceState.putInt( getString(R.string.tag_current_tab), tabHost.getCurrentTab() );
 
+        super.onSaveInstanceState(savedInstanceState);
     }
     
     @Override
@@ -264,7 +268,7 @@ public class MainActivity extends AppCompatActivity
                 {
                     /*convertTemperature( applicationSettings.getUnitTemp(), weatherDay.getCurrentTemp() );
                     convertPressure( applicationSettings.getUnitPress(), weatherDay.getPressure() );*/
-                    Intent intent = new Intent();
+                    Intent intent = new Intent( GlobalMethodsAndConstants.INTENT_NEW_SETTINGS );
                     intent.putExtra( getString(R.string.tag_settings), applicationSettings );
                     LocalBroadcastManager.getInstance( getBaseContext() ).sendBroadcast( intent );
                 }
@@ -281,6 +285,7 @@ public class MainActivity extends AppCompatActivity
 
         if ( DialogScreen.IDD_SET_CITY == idDialog )
         {
+            Toast.makeText(this, ( (DialogScreen)dialog ).getCity().trim(), Toast.LENGTH_SHORT ).show();
             applicationSettings.setCity( ( (DialogScreen)dialog ).getCity().trim() );
             updateWeather();
         }
@@ -375,6 +380,10 @@ public class MainActivity extends AppCompatActivity
                             {
                                 // замена английского названия города на введенное пользователем
                                 weatherDay.setCityName( applicationSettings.getCity() );
+                                // замена времени обновления данных о текущей погоде на сервере на
+                                // время обновления данных в приложении
+                                Date timeUpd = new Date();
+                                weatherDay.setTimeUpdate( timeUpd.getTime() / 1000  );
 
                                 updateUICurrentWeather( weatherDay );
                             }
@@ -430,12 +439,16 @@ public class MainActivity extends AppCompatActivity
             {
                 if ( response.isSuccessful() )
                 {
-                    WeatherForecast wf = response.body();
+                    weatherForecast = response.body();
 
-                    if ( null != wf )
+                    if ( null != weatherForecast )
                     {
-                        weatherForecast.setWeatherItems( wf.getWeatherItems() );
-                        mAdapter.notifyDataSetChanged();
+                        //weatherForecast.setWeatherItems( wf.getWeatherItems() );
+                        //mAdapter.notifyDataSetChanged();
+
+                        Intent intent = new Intent( GlobalMethodsAndConstants.INTENT_NEW_FORECAST );
+                        intent.putExtra( getString(R.string.tag_forecast), weatherForecast );
+                        LocalBroadcastManager.getInstance( getBaseContext() ).sendBroadcast( intent );
                     }
                 }
                 else
@@ -480,7 +493,7 @@ public class MainActivity extends AppCompatActivity
      */
     private void updateUICurrentWeather( WeatherDay weatherDay )
     {
-        Intent intent = new Intent( CurrentWeatherFragment.INTENT_NEW_WEATHER);
+        Intent intent = new Intent( GlobalMethodsAndConstants.INTENT_NEW_WEATHER);
         intent.putExtra( getString(R.string.tag_weather), weatherDay );
         LocalBroadcastManager.getInstance( getBaseContext() ).sendBroadcast( intent );
     }

@@ -25,6 +25,11 @@ public class GlobalMethodsAndConstants
     public static final int PRESS_HPA = 0; // гПа
     public static final int PRESS_MM_HG = 1; // мм рт.ст.
 
+    // actions
+    public static final String INTENT_NEW_WEATHER = "update_current_weather";
+    public static final String INTENT_NEW_SETTINGS = "new_settings";
+    public static final String INTENT_NEW_FORECAST = "update_weather_forecast";
+
     /**
      * Функция конвертации температуры из Кельвинов в градусы Цельсия
      * @param dTempKelvin - температура в кельвинах

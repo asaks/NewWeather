@@ -81,11 +81,13 @@
     <string name="tag_press_units">pressUnits</string>
     <string name="tag_about_app">aboutapp</string>
     <string name="tag_weather">weather</string>
+    <string name="tag_forecast">forecast</string>
     <string name="temp_units">Единицы измерения температуры</string>
     <string name="pressure_units">Единицы измерения давления</string>
     <string name="enter_city_name">Введите название города</string>
     <string name="tag_city">city</string>
     <string name="hint_double_press_exit">Нажмите еще раз для выхода</string>
+    <string name="tag_current_tab">current_tab</string>
 
     <!-- Единицы измерения температуры -->
     <string-array name="temperature_units">

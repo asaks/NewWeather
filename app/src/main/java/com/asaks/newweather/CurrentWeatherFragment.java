@@ -29,9 +29,6 @@ import java.util.Locale;
  */
 public class CurrentWeatherFragment extends Fragment
 {
-    public static final String INTENT_NEW_WEATHER = "update_current_weather";
-    public static final String INTENT_NEW_SETTINGS = "new_settings";
-
     TextView tvCity;
     TextView tvLat;
     TextView tvLon;
@@ -102,7 +99,7 @@ public class CurrentWeatherFragment extends Fragment
     }
 
     @Override
-    public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
+    public View onCreateView( @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
     {
         return inflater.inflate( R.layout.current_weather_layout, container, false );
     }
@@ -114,7 +111,7 @@ public class CurrentWeatherFragment extends Fragment
      */
     private void updateUi( @NonNull WeatherDay weatherDay )
     {
-        tvCity.setText( weatherDay.getCityName() );
+        tvCity.setText( weatherDay.getCityName().toUpperCase( Locale.getDefault() ) );
 
         String sLatitude = String.format( Locale.getDefault(), "%.2f %s%s",
                 weatherDay.getLatitude(), getString( R.string.gradus),
@@ -128,9 +125,8 @@ public class CurrentWeatherFragment extends Fragment
 
         tvLon.setText( sLongitude );
 
-        //Date timeUpd = new Date( weatherDay.getTimeUpdate() * 1000 );
-        Date timeUpd = new Date();
-        tvDateTime.setText( new SimpleDateFormat("dd MMMM HH:mm", Locale.getDefault()/*russiansMonths*/ ).format( timeUpd ) );
+        Date timeUpd = new Date( weatherDay.getTimeUpdate() * 1000 );
+        tvDateTime.setText( new SimpleDateFormat("dd MMMM HH:mm", Locale.getDefault() ).format( timeUpd ) );
 
         convertTemperature( applicationSettings.getUnitTemp(), weatherDay.getCurrentTemp() );
 
@@ -170,44 +166,48 @@ public class CurrentWeatherFragment extends Fragment
     {
         super.onActivityCreated(savedInstanceState);
 
-        tvCity = getView().findViewById( R.id.tvCityName );
-        tvLat = getView().findViewById( R.id.tvLatitude );
-        tvLon = getView().findViewById( R.id.tvLongitude );
-        tvDateTime = getView().findViewById( R.id.tvTimeUpdate );
-        tvCurrentTemp = getView().findViewById( R.id.tvCurrentTemp );
-        tvPressure = getView().findViewById( R.id.tvPressure );
-        tvHumidity = getView().findViewById( R.id.tvHumidity );
-        tvWindSpeed = getView().findViewById( R.id.tvWindSpeed );
-        tvWeatherConditions = getView().findViewById( R.id.tvWeatherDesc );
-        ivWeatherCondition = getView().findViewById( R.id.ivWeatherCondition);
-        ivFlag = getView().findViewById( R.id.ivFlag );
-        tvSunrise = getView().findViewById( R.id.tvSunrise );
-        tvSunset = getView().findViewById( R.id.tvSunset );
-        ivThermometer = getView().findViewById( R.id.ivThermometer );
-        ivArrow = getView().findViewById( R.id.ivArrow );
+        View view = getView();
 
-        if ( null != savedInstanceState )
+        if ( null != view )
         {
-            this.weatherDay = savedInstanceState.getParcelable( getString(R.string.tag_weather) );
-            this.applicationSettings = savedInstanceState.getParcelable( getString(R.string.tag_settings) );
-        }
-        else
-        {
-            Bundle args = getArguments();
+            tvCity = view.findViewById( R.id.tvCityName );
+            tvLat = view.findViewById( R.id.tvLatitude );
+            tvLon = view.findViewById( R.id.tvLongitude );
+            tvDateTime = view.findViewById( R.id.tvTimeUpdate );
+            tvCurrentTemp = view.findViewById( R.id.tvCurrentTemp );
+            tvPressure = view.findViewById( R.id.tvPressure );
+            tvHumidity = view.findViewById( R.id.tvHumidity );
+            tvWindSpeed = view.findViewById( R.id.tvWindSpeed );
+            tvWeatherConditions = view.findViewById( R.id.tvWeatherDesc );
+            ivWeatherCondition = view.findViewById( R.id.ivWeatherCondition);
+            ivFlag = view.findViewById( R.id.ivFlag );
+            tvSunrise = view.findViewById( R.id.tvSunrise );
+            tvSunset = view.findViewById( R.id.tvSunset );
+            ivThermometer = view.findViewById( R.id.ivThermometer );
+            ivArrow = view.findViewById( R.id.ivArrow );
 
-            if ( null != args )
+            if ( null != savedInstanceState )
             {
-                this.weatherDay = args.getParcelable( getString(R.string.tag_weather) );
-                this.applicationSettings = args.getParcelable( getString(R.string.tag_settings) );
+                this.weatherDay = savedInstanceState.getParcelable( getString(R.string.tag_weather) );
+                this.applicationSettings = savedInstanceState.getParcelable( getString(R.string.tag_settings) );
             }
+            else
+            {
+                Bundle args = getArguments();
+
+                if ( null != args )
+                {
+                    this.weatherDay = args.getParcelable( getString(R.string.tag_weather) );
+                    this.applicationSettings = args.getParcelable( getString(R.string.tag_settings) );
+                }
+            }
+
+            updateUi( weatherDay );
         }
-
-        updateUi( weatherDay );
-
     }
 
     @Override
-    public void onSaveInstanceState( Bundle savedInstanceState )
+    public void onSaveInstanceState( @NonNull Bundle savedInstanceState )
     {
         savedInstanceState.putParcelable( getString(R.string.tag_weather), weatherDay );
         savedInstanceState.putParcelable( getString(R.string.tag_settings), applicationSettings );
@@ -220,10 +220,10 @@ public class CurrentWeatherFragment extends Fragment
     {
         super.onResume();
 
-        IntentFilter ifNewWeather = new IntentFilter(INTENT_NEW_WEATHER);
+        IntentFilter ifNewWeather = new IntentFilter(GlobalMethodsAndConstants.INTENT_NEW_WEATHER);
         LocalBroadcastManager.getInstance( getContext() ).registerReceiver( brNewWeather, ifNewWeather );
 
-        IntentFilter ifNewSettings = new IntentFilter(INTENT_NEW_SETTINGS);
+        IntentFilter ifNewSettings = new IntentFilter(GlobalMethodsAndConstants.INTENT_NEW_SETTINGS);
         LocalBroadcastManager.getInstance( getContext() ).registerReceiver( brNewSettings, ifNewSettings );
 
         updateUi( weatherDay );
@@ -235,6 +235,7 @@ public class CurrentWeatherFragment extends Fragment
         super.onPause();
 
         LocalBroadcastManager.getInstance( getContext() ).unregisterReceiver(brNewWeather);
+        LocalBroadcastManager.getInstance( getContext() ).unregisterReceiver(brNewSettings);
     }
 
     /**

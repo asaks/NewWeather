@@ -28,7 +28,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
 
     private WeatherForecast weatherForecast;
 
-    public static class ForecastHolder extends RecyclerView.ViewHolder
+    static class ForecastHolder extends RecyclerView.ViewHolder
     {
         private TextView tvDay;
         private TextView tvForecastTemp;
@@ -37,7 +37,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         private TextView tvForecastWind;
         private ImageView ivWeatherCondition;
 
-        public ForecastHolder(View itemView)
+        ForecastHolder(View itemView)
         {
             super(itemView);
             tvDay = itemView.findViewById( R.id.tvDay );
