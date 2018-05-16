@@ -6,6 +6,24 @@ package com.asaks.newweather;
 
 public class GlobalMethodsAndConstants
 {
+    // названия вкладок
+    public static final String TITLE_FIRST_TAB = "Погода сейчас";
+    public static final String TITLE_SECOND_TAB = "Прогноз погоды";
+
+    // номера вкладок
+    public static final int PAGE_CURRENT_WEATHER = 0; // вкладка текущей погоды
+    public static final int PAGE_FORECAST_WEATHER = 1; // вкладка прогноза погоды
+
+    // тэги
+    public static final String TAG_SETTINGS = "settings";
+    public static final String TAG_TEMP_UNITS = "temp_units";
+    public static final String TAG_PRESS_UNITS = "press_units";
+    public static final String TAG_ABOUT_APP = "about_app";
+    public static final String TAG_WEATHER = "weather";
+    public static final String TAG_FORECAST = "forecast";
+    public static final String TAG_CITY = "city";
+    public static final String TAG_MESSAGE = "message";
+
     // смещение по оси Y для всплывающей подсказки
     public static final int Y_OFFSET_TOAST = 100;
 

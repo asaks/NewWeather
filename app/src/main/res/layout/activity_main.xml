@@ -8,81 +8,23 @@
 
     <!--TODO слишком много layout'ов-->
 
-    <TabHost
-        android:id="@+id/tabHost"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        android:background="@color/colorBackground">
 
-        <LinearLayout
-            android:id="@+id/llTabHost"
+        <android.support.v4.view.PagerTabStrip
+            android:id="@+id/pagerTabStrip"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:background="@color/colorBackground"/>
 
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:background="@color/colorBackground"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <!-- Разметка вкладки текущей погоды -->
-                <LinearLayout
-                    android:id="@+id/llCurrentWeather"
-                    android:background="@color/colorBackground"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/clCurrentWeather"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-
-                        <ScrollView
-                            android:id="@+id/svCurrentWeather"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
-
-                            <LinearLayout
-                                android:id="@+id/llScrollCurrentWeather"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical" >
-
-                            </LinearLayout>
-
-                        </ScrollView>
-                    </android.support.constraint.ConstraintLayout>
-                </LinearLayout>
-
-                <!-- Разметка вкладки прогноза -->
-                <LinearLayout
-                    android:id="@+id/llForecast"
-                    android:background="@color/colorBackground"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-
-                </LinearLayout>
-            </FrameLayout>
-        </LinearLayout>
-    </TabHost>
+    </android.support.v4.view.ViewPager>
 
 </android.support.constraint.ConstraintLayout>

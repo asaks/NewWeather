@@ -9,22 +9,28 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.TabHost;
 import android.widget.Toast;
 
 import com.asaks.newweather.api.ConstantsAPI;
 import com.asaks.newweather.api.WeatherAPI;
 
+import com.asaks.newweather.dialogs.DialogAbout;
+import com.asaks.newweather.dialogs.DialogInputCity;
 import com.asaks.newweather.weather.WeatherDay;
 import com.asaks.newweather.weather.WeatherForecast;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -37,15 +43,88 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
 /**
  * Класс основного окна приложения
  */
 public class MainActivity extends AppCompatActivity
-        implements DialogScreen.NoticeDialogListener {
+        implements DialogInputCity.NoticeDialogListener {
 
     private static final String TAG_MAIN_ACTIVITY = "MainActivity";
 
-    TabHost tabHost;
+    private class WeatherFragmentPagerAdapter extends FragmentPagerAdapter
+    {
+        SparseArray<Fragment> saCreatedFragments = new SparseArray<>();
+
+        WeatherFragmentPagerAdapter( FragmentManager fm )
+        {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position)
+        {
+            switch ( position )
+            {
+                case GlobalMethodsAndConstants.PAGE_CURRENT_WEATHER:
+                {
+                    return CurrentWeatherFragment.newInstance( applicationSettings, weatherDay );
+                }
+                case GlobalMethodsAndConstants.PAGE_FORECAST_WEATHER:
+                {
+                    return ForecastFragment.newInstance( applicationSettings, weatherForecast );
+                }
+                default:
+                    return null;
+            }
+        }
+
+        @Override
+        public int getCount()
+        {
+            return 2;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position)
+        {
+            switch (position)
+            {
+                case GlobalMethodsAndConstants.PAGE_CURRENT_WEATHER:
+                {
+                    return GlobalMethodsAndConstants.TITLE_FIRST_TAB;
+                }
+                case GlobalMethodsAndConstants.PAGE_FORECAST_WEATHER:
+                {
+                    return GlobalMethodsAndConstants.TITLE_SECOND_TAB;
+                }
+                default:
+                    return "";
+            }
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position)
+        {
+            Fragment createdFragment = (Fragment)super.instantiateItem(container, position);
+            saCreatedFragments.put( position, createdFragment );
+
+            return createdFragment;
+        }
+
+        /**
+         * Функция возвращает фрагмент по номеру его позиции
+         * @param position
+         * @return фрагмент или null, если фрагмента с таким номером позиции не существует
+         */
+        public Fragment getFragmentByPosition( int position )
+        {
+            return saCreatedFragments.get( position, null );
+        }
+    }
+
+    ViewPager viewPager;
+    PagerAdapter pagerAdapter;
 
     WeatherAPI.InterfaceAPI api;
     ApplicationSettings applicationSettings;
@@ -54,8 +133,6 @@ public class MainActivity extends AppCompatActivity
 
     WeatherDay weatherDay;
     WeatherForecast weatherForecast;
-    CurrentWeatherFragment currentWeatherFragment;
-    ForecastFragment forecastFragment;
 
     boolean bDoubleBackPressedToExitOnce = false;
 
@@ -71,27 +148,6 @@ public class MainActivity extends AppCompatActivity
             actionBar.setDisplayShowHomeEnabled( true );
             actionBar.setIcon( R.mipmap.ic_launcher );
         }
-
-        tabHost = findViewById( R.id.tabHost );
-        tabHost.setup();
-
-        // вкладка с текущей погодой
-        TabHost.TabSpec tabSpec = tabHost.newTabSpec("current");
-        tabSpec.setContent( R.id.llCurrentWeather );
-        tabSpec.setIndicator( getString(R.string.weather_now) );
-        tabHost.addTab( tabSpec );
-
-        // вкладка с прогнозом погоды
-        tabSpec = tabHost.newTabSpec( "forecast" );
-        tabSpec.setContent( R.id.llForecast );
-        tabSpec.setIndicator( getString( R.string.weather_forecast) );
-        tabHost.addTab( tabSpec );
-
-        // по умолчанию открывается вкладка с текущей погодой
-        tabHost.setCurrentTab(0);
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        //Fragment fragmentMain = fragmentManager.findFragmentById(R.id.llCurrentWeather);
 
         weatherDay = new WeatherDay();
         weatherForecast = new WeatherForecast();
@@ -109,47 +165,30 @@ public class MainActivity extends AppCompatActivity
         sharedPreferences = getPreferences( Context.MODE_PRIVATE );
         if ( null != sharedPreferences )
         {
-            applicationSettings.setUnitTemp( sharedPreferences.getInt( getString(R.string.tag_temp_units), GlobalMethodsAndConstants.TEMP_KELVIN ) );
-            applicationSettings.setUnitPress( sharedPreferences.getInt( getString(R.string.tag_press_units), GlobalMethodsAndConstants.PRESS_MM_HG ) );
-            applicationSettings.setCity( sharedPreferences.getString("city", "" ) );
+            applicationSettings.setUnitTemp( sharedPreferences.getInt( GlobalMethodsAndConstants.TAG_TEMP_UNITS,
+                    GlobalMethodsAndConstants.TEMP_KELVIN ) );
+            applicationSettings.setUnitPress( sharedPreferences.getInt( GlobalMethodsAndConstants.TAG_PRESS_UNITS,
+                    GlobalMethodsAndConstants.PRESS_MM_HG ) );
+            applicationSettings.setCity( sharedPreferences.getString(GlobalMethodsAndConstants.TAG_CITY,
+                    "" ) );
         }
 
         //TODO при первом запуске приложения запрашивать город
         // если нет сохраненного города, то показываем диалог
         if ( applicationSettings.getCity().isEmpty() )
         {
-            DialogScreen dlgInputCity = DialogScreen.newInstance( DialogScreen.IDD_SET_CITY, "" );
+            DialogInputCity dlgInputCity = DialogInputCity.newInstance();
             dlgInputCity.show( getSupportFragmentManager(), "DlgSetCity" );
         }
 
-        if ( null == /*fragmentMain*/savedInstanceState )
-        {
-            currentWeatherFragment = CurrentWeatherFragment.newInstance( applicationSettings, weatherDay );
-            forecastFragment = ForecastFragment.newInstance( applicationSettings, weatherForecast );
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.add( R.id.llScrollCurrentWeather, currentWeatherFragment );
-            fragmentTransaction.add( R.id.llForecast, forecastFragment );
-            fragmentTransaction.commit();
-            fragmentManager.executePendingTransactions();
-        }
-        else
-        {
-            // делаем активной вкладкой прежнюю
-            tabHost.setCurrentTab( savedInstanceState.getInt( getString(R.string.tag_current_tab) ) );
-        }
+        viewPager = findViewById(R.id.pager);
+        pagerAdapter = new WeatherFragmentPagerAdapter( getSupportFragmentManager() );
+        viewPager.setAdapter( pagerAdapter );
 
         api = WeatherAPI.getClient().create(WeatherAPI.InterfaceAPI.class);
         requestOptionsGlide = new RequestOptions();
         requestOptionsGlide = requestOptionsGlide.diskCacheStrategy( DiskCacheStrategy.ALL );
 
-    }
-
-    @Override
-    public void onSaveInstanceState( Bundle savedInstanceState )
-    {
-        savedInstanceState.putInt( getString(R.string.tag_current_tab), tabHost.getCurrentTab() );
-
-        super.onSaveInstanceState(savedInstanceState);
     }
     
     @Override
@@ -178,7 +217,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_settings: // настройки
             {
                 Intent intentSettings = new Intent( this, SettingsActivity.class );
-                intentSettings.putExtra( getString(R.string.tag_settings), applicationSettings );
+                intentSettings.putExtra( GlobalMethodsAndConstants.TAG_SETTINGS, applicationSettings );
                 startActivityForResult( intentSettings, GlobalMethodsAndConstants.REQUEST_CODE_SETTINGS );
 
                 return true;
@@ -199,9 +238,10 @@ public class MainActivity extends AppCompatActivity
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
-                DialogScreen dlgAbout = DialogScreen.newInstance(DialogScreen.IDD_ABOUT, strAbout);
 
-                dlgAbout.show( getSupportFragmentManager(), getString(R.string.tag_about_app) );
+                DialogAbout dlgAbout = DialogAbout.newInstance( strAbout );
+
+                dlgAbout.show( getSupportFragmentManager(), GlobalMethodsAndConstants.TAG_ABOUT_APP );
                 return true;
             }
             case R.id.action_exit: // выход
@@ -250,29 +290,27 @@ public class MainActivity extends AppCompatActivity
         {
             if ( requestCode == GlobalMethodsAndConstants.REQUEST_CODE_SETTINGS )
             {
-                applicationSettings = data.getParcelableExtra(getString(R.string.tag_settings));
+                applicationSettings = data.getParcelableExtra(GlobalMethodsAndConstants.TAG_SETTINGS);
 
-                //TODO хранить настройки в базе данных
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt( getString(R.string.tag_temp_units), applicationSettings.getUnitTemp() );
-                editor.putInt( getString(R.string.tag_press_units), applicationSettings.getUnitPress() );
-                editor.putString( getString(R.string.tag_city), applicationSettings.getCity() );
-                editor.apply();
-
-                Fragment fragment = getSupportFragmentManager().findFragmentById( R.id.llScrollCurrentWeather );
-                TextView tvCity = fragment.getView().findViewById( R.id.tvCityName );
-
-                if ( !applicationSettings.getCity().equals( tvCity.getText().toString() ) )
-                    updateWeather();
-                else
+                if ( applicationSettings != null )
                 {
-                    /*convertTemperature( applicationSettings.getUnitTemp(), weatherDay.getCurrentTemp() );
-                    convertPressure( applicationSettings.getUnitPress(), weatherDay.getPressure() );*/
-                    Intent intent = new Intent( GlobalMethodsAndConstants.INTENT_NEW_SETTINGS );
-                    intent.putExtra( getString(R.string.tag_settings), applicationSettings );
-                    LocalBroadcastManager.getInstance( getBaseContext() ).sendBroadcast( intent );
-                }
+                    SharedPreferences sf = getPreferences( Context.MODE_PRIVATE );
+                    String sCity = sf.getString( GlobalMethodsAndConstants.TAG_CITY, "" );
 
+                    if ( !sCity.equals( applicationSettings.getCity() ) )
+                        updateWeather();
+
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt( GlobalMethodsAndConstants.TAG_TEMP_UNITS, applicationSettings.getUnitTemp() );
+                    editor.putInt( GlobalMethodsAndConstants.TAG_PRESS_UNITS, applicationSettings.getUnitPress() );
+                    editor.putString( GlobalMethodsAndConstants.TAG_CITY, applicationSettings.getCity() );
+                    editor.apply();
+
+                    Intent intent = new Intent( GlobalMethodsAndConstants.INTENT_NEW_SETTINGS );
+                    intent.putExtra( GlobalMethodsAndConstants.TAG_SETTINGS, applicationSettings );
+                    LocalBroadcastManager.getInstance( this ).sendBroadcast( intent );
+
+                }
             }
         }
     }
@@ -280,23 +318,19 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onDialogPositiveClick( DialogFragment dialog )
     {
-        int idDialog = ( (DialogScreen)dialog ).getDialogID();
+        applicationSettings.setCity( ( (DialogInputCity)dialog ).getCity().trim() );
 
-        if ( DialogScreen.IDD_SET_CITY == idDialog )
-        {
-            Toast.makeText(this, ( (DialogScreen)dialog ).getCity().trim(), Toast.LENGTH_SHORT ).show();
-            applicationSettings.setCity( ( (DialogScreen)dialog ).getCity().trim() );
-            updateWeather();
-        }
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString( GlobalMethodsAndConstants.TAG_CITY, applicationSettings.getCity() );
+        editor.apply();
 
+        updateWeather();
     }
 
     @Override
     public void onDialogNegativeClick( DialogFragment dialog )
     {
-        int idDialog = ( (DialogScreen)dialog ).getDialogID();
-
-        if ( DialogScreen.IDD_SET_CITY == idDialog && applicationSettings.getCity().isEmpty() )
+        if ( applicationSettings.getCity().isEmpty() )
         {
             //TODO диалог вызывается в двух местах: при первом запуске и из настроек
             // как отловить что вызов был при первом запуске? пока проверяю что в классе
@@ -310,19 +344,29 @@ public class MainActivity extends AppCompatActivity
      */
     private void shareWeather()
     {
-        android.support.v4.app.Fragment fragment = getSupportFragmentManager().findFragmentById( R.id.llScrollCurrentWeather );
+        String textMessage = "";
+        Fragment fragment = ( (WeatherFragmentPagerAdapter)pagerAdapter )
+                .getFragmentByPosition(GlobalMethodsAndConstants.PAGE_CURRENT_WEATHER);
 
-        TextView tvCity = fragment.getView().findViewById( R.id.tvCityName );
-        TextView tvCurrentTemp = fragment.getView().findViewById( R.id.tvCurrentTemp );
-        TextView tvPressure = fragment.getView().findViewById( R.id.tvPressure );
-        TextView tvHumidity = fragment.getView().findViewById( R.id.tvHumidity );
+        if ( fragment != null )
+        {
+            View view = fragment.getView();
 
-        String textMessage = getString(R.string.weather_in_city) + " " + tvCity.getText() + "\n";
-        textMessage += getString(R.string.current_temp) + " " + tvCurrentTemp.getText() + "\n";
-        textMessage += getString(R.string.pressure) + " " + tvPressure.getText() + "\n";
-        textMessage += getString(R.string.humidity) + " " + tvHumidity.getText() + "\n";
-        textMessage += getString(R.string.more) + " ";
-        textMessage += ConstantsAPI.URL_CITY_WEATHER_FORECAST + weatherDay.getCityID();
+            if ( view != null )
+            {
+                TextView tvCity = view.findViewById( R.id.tvCityName );
+                TextView tvCurrentTemp = view.findViewById( R.id.tvCurrentTemp );
+                TextView tvPressure = view.findViewById( R.id.tvPressure );
+                TextView tvHumidity = view.findViewById( R.id.tvHumidity );
+
+                textMessage = getString(R.string.weather_in_city) + " " + tvCity.getText() + "\n";
+                textMessage += getString(R.string.current_temp) + " " + tvCurrentTemp.getText() + "\n";
+                textMessage += getString(R.string.pressure) + " " + tvPressure.getText() + "\n";
+                textMessage += getString(R.string.humidity) + " " + tvHumidity.getText() + "\n";
+                textMessage += getString(R.string.more) + " ";
+                textMessage += ConstantsAPI.URL_CITY_WEATHER_FORECAST + weatherDay.getCityID();
+            }
+        }
 
         Intent intentShare = new Intent();
         intentShare.setAction( Intent.ACTION_SEND );
@@ -445,7 +489,7 @@ public class MainActivity extends AppCompatActivity
                         //mAdapter.notifyDataSetChanged();
 
                         Intent intent = new Intent( GlobalMethodsAndConstants.INTENT_NEW_FORECAST );
-                        intent.putExtra( getString(R.string.tag_forecast), weatherForecast );
+                        intent.putExtra( GlobalMethodsAndConstants.TAG_FORECAST, weatherForecast );
                         LocalBroadcastManager.getInstance( getBaseContext() ).sendBroadcast( intent );
                     }
                 }
@@ -492,7 +536,7 @@ public class MainActivity extends AppCompatActivity
     private void updateUICurrentWeather( WeatherDay weatherDay )
     {
         Intent intent = new Intent( GlobalMethodsAndConstants.INTENT_NEW_WEATHER);
-        intent.putExtra( getString(R.string.tag_weather), weatherDay );
+        intent.putExtra( GlobalMethodsAndConstants.TAG_WEATHER, weatherDay );
         LocalBroadcastManager.getInstance( getBaseContext() ).sendBroadcast( intent );
     }
 

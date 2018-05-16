@@ -29,7 +29,7 @@ public class ForecastFragment extends Fragment
     private final BroadcastReceiver brNewSettings = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            applicationSettings = intent.getParcelableExtra( getString(R.string.tag_settings) );
+            applicationSettings = intent.getParcelableExtra( GlobalMethodsAndConstants.TAG_SETTINGS );
         }
     };
 
@@ -39,7 +39,7 @@ public class ForecastFragment extends Fragment
     private final BroadcastReceiver brNewForecast = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            WeatherForecast forecast = intent.getParcelableExtra( getString(R.string.tag_forecast) );
+            WeatherForecast forecast = intent.getParcelableExtra( GlobalMethodsAndConstants.TAG_FORECAST );
             weatherForecast.setWeatherItems( forecast.getWeatherItems() );
             mAdapter.notifyDataSetChanged();
         }
@@ -65,7 +65,7 @@ public class ForecastFragment extends Fragment
     @Override
     public View onCreateView( @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
     {
-        return inflater.inflate( R.layout.forecast_layout, container, false );
+        return inflater.inflate( R.layout.fragment_forecast, container, false );
     }
 
     @Override
@@ -85,14 +85,14 @@ public class ForecastFragment extends Fragment
 
                 if ( null != args )
                 {
-                    this.weatherForecast = args.getParcelable( getString(R.string.tag_forecast) );
-                    this.applicationSettings = args.getParcelable( getString(R.string.tag_settings) );
+                    this.weatherForecast = args.getParcelable( GlobalMethodsAndConstants.TAG_FORECAST );
+                    this.applicationSettings = args.getParcelable( GlobalMethodsAndConstants.TAG_SETTINGS );
                 }
             }
             else
             {
-                this.weatherForecast = savedInstanceState.getParcelable( getString(R.string.tag_forecast) );
-                this.applicationSettings = savedInstanceState.getParcelable( getString(R.string.tag_settings) );
+                this.weatherForecast = savedInstanceState.getParcelable( GlobalMethodsAndConstants.TAG_FORECAST );
+                this.applicationSettings = savedInstanceState.getParcelable( GlobalMethodsAndConstants.TAG_SETTINGS );
             }
 
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -101,34 +101,42 @@ public class ForecastFragment extends Fragment
             mAdapter = new ForecastAdapter( weatherForecast );
             mRecyclerView.setAdapter( mAdapter );
         }
+
+        Context context = getContext();
+
+        if ( context != null )
+        {
+            IntentFilter ifNewSettings = new IntentFilter(GlobalMethodsAndConstants.INTENT_NEW_SETTINGS);
+            LocalBroadcastManager.getInstance( context ).registerReceiver( brNewSettings, ifNewSettings );
+
+            IntentFilter ifNewForecast = new IntentFilter(GlobalMethodsAndConstants.INTENT_NEW_FORECAST);
+            LocalBroadcastManager.getInstance( context ).registerReceiver( brNewForecast, ifNewForecast );
+        }
+
     }
 
     @Override
-    public void onResume()
+    public void onDestroy()
     {
-        super.onResume();
+        Context context = getContext();
 
-        IntentFilter ifNewSettings = new IntentFilter(GlobalMethodsAndConstants.INTENT_NEW_SETTINGS);
-        LocalBroadcastManager.getInstance( getContext() ).registerReceiver( brNewSettings, ifNewSettings );
+        if ( context != null )
+        {
+            LocalBroadcastManager.getInstance( context ).unregisterReceiver(brNewForecast);
+            LocalBroadcastManager.getInstance( context ).unregisterReceiver(brNewSettings);
+        }
 
-        IntentFilter ifNewForecast = new IntentFilter(GlobalMethodsAndConstants.INTENT_NEW_FORECAST);
-        LocalBroadcastManager.getInstance( getContext() ).registerReceiver( brNewForecast, ifNewForecast );
+        super.onDestroy();
     }
 
     @Override
-    public void onPause()
+    public void onSaveInstanceState( Bundle savedInstanceState )
     {
-        super.onPause();
-
-        LocalBroadcastManager.getInstance( getContext() ).unregisterReceiver(brNewForecast);
-        LocalBroadcastManager.getInstance( getContext() ).unregisterReceiver(brNewSettings);
-    }
-
-    @Override
-    public void onSaveInstanceState( @NonNull Bundle savedInstanceState )
-    {
-        savedInstanceState.putParcelable( getString(R.string.tag_forecast), weatherForecast );
-        savedInstanceState.putParcelable( getString(R.string.tag_settings), applicationSettings );
+        if ( savedInstanceState != null )
+        {
+            savedInstanceState.putParcelable( GlobalMethodsAndConstants.TAG_FORECAST, weatherForecast );
+            savedInstanceState.putParcelable( GlobalMethodsAndConstants.TAG_SETTINGS, applicationSettings );
+        }
 
         super.onSaveInstanceState( savedInstanceState );
     }

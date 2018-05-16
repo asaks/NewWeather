@@ -48,9 +48,9 @@ public class CurrentWeatherFragment extends Fragment
     // опции загрузки изображений с помощью Glide
     static RequestOptions requestOptionsGlide;
     // настройки приложения
-    ApplicationSettings applicationSettings;
+    ApplicationSettings applicationSettings = new ApplicationSettings();
     // данные о текущей погоде
-    WeatherDay weatherDay;
+    WeatherDay weatherDay = new WeatherDay();
 
     /**
      * Приемник новых данных о погоде
@@ -58,7 +58,7 @@ public class CurrentWeatherFragment extends Fragment
     private final BroadcastReceiver brNewWeather = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            weatherDay = intent.getParcelableExtra( getString(R.string.tag_weather) );
+            weatherDay = intent.getParcelableExtra( GlobalMethodsAndConstants.TAG_WEATHER );
 
             if ( null != weatherDay )
                 updateUi( weatherDay );
@@ -71,11 +71,14 @@ public class CurrentWeatherFragment extends Fragment
     private final BroadcastReceiver brNewSettings = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            applicationSettings = intent.getParcelableExtra( getString(R.string.tag_settings) );
+            applicationSettings = intent.getParcelableExtra( GlobalMethodsAndConstants.TAG_SETTINGS );
 
-            tvCity.setText( applicationSettings.getCity() );
-            convertPressure( applicationSettings.getUnitPress(), weatherDay.getPressure() );
-            convertTemperature( applicationSettings.getUnitTemp(), weatherDay.getCurrentTemp() );
+            if ( applicationSettings != null )
+            {
+                tvCity.setText( applicationSettings.getCity() );
+                convertPressure( applicationSettings.getUnitPress(), weatherDay.getPressure() );
+                convertTemperature( applicationSettings.getUnitTemp(), weatherDay.getCurrentTemp() );
+            }
         }
     };
 
@@ -102,7 +105,7 @@ public class CurrentWeatherFragment extends Fragment
     @Override
     public View onCreateView( @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
     {
-        return inflater.inflate( R.layout.current_weather_layout, container, false );
+        return inflater.inflate( R.layout.fragment_current_weather, container, false );
     }
 
     /**
@@ -110,7 +113,7 @@ public class CurrentWeatherFragment extends Fragment
      * Отображает принятые данные о погоде
      * @param weatherDay - данные о погоде
      */
-    private void updateUi( @NonNull WeatherDay weatherDay )
+    private void updateUi( WeatherDay weatherDay )
     {
         if ( weatherDay == null )
             return;
@@ -192,8 +195,8 @@ public class CurrentWeatherFragment extends Fragment
 
             if ( null != savedInstanceState )
             {
-                this.weatherDay = savedInstanceState.getParcelable( getString(R.string.tag_weather) );
-                this.applicationSettings = savedInstanceState.getParcelable( getString(R.string.tag_settings) );
+                this.weatherDay = savedInstanceState.getParcelable( GlobalMethodsAndConstants.TAG_WEATHER );
+                this.applicationSettings = savedInstanceState.getParcelable( GlobalMethodsAndConstants.TAG_SETTINGS );
             }
             else
             {
@@ -201,18 +204,32 @@ public class CurrentWeatherFragment extends Fragment
 
                 if ( null != args )
                 {
-                    this.weatherDay = args.getParcelable( getString(R.string.tag_weather) );
-                    this.applicationSettings = args.getParcelable( getString(R.string.tag_settings) );
+                    this.weatherDay = args.getParcelable( GlobalMethodsAndConstants.TAG_WEATHER );
+                    this.applicationSettings = args.getParcelable( GlobalMethodsAndConstants.TAG_SETTINGS );
                 }
             }
+        }
+
+        Context context = getContext();
+
+        if ( context != null )
+        {
+            IntentFilter ifNewWeather = new IntentFilter(GlobalMethodsAndConstants.INTENT_NEW_WEATHER);
+            LocalBroadcastManager.getInstance( context ).registerReceiver( brNewWeather, ifNewWeather );
+
+            IntentFilter ifNewSettings = new IntentFilter(GlobalMethodsAndConstants.INTENT_NEW_SETTINGS);
+            LocalBroadcastManager.getInstance( context ).registerReceiver( brNewSettings, ifNewSettings );
         }
     }
 
     @Override
-    public void onSaveInstanceState( @NonNull Bundle savedInstanceState )
+    public void onSaveInstanceState( Bundle savedInstanceState )
     {
-        savedInstanceState.putParcelable( getString(R.string.tag_weather), weatherDay );
-        savedInstanceState.putParcelable( getString(R.string.tag_settings), applicationSettings );
+        if ( savedInstanceState != null )
+        {
+            savedInstanceState.putParcelable( GlobalMethodsAndConstants.TAG_WEATHER, weatherDay );
+            savedInstanceState.putParcelable( GlobalMethodsAndConstants.TAG_SETTINGS, applicationSettings );
+        }
 
         super.onSaveInstanceState( savedInstanceState );
     }
@@ -222,22 +239,21 @@ public class CurrentWeatherFragment extends Fragment
     {
         super.onResume();
 
-        IntentFilter ifNewWeather = new IntentFilter(GlobalMethodsAndConstants.INTENT_NEW_WEATHER);
-        LocalBroadcastManager.getInstance( getContext() ).registerReceiver( brNewWeather, ifNewWeather );
-
-        IntentFilter ifNewSettings = new IntentFilter(GlobalMethodsAndConstants.INTENT_NEW_SETTINGS);
-        LocalBroadcastManager.getInstance( getContext() ).registerReceiver( brNewSettings, ifNewSettings );
-
         updateUi( weatherDay );
     }
 
     @Override
-    public void onPause()
+    public void onDestroy()
     {
-        super.onPause();
+        Context context = getContext();
 
-        LocalBroadcastManager.getInstance( getContext() ).unregisterReceiver(brNewWeather);
-        LocalBroadcastManager.getInstance( getContext() ).unregisterReceiver(brNewSettings);
+        if ( context != null )
+        {
+            LocalBroadcastManager.getInstance( context ).unregisterReceiver(brNewWeather);
+            LocalBroadcastManager.getInstance( context ).unregisterReceiver(brNewSettings);
+        }
+
+        super.onDestroy();
     }
 
     /**
