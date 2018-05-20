@@ -12,12 +12,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.asaks.newweather.dialogs.DialogInputCity;
+
 /**
  * Класс окна настроек приложения
  */
 
 public class SettingsActivity extends AppCompatActivity
-        implements DialogScreen.NoticeDialogListener {
+        implements DialogInputCity.NoticeDialogListener {
 
     Spinner spinnerTemperature;
     Spinner spinnerPressure;
@@ -43,7 +45,7 @@ public class SettingsActivity extends AppCompatActivity
         View.OnClickListener oclBtnSetCity = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogScreen dlgInputCity = DialogScreen.newInstance( DialogScreen.IDD_SET_CITY, "" );
+                DialogInputCity dlgInputCity = DialogInputCity.newInstance();
                 dlgInputCity.show( getSupportFragmentManager(), "DlgSetCity" );
             }
         };
@@ -65,11 +67,15 @@ public class SettingsActivity extends AppCompatActivity
         Intent intent = getIntent();
         if ( null != intent )
         {
-            applicationSettings = intent.getParcelableExtra( getString(R.string.tag_settings) );
-            spinnerTemperature.setSelection( applicationSettings.getUnitTemp() );
-            spinnerPressure.setSelection( applicationSettings.getUnitPress() );
-            btnSetCity.setText( String.format( "%s: %s", getString(R.string.change_city),
-                    applicationSettings.getCity() ) );
+            applicationSettings = intent.getParcelableExtra( GlobalMethodsAndConstants.TAG_SETTINGS );
+
+            if ( applicationSettings != null )
+            {
+                spinnerTemperature.setSelection( applicationSettings.getUnitTemp() );
+                spinnerPressure.setSelection( applicationSettings.getUnitPress() );
+                btnSetCity.setText( String.format( "%s: %s", getString(R.string.change_city),
+                        applicationSettings.getCity() ) );
+            }
         }
     }
 
@@ -102,7 +108,7 @@ public class SettingsActivity extends AppCompatActivity
                 Intent intent = new Intent();
                 applicationSettings.setUnitTemp( spinnerTemperature.getSelectedItemPosition() );
                 applicationSettings.setUnitPress( spinnerPressure.getSelectedItemPosition() );
-                intent.putExtra( getString(R.string.tag_settings), applicationSettings );
+                intent.putExtra( GlobalMethodsAndConstants.TAG_SETTINGS, applicationSettings );
                 setResult( RESULT_OK, intent );
 
                 this.finish();
@@ -115,15 +121,13 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onDialogPositiveClick(DialogFragment dialog) {
-        int idDialog = ( (DialogScreen)dialog ).getDialogID();
-
-        if ( DialogScreen.IDD_SET_CITY == idDialog )
-        {
-            applicationSettings.setCity( ( (DialogScreen)dialog ).getCity() );
-            btnSetCity.setText( String.format( "%s: %s", getString(R.string.change_city),
-                    applicationSettings.getCity() ) );
-        }
+    public void onDialogPositiveClick(DialogFragment dialog)
+    {
+        applicationSettings.setCity( ( (DialogInputCity)dialog ).getCity().toUpperCase().trim() );
+        btnSetCity.setText( String.format( "%s: %s", getString(R.string.change_city),
+                applicationSettings.getCity() ) );
+        applicationSettings.setLat( ( (DialogInputCity)dialog ).getLatitude() );
+        applicationSettings.setLon( ( (DialogInputCity)dialog ).getLongitude() );
     }
 
     @Override

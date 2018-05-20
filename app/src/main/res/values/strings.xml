@@ -56,19 +56,6 @@
     <string name="east_lon">в.д.</string>
     <string name="west_lon">з.д.</string>
 
-    <!-- Названия месяцев в родительном падеже -->
-    <string name="january">января</string>
-    <string name="february">февраля</string>
-    <string name="march">марта</string>
-    <string name="april">апреля</string>
-    <string name="may">мая</string>
-    <string name="june">июня</string>
-    <string name="july">июля</string>
-    <string name="august">августа</string>
-    <string name="september">сентября</string>
-    <string name="october">октября</string>
-    <string name="november">ноября</string>
-    <string name="december">декабря</string>
     <string name="err_update_current_weather">Ошибка загрузки данных о текущей погоде</string>
     <string name="err_update_forecast_weather">Ошибка загрузки данных прогноза погоды</string>
     <string name="settings">Настройки</string>
@@ -76,15 +63,9 @@
     <string name="weather_in_city">Погода в городе</string>
     <string name="more">Подробнее:</string>
 
-    <string name="tag_settings">settings</string>
-    <string name="tag_temp_units">tempUnits</string>
-    <string name="tag_press_units">pressUnits</string>
-    <string name="tag_about_app">aboutapp</string>
-    <string name="tag_weather">weather</string>
     <string name="temp_units">Единицы измерения температуры</string>
     <string name="pressure_units">Единицы измерения давления</string>
     <string name="enter_city_name">Введите название города</string>
-    <string name="tag_city">city</string>
     <string name="hint_double_press_exit">Нажмите еще раз для выхода</string>
 
     <!-- Единицы измерения температуры -->

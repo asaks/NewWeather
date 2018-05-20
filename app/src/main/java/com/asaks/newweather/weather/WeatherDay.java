@@ -1,5 +1,6 @@
 package com.asaks.newweather.weather;
 
+import android.arch.persistence.room.Entity;
 import android.os.Parcelable;
 import android.os.Parcel;
 
@@ -14,6 +15,8 @@ import java.util.List;
  * Класс, содержащий информацию о погоде на день
  */
 
+
+@Entity
 public class WeatherDay implements Parcelable
 {
     //! Класс, содержащий географические координаты города

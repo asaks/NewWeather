@@ -36,7 +36,7 @@ android {
         applicationId "com.asaks.newweather"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode /*getVersionCode()*/1
+        versionCode /*getVersionCode()*/2
         versionName /*getVersionName()*/"1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

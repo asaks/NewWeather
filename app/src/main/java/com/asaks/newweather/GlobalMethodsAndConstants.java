@@ -6,6 +6,26 @@ package com.asaks.newweather;
 
 public class GlobalMethodsAndConstants
 {
+    // названия вкладок
+    public static final String TITLE_FIRST_TAB = "Погода сейчас";
+    public static final String TITLE_SECOND_TAB = "Прогноз погоды";
+
+    // номера вкладок
+    public static final int PAGE_CURRENT_WEATHER = 0; // вкладка текущей погоды
+    public static final int PAGE_FORECAST_WEATHER = 1; // вкладка прогноза погоды
+
+    // тэги
+    public static final String TAG_SETTINGS = "settings";
+    public static final String TAG_TEMP_UNITS = "temp_units";
+    public static final String TAG_PRESS_UNITS = "press_units";
+    public static final String TAG_ABOUT_APP = "about_app";
+    public static final String TAG_WEATHER = "weather";
+    public static final String TAG_FORECAST = "forecast";
+    public static final String TAG_CITY = "city";
+    public static final String TAG_MESSAGE = "message";
+    public static final String TAG_LAT = "lat";
+    public static final String TAG_LON = "lon";
+
     // смещение по оси Y для всплывающей подсказки
     public static final int Y_OFFSET_TOAST = 100;
 
@@ -24,6 +44,11 @@ public class GlobalMethodsAndConstants
     // давление
     public static final int PRESS_HPA = 0; // гПа
     public static final int PRESS_MM_HG = 1; // мм рт.ст.
+
+    // actions
+    public static final String INTENT_NEW_WEATHER = "update_current_weather";
+    public static final String INTENT_NEW_SETTINGS = "new_settings";
+    public static final String INTENT_NEW_FORECAST = "update_weather_forecast";
 
     /**
      * Функция конвертации температуры из Кельвинов в градусы Цельсия
