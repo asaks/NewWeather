@@ -26,11 +26,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.asaks.newweather.api.ConstantsAPI;
+import com.asaks.newweather.api.ConstantsWeatherAPI;
 import com.asaks.newweather.api.WeatherAPI;
 
 import com.asaks.newweather.dialogs.DialogAbout;
 import com.asaks.newweather.dialogs.DialogInputCity;
+import com.asaks.newweather.fragments.CurrentWeatherFragment;
+import com.asaks.newweather.fragments.ForecastFragment;
 import com.asaks.newweather.weather.WeatherDay;
 import com.asaks.newweather.weather.WeatherForecast;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -171,6 +173,8 @@ public class MainActivity extends AppCompatActivity
                     GlobalMethodsAndConstants.PRESS_MM_HG ) );
             applicationSettings.setCity( sharedPreferences.getString(GlobalMethodsAndConstants.TAG_CITY,
                     "" ) );
+            applicationSettings.setLat( sharedPreferences.getFloat( GlobalMethodsAndConstants.TAG_LAT, 0 ) );
+            applicationSettings.setLon( sharedPreferences.getFloat( GlobalMethodsAndConstants.TAG_LON, 0 ) );
         }
 
         //TODO при первом запуске приложения запрашивать город
@@ -304,6 +308,8 @@ public class MainActivity extends AppCompatActivity
                     editor.putInt( GlobalMethodsAndConstants.TAG_TEMP_UNITS, applicationSettings.getUnitTemp() );
                     editor.putInt( GlobalMethodsAndConstants.TAG_PRESS_UNITS, applicationSettings.getUnitPress() );
                     editor.putString( GlobalMethodsAndConstants.TAG_CITY, applicationSettings.getCity() );
+                    editor.putFloat( GlobalMethodsAndConstants.TAG_LAT, (float)applicationSettings.getLat() );
+                    editor.putFloat( GlobalMethodsAndConstants.TAG_LON, (float)applicationSettings.getLon() );
                     editor.apply();
 
                     Intent intent = new Intent( GlobalMethodsAndConstants.INTENT_NEW_SETTINGS );
@@ -319,9 +325,13 @@ public class MainActivity extends AppCompatActivity
     public void onDialogPositiveClick( DialogFragment dialog )
     {
         applicationSettings.setCity( ( (DialogInputCity)dialog ).getCity().trim() );
+        applicationSettings.setLat( ( (DialogInputCity)dialog ).getLatitude() );
+        applicationSettings.setLon( ( (DialogInputCity)dialog ).getLongitude() );
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString( GlobalMethodsAndConstants.TAG_CITY, applicationSettings.getCity() );
+        editor.putFloat( GlobalMethodsAndConstants.TAG_LAT, (float)applicationSettings.getLat() );
+        editor.putFloat( GlobalMethodsAndConstants.TAG_LON, (float)applicationSettings.getLon() );
         editor.apply();
 
         updateWeather();
@@ -364,7 +374,7 @@ public class MainActivity extends AppCompatActivity
                 textMessage += getString(R.string.pressure) + " " + tvPressure.getText() + "\n";
                 textMessage += getString(R.string.humidity) + " " + tvHumidity.getText() + "\n";
                 textMessage += getString(R.string.more) + " ";
-                textMessage += ConstantsAPI.URL_CITY_WEATHER_FORECAST + weatherDay.getCityID();
+                textMessage += ConstantsWeatherAPI.URL_CITY_WEATHER_FORECAST + weatherDay.getCityID();
             }
         }
 
@@ -392,21 +402,11 @@ public class MainActivity extends AppCompatActivity
      */
     private void updateCurrentWeather()
     {
-        //TODO OpenWeatherMap рекомендуют запрашивать погоду по id города
-        //TODO Как связать название города (на русском) с id?
-        //TODO В city.list.json перечислены города с id и координатами, но как быть с одинаковыми названиями городов?
-
         Log.d( TAG_MAIN_ACTIVITY, "update weather" );
 
         //TODO прикрутить анимацию ожидания ответа при долгом выполнении запроса
-        /*Call<WeatherDay> callCurrentWeather = api.getCurrentWeather( dLat, dLon,
-                ConstantsAPI.DEFAULT_LANG, ConstantsAPI.APIKEY );*/
-
-        /*Call<WeatherDay> callCurrentWeather = api.getCurrentWeather( idCity,
-                ConstantsAPI.DEFAULT_LANG, ConstantsAPI.APIKEY );*/
-
-        Call<WeatherDay> callCurrentWeather = api.getCurrentWeather( applicationSettings.getCity(),
-                ConstantsAPI.DEFAULT_LANG, ConstantsAPI.APIKEY );
+        Call<WeatherDay> callCurrentWeather = api.getCurrentWeather( applicationSettings.getLat(),
+                applicationSettings.getLon(), ConstantsWeatherAPI.DEFAULT_LANG, ConstantsWeatherAPI.APIKEY );
 
         callCurrentWeather.enqueue(
                 new Callback<WeatherDay>()
@@ -472,8 +472,8 @@ public class MainActivity extends AppCompatActivity
     {
         Log.d( TAG_MAIN_ACTIVITY, "update weather forecast" );
 
-        Call<WeatherForecast> callWeatherForecast = api.getWeatherForecast( applicationSettings.getCity(),
-                ConstantsAPI.DEFAULT_LANG, ConstantsAPI.APIKEY );
+        Call<WeatherForecast> callWeatherForecast = api.getWeatherForecast( applicationSettings.getLat(),
+                applicationSettings.getLon(), ConstantsWeatherAPI.DEFAULT_LANG, ConstantsWeatherAPI.APIKEY );
 
         callWeatherForecast.enqueue( new Callback<WeatherForecast>() {
             @Override

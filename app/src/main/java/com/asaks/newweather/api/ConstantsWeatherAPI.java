@@ -6,7 +6,7 @@ package com.asaks.newweather.api;
  * Константы для API OpenWeatherMap
  */
 
-public class ConstantsAPI
+public class ConstantsWeatherAPI
 {
     public static final String APIKEY = "6e98c2c290b06c0743d1386ec90baf08";
     public static final String BASE_API_URL = "http://api.openweathermap.org/data/2.5/";

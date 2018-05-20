@@ -20,7 +20,14 @@ public class WeatherAPI
     //! Интерфейс запроса погоды
     public interface InterfaceAPI
     {
-        //! Запрос текущей погоды по координатам
+        /**
+         * Запрос текущей погоды по координатам города
+         * @param lat - широта города в градусах
+         * @param lon - долгота города в градусах
+         * @param lang - язык ответа
+         * @param appid - ключ OpenWeatherMap
+         * @return объект с данными о погоде
+         */
         @GET("weather")
         Call<WeatherDay> getCurrentWeather(
                 @Query("lat") double lat,
@@ -29,7 +36,13 @@ public class WeatherAPI
                 @Query("appid") String appid
         );
 
-        //! Запрос текущей погоды по id города OpenWeatherMap
+        /**
+         * Запрос текущей погоды по id города OpenWeatherMap
+         * @param id - id города
+         * @param lang - язык ответа
+         * @param appid - ключ OpenWeatherMap
+         * @return объект с данными о погоде
+         */
         @GET("weather")
         Call<WeatherDay> getCurrentWeather(
                 @Query("id") long id,
@@ -37,7 +50,13 @@ public class WeatherAPI
                 @Query("appid") String appid
         );
 
-        //! Запрос текущей погоды по названию города
+        /**
+         * Запрос текущей погоды по названию города
+         * @param city - название города
+         * @param lang - язык ответа
+         * @param appid - ключ OpenWeatherMap
+         * @return объект с данными о погоде
+         */
         @GET("weather")
         Call<WeatherDay> getCurrentWeather(
                 @Query("q") String city,
@@ -45,7 +64,13 @@ public class WeatherAPI
                 @Query("appid") String appid
         );
 
-
+        /**
+         * Запрос прогноза погоды по id города OpenWeatherMap
+         * @param id - id Города
+         * @param lang - язык ответа
+         * @param appid - ключ OpenWeatherMap
+         * @return объект с данными о прогнозе погоды
+         */
         @GET("forecast")
         Call<WeatherForecast> getWeatherForecast(
                 @Query("id") long id,
@@ -53,6 +78,13 @@ public class WeatherAPI
                 @Query("appid") String appid
         );
 
+        /**
+         * Запрос прогноза погоды по названию города
+         * @param city - название города
+         * @param lang - язык ответа
+         * @param appid - ключ OpenWeatherMap
+         * @return объект с данными о прогнозе погоды
+         */
         @GET("forecast")
         Call<WeatherForecast> getWeatherForecast(
                 @Query("q") String city,
@@ -60,12 +92,27 @@ public class WeatherAPI
                 @Query("appid") String appid
         );
 
+        /**
+         * Запрос прогноза погоды по координатам города
+         * @param lat - широта города в градусах
+         * @param lon - долгота города в градусах
+         * @@param lang - язык ответа
+         * @param appid - ключ OpenWeatherMap
+         * @return объект с данными о прогнозе погоды
+         */
+        @GET("forecast")
+        Call<WeatherForecast> getWeatherForecast(
+                @Query("lat") double lat,
+                @Query("lon") double lon,
+                @Query("lang") String lang,
+                @Query("appid") String appid
+        );
     }
 
     public static Retrofit getClient()
     {
         if ( null == retrofit )
-            retrofit = new Retrofit.Builder().baseUrl(ConstantsAPI.BASE_API_URL)
+            retrofit = new Retrofit.Builder().baseUrl(ConstantsWeatherAPI.BASE_API_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 

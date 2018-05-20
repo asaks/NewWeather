@@ -1,4 +1,4 @@
-package com.asaks.newweather;
+package com.asaks.newweather.fragments;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,6 +15,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.asaks.newweather.ApplicationSettings;
+import com.asaks.newweather.GlobalMethodsAndConstants;
+import com.asaks.newweather.R;
 import com.asaks.newweather.weather.WeatherDay;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;

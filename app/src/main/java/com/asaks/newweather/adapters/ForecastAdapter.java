@@ -1,4 +1,4 @@
-package com.asaks.newweather;
+package com.asaks.newweather.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.asaks.newweather.GlobalMethodsAndConstants;
+import com.asaks.newweather.R;
 import com.asaks.newweather.weather.WeatherForecast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -49,7 +51,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         }
     }
 
-    ForecastAdapter( WeatherForecast weatherForecast )
+    public ForecastAdapter( WeatherForecast weatherForecast )
     {
         this.weatherForecast = weatherForecast;
     }

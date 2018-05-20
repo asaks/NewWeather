@@ -126,6 +126,8 @@ public class SettingsActivity extends AppCompatActivity
         applicationSettings.setCity( ( (DialogInputCity)dialog ).getCity().toUpperCase().trim() );
         btnSetCity.setText( String.format( "%s: %s", getString(R.string.change_city),
                 applicationSettings.getCity() ) );
+        applicationSettings.setLat( ( (DialogInputCity)dialog ).getLatitude() );
+        applicationSettings.setLon( ( (DialogInputCity)dialog ).getLongitude() );
     }
 
     @Override

@@ -9,9 +9,12 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
+import android.widget.AdapterView;
 
+import com.asaks.newweather.adapters.GeoCodingAdapter;
 import com.asaks.newweather.R;
+import com.asaks.newweather.geo.AddressComponents;
+import com.asaks.newweather.ui.DelayAutoCompleteTextView;
 
 /**
  * Класс диалогового окна ввода названия города
@@ -26,7 +29,9 @@ public class DialogInputCity extends DialogFragment
 
     NoticeDialogListener mListener;
 
-    private EditText edCity;
+    private DelayAutoCompleteTextView edCity;
+    private double lat;
+    private double lon;
 
     /**
      * Создает новый экземпляр диалогового окна
@@ -63,21 +68,40 @@ public class DialogInputCity extends DialogFragment
         builder.setView( promptView );
         edCity = promptView.findViewById( R.id.edInputCity );
 
-        builder.setCancelable(false)
-                .setPositiveButton( getString(R.string.OK), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+        if ( edCity != null )
+        {
+            edCity.setAdapter( new GeoCodingAdapter( getContext() ) );
+            edCity.setOnItemClickListener(new AdapterView.OnItemClickListener()
+            {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+                {
+                    AddressComponents address = (AddressComponents)adapterView.getItemAtPosition(i);
 
-                        if ( !edCity.getText().toString().isEmpty() )
-                            mListener.onDialogPositiveClick( DialogInputCity.this );
-                    }
-                })
-                .setNegativeButton( getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        mListener.onDialogNegativeClick( DialogInputCity.this );
-                    }
-                });
+                    //TODO выделять название города из ответа по-другому
+                    String sCity = address.getFormattedAddress().trim().split(",")[0];
+                    edCity.setText( sCity );
+                    lat = address.getLatitude();
+                    lon = address.getLongitude();
+                }
+            });
+
+            builder.setCancelable(false)
+                    .setPositiveButton( getString(R.string.OK), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            if ( !edCity.getText().toString().isEmpty() )
+                                mListener.onDialogPositiveClick( DialogInputCity.this );
+                        }
+                    })
+                    .setNegativeButton( getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            mListener.onDialogNegativeClick( DialogInputCity.this );
+                        }
+                    });
+        }
 
         return builder.create();
     }
@@ -102,5 +126,23 @@ public class DialogInputCity extends DialogFragment
             return edCity.getText().toString().toUpperCase().trim();
 
         return "";
+    }
+
+    /**
+     * Функция запроса широты города
+     * @return широта города в градусах
+     */
+    public double getLatitude()
+    {
+        return lat;
+    }
+
+    /**
+     * Функция запроса долготы города
+     * @return долгота города в градусах
+     */
+    public double getLongitude()
+    {
+        return lon;
     }
 }

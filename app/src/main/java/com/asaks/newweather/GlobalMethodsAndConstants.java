@@ -23,6 +23,8 @@ public class GlobalMethodsAndConstants
     public static final String TAG_FORECAST = "forecast";
     public static final String TAG_CITY = "city";
     public static final String TAG_MESSAGE = "message";
+    public static final String TAG_LAT = "lat";
+    public static final String TAG_LON = "lon";
 
     // смещение по оси Y для всплывающей подсказки
     public static final int Y_OFFSET_TOAST = 100;

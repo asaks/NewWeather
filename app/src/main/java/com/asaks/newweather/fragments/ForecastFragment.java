@@ -1,4 +1,4 @@
-package com.asaks.newweather;
+package com.asaks.newweather.fragments;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,6 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.asaks.newweather.ApplicationSettings;
+import com.asaks.newweather.adapters.ForecastAdapter;
+import com.asaks.newweather.GlobalMethodsAndConstants;
+import com.asaks.newweather.R;
 import com.asaks.newweather.weather.WeatherForecast;
 
 public class ForecastFragment extends Fragment
