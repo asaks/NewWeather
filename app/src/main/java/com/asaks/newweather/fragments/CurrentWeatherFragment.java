@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -118,7 +119,7 @@ public class CurrentWeatherFragment extends Fragment
      */
     private void updateUi( WeatherDay weatherDay )
     {
-        if ( weatherDay == null )
+        if ((weatherDay == null) || (weatherDay.getCityID() == 0))
             return;
 
         tvCity.setText( weatherDay.getCityName().toUpperCase( Locale.getDefault() ) );
@@ -135,7 +136,7 @@ public class CurrentWeatherFragment extends Fragment
 
         tvLon.setText( sLongitude );
 
-        Date timeUpd = new Date( weatherDay.getTimeUpdate() * 1000 );
+        Date timeUpd = new Date( weatherDay.getDateTime() * 1000 );
         tvDateTime.setText( new SimpleDateFormat("dd MMMM HH:mm", Locale.getDefault() ).format( timeUpd ) );
 
         convertTemperature( applicationSettings.getUnitTemp(), weatherDay.getCurrentTemp() );
@@ -155,7 +156,7 @@ public class CurrentWeatherFragment extends Fragment
         float angle = 180 + (float)weatherDay.getWindDeg();
         ivArrow.setRotation( angle );
 
-        tvWeatherConditions.setText( weatherDay.getWeatherDesc() );
+        tvWeatherConditions.setText( weatherDay.getWeatherDescription() );
 
         Date timeSunrise = new Date( weatherDay.getTimeSunrise() * 1000 );
         tvSunrise.setText( new SimpleDateFormat( "HH:mm", Locale.getDefault() ).format( timeSunrise ) );

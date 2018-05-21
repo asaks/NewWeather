@@ -29,6 +29,8 @@ import android.widget.Toast;
 import com.asaks.newweather.api.ConstantsWeatherAPI;
 import com.asaks.newweather.api.WeatherAPI;
 
+import com.asaks.newweather.db.AppDatabase;
+import com.asaks.newweather.db.WeatherDatabase;
 import com.asaks.newweather.dialogs.DialogAbout;
 import com.asaks.newweather.dialogs.DialogInputCity;
 import com.asaks.newweather.fragments.CurrentWeatherFragment;
@@ -40,6 +42,7 @@ import com.bumptech.glide.request.RequestOptions;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,6 +57,9 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG_MAIN_ACTIVITY = "MainActivity";
 
+    /**
+     * Вспомогательный класс. Адаптер для показа вкладок
+     */
     private class WeatherFragmentPagerAdapter extends FragmentPagerAdapter
     {
         SparseArray<Fragment> saCreatedFragments = new SparseArray<>();
@@ -70,6 +76,12 @@ public class MainActivity extends AppCompatActivity
             {
                 case GlobalMethodsAndConstants.PAGE_CURRENT_WEATHER:
                 {
+                    List<WeatherDay> lst = db.weatherDayDao().getCurrentWeather();
+                    WeatherDay weatherDay = new WeatherDay();
+
+                    if ( !lst.isEmpty() )
+                        weatherDay = lst.get(0);
+
                     return CurrentWeatherFragment.newInstance( applicationSettings, weatherDay );
                 }
                 case GlobalMethodsAndConstants.PAGE_FORECAST_WEATHER:
@@ -133,10 +145,11 @@ public class MainActivity extends AppCompatActivity
     SharedPreferences sharedPreferences;
     RequestOptions requestOptionsGlide;
 
-    WeatherDay weatherDay;
     WeatherForecast weatherForecast;
 
     boolean bDoubleBackPressedToExitOnce = false;
+
+    WeatherDatabase db = AppDatabase.getInstance().getWeatherDatabase();
 
     @Override
     protected void onCreate( Bundle savedInstanceState )
@@ -151,17 +164,7 @@ public class MainActivity extends AppCompatActivity
             actionBar.setIcon( R.mipmap.ic_launcher );
         }
 
-        weatherDay = new WeatherDay();
         weatherForecast = new WeatherForecast();
-
-        ///////////////////////ТЕСТОВЫЕ ДАННЫЕ//////////////////////
-        weatherDay.setCityID( 511565 );
-        weatherDay.setTestData( "Пенза", 53.2,45.0,1523385261,
-                276.1, 1006.31, 83, 4.31,
-                193.505, "Ясно", 1524372257, 1524424277 );
-        weatherDay.setWindDeg(276f);
-        weatherDay.setCountry("ru");
-        ////////////////////////////////////////////////////////////
 
         applicationSettings = new ApplicationSettings();
         sharedPreferences = getPreferences( Context.MODE_PRIVATE );
@@ -183,6 +186,16 @@ public class MainActivity extends AppCompatActivity
         {
             DialogInputCity dlgInputCity = DialogInputCity.newInstance();
             dlgInputCity.show( getSupportFragmentManager(), "DlgSetCity" );
+        }
+        else
+        {
+            List<WeatherDay> lst = db.weatherDayDao().getCurrentWeather();
+
+            if ( !lst.isEmpty() )
+                // т.к. у нас пока только один город, всегда берем первую (и единственную) запись
+                updateUICurrentWeather( lst.get(0) );
+            else
+                Toast.makeText(this,"пусто",Toast.LENGTH_SHORT).show();
         }
 
         viewPager = findViewById(R.id.pager);
@@ -301,8 +314,16 @@ public class MainActivity extends AppCompatActivity
                     SharedPreferences sf = getPreferences( Context.MODE_PRIVATE );
                     String sCity = sf.getString( GlobalMethodsAndConstants.TAG_CITY, "" );
 
+                    // если названия не совпадаю - значит сменили город
                     if ( !sCity.equals( applicationSettings.getCity() ) )
+                    {
+                        // удаляем старую запись о погоде, т.к. сменили город
+                        List<WeatherDay> lst = db.weatherDayDao().getCurrentWeather();
+                        if ( !lst.isEmpty() && lst.get(0) != null )
+                            db.weatherDayDao().delete( lst.get(0) );
+
                         updateWeather();
+                    }
 
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putInt( GlobalMethodsAndConstants.TAG_TEMP_UNITS, applicationSettings.getUnitTemp() );
@@ -364,6 +385,12 @@ public class MainActivity extends AppCompatActivity
 
             if ( view != null )
             {
+                List<WeatherDay> lst = db.weatherDayDao().getCurrentWeather();
+                long idCity = 0;
+
+                if ( !lst.isEmpty() )
+                    idCity = lst.get(0).getCityID();
+
                 TextView tvCity = view.findViewById( R.id.tvCityName );
                 TextView tvCurrentTemp = view.findViewById( R.id.tvCurrentTemp );
                 TextView tvPressure = view.findViewById( R.id.tvPressure );
@@ -374,7 +401,7 @@ public class MainActivity extends AppCompatActivity
                 textMessage += getString(R.string.pressure) + " " + tvPressure.getText() + "\n";
                 textMessage += getString(R.string.humidity) + " " + tvHumidity.getText() + "\n";
                 textMessage += getString(R.string.more) + " ";
-                textMessage += ConstantsWeatherAPI.URL_CITY_WEATHER_FORECAST + weatherDay.getCityID();
+                textMessage += ConstantsWeatherAPI.URL_CITY_WEATHER_FORECAST + idCity;
             }
         }
 
@@ -403,10 +430,19 @@ public class MainActivity extends AppCompatActivity
     private void updateCurrentWeather()
     {
         Log.d( TAG_MAIN_ACTIVITY, "update weather" );
+        Call<WeatherDay> callCurrentWeather;
 
         //TODO прикрутить анимацию ожидания ответа при долгом выполнении запроса
-        Call<WeatherDay> callCurrentWeather = api.getCurrentWeather( applicationSettings.getLat(),
-                applicationSettings.getLon(), ConstantsWeatherAPI.DEFAULT_LANG, ConstantsWeatherAPI.APIKEY );
+
+        if ( applicationSettings.getLat() != 0.0 && applicationSettings.getLon() != 0.0 )
+        {
+            callCurrentWeather = api.getCurrentWeather( applicationSettings.getLat(),
+                    applicationSettings.getLon(), ConstantsWeatherAPI.DEFAULT_LANG, ConstantsWeatherAPI.APIKEY );
+        }
+        else
+            callCurrentWeather = api.getCurrentWeather( applicationSettings.getCity(),
+                    ConstantsWeatherAPI.DEFAULT_LANG, ConstantsWeatherAPI.APIKEY );
+
 
         callCurrentWeather.enqueue(
                 new Callback<WeatherDay>()
@@ -414,18 +450,36 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onResponse( @NonNull Call<WeatherDay> call, @NonNull Response<WeatherDay> response )
                     {
-                        //WeatherDay weatherDay = response.body();
-                        weatherDay = response.body();
+                        WeatherDay weatherDay = response.body();
 
                         if ( response.isSuccessful() )
                             if ( null != weatherDay )
                             {
+                                //TODO а если координаты должны быть (0,0)?
+                                if ( applicationSettings.getLon() == 0.0 && applicationSettings.getLat() == 0.0 )
+                                {
+                                    applicationSettings.setLat( weatherDay.getLatitude() );
+                                    applicationSettings.setLon( weatherDay.getLongitude() );
+
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putString( GlobalMethodsAndConstants.TAG_CITY, applicationSettings.getCity() );
+                                    editor.putFloat( GlobalMethodsAndConstants.TAG_LAT, (float)applicationSettings.getLat() );
+                                    editor.putFloat( GlobalMethodsAndConstants.TAG_LON, (float)applicationSettings.getLon() );
+                                    editor.apply();
+                                }
+
                                 // замена английского названия города на введенное пользователем
                                 weatherDay.setCityName( applicationSettings.getCity() );
                                 // замена времени обновления данных о текущей погоде на сервере на
                                 // время обновления данных в приложении
                                 Date timeUpd = new Date();
                                 weatherDay.setTimeUpdate( timeUpd.getTime() / 1000  );
+
+                                //TODO вынести в отдельный поток
+                                if ( db.weatherDayDao().isExist( weatherDay.getCityID() ) )
+                                    db.weatherDayDao().update(weatherDay);
+                                else
+                                    db.weatherDayDao().insert(weatherDay);
 
                                 updateUICurrentWeather( weatherDay );
                             }

@@ -81,7 +81,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
 
         //ApplicationSettings applicationSettings = ( (MainActivity)mContext).getApplicationSettings();
 
-        Date timeUpd = new Date( weatherForecast.getWeatherItems().get(position).getTimeUpdate() * 1000 );
+        Date timeUpd = new Date( weatherForecast.getWeatherItems().get(position).getDateTime() * 1000 );
         holder.tvDay.setText( new SimpleDateFormat( "dd.MM.yyyy HH:mm", Locale.getDefault() ).format( timeUpd ) );
 
         long temp = Math.round( weatherForecast.getWeatherItems().get(position).getCurrentTemp() );
