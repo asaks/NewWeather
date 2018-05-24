@@ -1,23 +1,33 @@
 package com.asaks.newweather;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
  * Класс настроек приложения
  */
-
+@Entity(tableName = "settings")
 public class ApplicationSettings implements Parcelable
 {
+    @PrimaryKey
+    private long idd;
     // город
+    @ColumnInfo(name = "city")
     private String city;
     // позиция выбранной единицы измерения температуры
+    @ColumnInfo(name = "unit_temp")
     private int unitTempPos;
     // позиция выбранной единицы измерения давления
+    @ColumnInfo(name = "unit_press")
     private int unitPressPos;
     // широта города в градусах
+    @ColumnInfo(name = "lat")
     private double lat;
     // долгота города в градусах
+    @ColumnInfo(name = "lon")
     private double lon;
 
     public ApplicationSettings()
@@ -61,6 +71,36 @@ public class ApplicationSettings implements Parcelable
         parcel.writeInt(unitPressPos);
         parcel.writeDouble(lat);
         parcel.writeDouble(lon);
+    }
+
+    public long getIdd()
+    {
+        return idd;
+    }
+
+    public void setIdd(long idd)
+    {
+        this.idd = idd;
+    }
+
+    public int getUnitTempPos()
+    {
+        return unitTempPos;
+    }
+
+    public void setUnitTempPos(int unitTempPos)
+    {
+        this.unitTempPos = unitTempPos;
+    }
+
+    public int getUnitPressPos()
+    {
+        return unitPressPos;
+    }
+
+    public void setUnitPressPos(int unitPressPos)
+    {
+        this.unitPressPos = unitPressPos;
     }
 
     public String getCity()

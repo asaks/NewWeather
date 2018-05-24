@@ -4,7 +4,6 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.Relation;
 import android.arch.persistence.room.TypeConverters;
 import android.os.Parcelable;
 import android.os.Parcel;
@@ -282,14 +281,6 @@ public class WeatherDay implements Parcelable
     private Sys sys;
 
     protected WeatherDay(Parcel in) {
-        /*temp = new DayTemperature();
-        weatherDesc = new ArrayList<>();
-        coords = new Coords();
-        wind = new Wind();
-        sys = new Sys();
-
-        weatherDesc.add( new WeatherDesc() );*/
-
         cityName = in.readString();
         cityID = in.readLong();
         dateTime = in.readLong();
@@ -361,32 +352,10 @@ public class WeatherDay implements Parcelable
     public WeatherDay()
     {
         temp = new DayTemperature();
-        weatherDesc = new ArrayList<WeatherDesc>();
+        weatherDesc = new ArrayList<>();
         coords = new Coords();
         wind = new Wind();
         sys = new Sys();
-    }
-
-
-    // Функция заполнения тестовыми данными
-    public void setTestData( String sCity, double dLat, double dLon, long iTimeUpd, double dCurrentTemp, double dPressure,
-                                    double dHumidity, double dWindSpeed, double dWindDeg, String sWeatherDesc,
-                                    long iSunrise, long iSunset )
-    {
-        weatherDesc.add( new WeatherDesc() );
-
-        this.cityName = sCity;
-        coords.lat = dLat;
-        coords.lon = dLon;
-        this.dateTime = iTimeUpd;
-        temp.temp = dCurrentTemp;
-        temp.pressure = dPressure;
-        temp.humidity = dHumidity;
-        wind.speed = dWindSpeed;
-        wind.deg = dWindDeg;
-        weatherDesc.get(0).description = sWeatherDesc;
-        sys.sunrise = iSunrise;
-        sys.sunset = iSunset;
     }
 
     ////////////////////////////геттеры////////////////////////////

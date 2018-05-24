@@ -142,7 +142,6 @@ public class MainActivity extends AppCompatActivity
 
     WeatherAPI.InterfaceAPI api;
     ApplicationSettings applicationSettings;
-    SharedPreferences sharedPreferences;
     RequestOptions requestOptionsGlide;
 
     WeatherForecast weatherForecast;
@@ -166,36 +165,28 @@ public class MainActivity extends AppCompatActivity
 
         weatherForecast = new WeatherForecast();
 
-        applicationSettings = new ApplicationSettings();
-        sharedPreferences = getPreferences( Context.MODE_PRIVATE );
-        if ( null != sharedPreferences )
-        {
-            applicationSettings.setUnitTemp( sharedPreferences.getInt( GlobalMethodsAndConstants.TAG_TEMP_UNITS,
-                    GlobalMethodsAndConstants.TEMP_KELVIN ) );
-            applicationSettings.setUnitPress( sharedPreferences.getInt( GlobalMethodsAndConstants.TAG_PRESS_UNITS,
-                    GlobalMethodsAndConstants.PRESS_MM_HG ) );
-            applicationSettings.setCity( sharedPreferences.getString(GlobalMethodsAndConstants.TAG_CITY,
-                    "" ) );
-            applicationSettings.setLat( sharedPreferences.getFloat( GlobalMethodsAndConstants.TAG_LAT, 0 ) );
-            applicationSettings.setLon( sharedPreferences.getFloat( GlobalMethodsAndConstants.TAG_LON, 0 ) );
-        }
+        applicationSettings = db.settingsDao().getSettings();
 
-        //TODO при первом запуске приложения запрашивать город
-        // если нет сохраненного города, то показываем диалог
-        if ( applicationSettings.getCity().isEmpty() )
+        if ( applicationSettings == null )
         {
+            applicationSettings = new ApplicationSettings();
+            applicationSettings.setLon( 0.0 );
+            applicationSettings.setLat( 0.0 );
+            applicationSettings.setUnitPress( GlobalMethodsAndConstants.PRESS_MM_HG );
+            applicationSettings.setUnitTemp( GlobalMethodsAndConstants.TEMP_KELVIN );
+            applicationSettings.setCity( "" );
+
             DialogInputCity dlgInputCity = DialogInputCity.newInstance();
             dlgInputCity.show( getSupportFragmentManager(), "DlgSetCity" );
+
         }
         else
         {
             List<WeatherDay> lst = db.weatherDayDao().getCurrentWeather();
 
-            if ( !lst.isEmpty() )
+            if ( lst != null && !lst.isEmpty() )
                 // т.к. у нас пока только один город, всегда берем первую (и единственную) запись
                 updateUICurrentWeather( lst.get(0) );
-            else
-                Toast.makeText(this,"пусто",Toast.LENGTH_SHORT).show();
         }
 
         viewPager = findViewById(R.id.pager);
@@ -325,13 +316,10 @@ public class MainActivity extends AppCompatActivity
                         updateWeather();
                     }
 
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putInt( GlobalMethodsAndConstants.TAG_TEMP_UNITS, applicationSettings.getUnitTemp() );
-                    editor.putInt( GlobalMethodsAndConstants.TAG_PRESS_UNITS, applicationSettings.getUnitPress() );
-                    editor.putString( GlobalMethodsAndConstants.TAG_CITY, applicationSettings.getCity() );
-                    editor.putFloat( GlobalMethodsAndConstants.TAG_LAT, (float)applicationSettings.getLat() );
-                    editor.putFloat( GlobalMethodsAndConstants.TAG_LON, (float)applicationSettings.getLon() );
-                    editor.apply();
+                    if ( db.settingsDao().isExist( applicationSettings.getCity() ) )
+                        db.settingsDao().update( applicationSettings );
+                    else
+                        db.settingsDao().insert( applicationSettings );
 
                     Intent intent = new Intent( GlobalMethodsAndConstants.INTENT_NEW_SETTINGS );
                     intent.putExtra( GlobalMethodsAndConstants.TAG_SETTINGS, applicationSettings );
@@ -349,11 +337,10 @@ public class MainActivity extends AppCompatActivity
         applicationSettings.setLat( ( (DialogInputCity)dialog ).getLatitude() );
         applicationSettings.setLon( ( (DialogInputCity)dialog ).getLongitude() );
 
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString( GlobalMethodsAndConstants.TAG_CITY, applicationSettings.getCity() );
-        editor.putFloat( GlobalMethodsAndConstants.TAG_LAT, (float)applicationSettings.getLat() );
-        editor.putFloat( GlobalMethodsAndConstants.TAG_LON, (float)applicationSettings.getLon() );
-        editor.apply();
+        if ( db.settingsDao().isExist( applicationSettings.getCity() ) )
+            db.settingsDao().update( applicationSettings );
+        else
+            db.settingsDao().insert( applicationSettings );
 
         updateWeather();
     }
@@ -461,11 +448,7 @@ public class MainActivity extends AppCompatActivity
                                     applicationSettings.setLat( weatherDay.getLatitude() );
                                     applicationSettings.setLon( weatherDay.getLongitude() );
 
-                                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                                    editor.putString( GlobalMethodsAndConstants.TAG_CITY, applicationSettings.getCity() );
-                                    editor.putFloat( GlobalMethodsAndConstants.TAG_LAT, (float)applicationSettings.getLat() );
-                                    editor.putFloat( GlobalMethodsAndConstants.TAG_LON, (float)applicationSettings.getLon() );
-                                    editor.apply();
+                                    db.settingsDao().update( applicationSettings );
                                 }
 
                                 // замена английского названия города на введенное пользователем

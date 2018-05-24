@@ -1,6 +1,7 @@
 package com.asaks.newweather.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,8 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.asaks.newweather.ApplicationSettings;
 import com.asaks.newweather.GlobalMethodsAndConstants;
 import com.asaks.newweather.R;
+import com.asaks.newweather.db.AppDatabase;
+import com.asaks.newweather.db.WeatherDatabase;
 import com.asaks.newweather.weather.WeatherForecast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -27,8 +31,10 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
 {
     private Context mContext;
     private RequestOptions requestOptionsGlide = new RequestOptions();
+    private WeatherDatabase db = AppDatabase.getInstance().getWeatherDatabase();
 
     private WeatherForecast weatherForecast;
+    private Resources res;
 
     static class ForecastHolder extends RecyclerView.ViewHolder
     {
@@ -77,20 +83,22 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
     @Override
     public void onBindViewHolder(@NonNull ForecastAdapter.ForecastHolder holder, int position)
     {
-        //TODO отображение в заисимости от установленных настроек
+        //TODO пока каждый раз лезу в БД и смотрю настройки
 
-        //ApplicationSettings applicationSettings = ( (MainActivity)mContext).getApplicationSettings();
+        res = holder.itemView.getResources();
+        ApplicationSettings settings = db.settingsDao().getSettings();
+
+        if ( settings == null )
+            settings = new ApplicationSettings();
 
         Date timeUpd = new Date( weatherForecast.getWeatherItems().get(position).getDateTime() * 1000 );
         holder.tvDay.setText( new SimpleDateFormat( "dd.MM.yyyy HH:mm", Locale.getDefault() ).format( timeUpd ) );
 
         long temp = Math.round( weatherForecast.getWeatherItems().get(position).getCurrentTemp() );
-        holder.tvForecastTemp.setText( String.format( Locale.getDefault(), "%d %s", temp,
-                mContext.getString(R.string.Kelvin) ) );
+        holder.tvForecastTemp.setText( convertTemperature( settings.getUnitTemp(), temp ) );
 
-        holder.tvForecastPressure.setText( String.format( Locale.getDefault(), "%.2f %s",
-                GlobalMethodsAndConstants.toMmHg( weatherForecast.getWeatherItems().get(position).getPressure() ),
-                mContext.getString(R.string.mmHg) ) );
+        holder.tvForecastPressure.setText( convertPressure( settings.getUnitPress(),
+                weatherForecast.getWeatherItems().get(position).getPressure() ) );
 
         holder.tvForecastHumidity.setText( String.format( Locale.getDefault(), "%d %s",
                 Math.round( weatherForecast.getWeatherItems().get(position).getHumidity() ),
@@ -111,4 +119,68 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         return weatherForecast.getWeatherItems().size();
     }
 
+    /**
+     * Отображает температуру в указанных единицах измерения
+     * @param unit - единицы измерения
+     * @param temp - температура в кельвинах
+     * return строковое описание температуры
+     */
+    private String convertTemperature( int unit, double temp )
+    {
+        String sTemp = "";
+
+        if ( res != null )
+        {
+            switch ( unit )
+            {
+                case GlobalMethodsAndConstants.TEMP_CELSIUS: // градусы Цельсия
+                {
+                    sTemp = String.format( Locale.getDefault(), "%d %s%s",
+                            GlobalMethodsAndConstants.toCelsius(temp),
+                            res.getString(R.string.gradus), res.getString(R.string.Celcius) );
+                    break;
+                }
+                case GlobalMethodsAndConstants.TEMP_FARENHEIT: // градусы Фаренгейта
+                {
+                    sTemp = String.format( Locale.getDefault(), "%d %s%s",
+                            GlobalMethodsAndConstants.toFarenheit(temp),
+                            res.getString(R.string.gradus), res.getString(R.string.Farenheit) );
+                    break;
+                }
+                case GlobalMethodsAndConstants.TEMP_KELVIN: // Кельвины
+                default:
+                {
+                    sTemp = String.format( Locale.getDefault(), "%d %s",
+                            Math.round(temp),
+                            res.getString(R.string.Kelvin) );
+                }
+            }
+        }
+
+        return sTemp;
+    }
+
+    /**
+     * Отображает давление в указанных единицах измерения
+     * @param unit - единицы измерения
+     * @param press - давление в гектопаскалях
+     * return строковое описание давления
+     */
+    private String convertPressure( int unit, double press )
+    {
+        String sPress = "";
+
+        if ( res != null )
+        {
+            if ( GlobalMethodsAndConstants.PRESS_HPA == unit )
+                sPress = String.format( Locale.getDefault(), "%.2f %s", press,
+                        res.getString(R.string.gektopascal) );
+            else if ( GlobalMethodsAndConstants.PRESS_MM_HG == unit )
+                sPress = String.format( Locale.getDefault(), "%.2f %s",
+                        GlobalMethodsAndConstants.toMmHg( press ),
+                        res.getString(R.string.mmHg) );
+        }
+
+        return sPress;
+    }
 }
