@@ -27,25 +27,60 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 /**
  * Класс фрагмента, отображающего текущую погоду
  */
 public class CurrentWeatherFragment extends Fragment
 {
+    private Unbinder unbinder;
+
+    @BindView(R.id.tvCityName)
     TextView tvCity;
+
+    @BindView(R.id.tvLatitude)
     TextView tvLat;
+
+    @BindView(R.id.tvLongitude)
     TextView tvLon;
+
+    @BindView(R.id.tvTimeUpdate)
     TextView tvDateTime;
+
+    @BindView(R.id.tvCurrentTemp)
     TextView tvCurrentTemp;
+
+    @BindView(R.id.tvPressure)
     TextView tvPressure;
+
+    @BindView(R.id.tvHumidity)
     TextView tvHumidity;
+
+    @BindView(R.id.tvWindSpeed)
     TextView tvWindSpeed;
+
+    @BindView(R.id.tvWeatherDesc)
     TextView tvWeatherConditions;
+
+    @BindView(R.id.ivWeatherCondition)
     ImageView ivWeatherCondition;
+
+    @BindView(R.id.ivFlag)
     ImageView ivFlag;
+
+    @BindView(R.id.tvSunrise)
     TextView tvSunrise;
+
+    @BindView(R.id.tvSunset)
     TextView tvSunset;
+
+    @BindView(R.id.ivThermometer)
     ImageView ivThermometer;
+
+    @BindView(R.id.ivArrow)
     ImageView ivArrow;
 
     // опции загрузки изображений с помощью Glide
@@ -108,7 +143,11 @@ public class CurrentWeatherFragment extends Fragment
     @Override
     public View onCreateView( @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
     {
-        return inflater.inflate( R.layout.fragment_current_weather, container, false );
+        View view = inflater.inflate( R.layout.fragment_current_weather, container, false );
+
+        unbinder = ButterKnife.bind( this, view );
+
+        return view;
     }
 
     /**
@@ -180,22 +219,6 @@ public class CurrentWeatherFragment extends Fragment
 
         if ( null != view )
         {
-            tvCity = view.findViewById( R.id.tvCityName );
-            tvLat = view.findViewById( R.id.tvLatitude );
-            tvLon = view.findViewById( R.id.tvLongitude );
-            tvDateTime = view.findViewById( R.id.tvTimeUpdate );
-            tvCurrentTemp = view.findViewById( R.id.tvCurrentTemp );
-            tvPressure = view.findViewById( R.id.tvPressure );
-            tvHumidity = view.findViewById( R.id.tvHumidity );
-            tvWindSpeed = view.findViewById( R.id.tvWindSpeed );
-            tvWeatherConditions = view.findViewById( R.id.tvWeatherDesc );
-            ivWeatherCondition = view.findViewById( R.id.ivWeatherCondition);
-            ivFlag = view.findViewById( R.id.ivFlag );
-            tvSunrise = view.findViewById( R.id.tvSunrise );
-            tvSunset = view.findViewById( R.id.tvSunset );
-            ivThermometer = view.findViewById( R.id.ivThermometer );
-            ivArrow = view.findViewById( R.id.ivArrow );
-
             if ( null != savedInstanceState )
             {
                 this.weatherDay = savedInstanceState.getParcelable( GlobalMethodsAndConstants.TAG_WEATHER );
@@ -257,6 +280,14 @@ public class CurrentWeatherFragment extends Fragment
         }
 
         super.onDestroy();
+    }
+
+    @Override
+    public void onDestroyView()
+    {
+        unbinder.unbind();
+
+        super.onDestroyView();
     }
 
     /**

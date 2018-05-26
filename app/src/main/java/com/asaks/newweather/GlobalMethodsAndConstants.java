@@ -50,6 +50,10 @@ public class GlobalMethodsAndConstants
     public static final String INTENT_NEW_SETTINGS = "new_settings";
     public static final String INTENT_NEW_FORECAST = "update_weather_forecast";
 
+    //
+    public static final int IDD_CURRENT_WEATHER = 1;
+    public static final int IDD_WEATHER_FORECAST = 2;
+
     /**
      * Функция конвертации температуры из Кельвинов в градусы Цельсия
      * @param dTempKelvin - температура в кельвинах

@@ -44,6 +44,8 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -76,16 +78,22 @@ public class MainActivity extends AppCompatActivity
             {
                 case GlobalMethodsAndConstants.PAGE_CURRENT_WEATHER:
                 {
-                    List<WeatherDay> lst = db.weatherDayDao().getCurrentWeather();
-                    WeatherDay weatherDay = new WeatherDay();
+                    WeatherDay weatherDay = AppDatabase.getInstance().getCurrentWeather();
 
-                    if ( !lst.isEmpty() )
-                        weatherDay = lst.get(0);
+                    if ( weatherDay == null )
+                        weatherDay = new WeatherDay();
 
                     return CurrentWeatherFragment.newInstance( applicationSettings, weatherDay );
                 }
                 case GlobalMethodsAndConstants.PAGE_FORECAST_WEATHER:
                 {
+                    List<WeatherDay> lst = db.weatherDayDao().getForecast(GlobalMethodsAndConstants.IDD_WEATHER_FORECAST);
+
+                    if ( lst != null && !lst.isEmpty() )
+                    {
+                        weatherForecast.setWeatherItems( lst );
+                    }
+
                     return ForecastFragment.newInstance( applicationSettings, weatherForecast );
                 }
                 default:
@@ -137,6 +145,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @BindView(R.id.pager)
     ViewPager viewPager;
     PagerAdapter pagerAdapter;
 
@@ -180,16 +189,8 @@ public class MainActivity extends AppCompatActivity
             dlgInputCity.show( getSupportFragmentManager(), "DlgSetCity" );
 
         }
-        else
-        {
-            List<WeatherDay> lst = db.weatherDayDao().getCurrentWeather();
 
-            if ( lst != null && !lst.isEmpty() )
-                // т.к. у нас пока только один город, всегда берем первую (и единственную) запись
-                updateUICurrentWeather( lst.get(0) );
-        }
-
-        viewPager = findViewById(R.id.pager);
+        ButterKnife.bind(this);
         pagerAdapter = new WeatherFragmentPagerAdapter( getSupportFragmentManager() );
         viewPager.setAdapter( pagerAdapter );
 
@@ -458,11 +459,23 @@ public class MainActivity extends AppCompatActivity
                                 Date timeUpd = new Date();
                                 weatherDay.setTimeUpdate( timeUpd.getTime() / 1000  );
 
+                                weatherDay.setCurrentOrForecast( GlobalMethodsAndConstants.IDD_CURRENT_WEATHER );
+
                                 //TODO вынести в отдельный поток
-                                if ( db.weatherDayDao().isExist( weatherDay.getCityID() ) )
-                                    db.weatherDayDao().update(weatherDay);
-                                else
-                                    db.weatherDayDao().insert(weatherDay);
+                                //TODO пока перед сохранением удаляю все записи
+                                db.weatherDayDao().deleteCurrentWeather( GlobalMethodsAndConstants.IDD_CURRENT_WEATHER );
+
+                                weatherDay.setIdCoords( db.weatherDayDao().saveCoords(weatherDay.getCoords()));
+                                weatherDay.setIdTemp( db.weatherDayDao().saveTemp(weatherDay.getTemp()) );
+                                weatherDay.setIdWind( db.weatherDayDao().saveWind(weatherDay.getWind()) );
+                                weatherDay.setIdSys( db.weatherDayDao().saveSys(weatherDay.getSys() ));
+
+                                weatherDay.setIdd( db.weatherDayDao().saveWeatherDay(weatherDay) );
+
+                                for ( int i = 0; i < weatherDay.getWeatherDesc().size(); i++ )
+                                    weatherDay.getWeatherDesc().get(i).setIdWeatherDay( weatherDay.getIdd() );
+
+                                db.weatherDayDao().saveWeatherDesc( weatherDay.getWeatherDesc() );
 
                                 updateUICurrentWeather( weatherDay );
                             }
@@ -524,6 +537,28 @@ public class MainActivity extends AppCompatActivity
                     {
                         //weatherForecast.setWeatherItems( wf.getWeatherItems() );
                         //mAdapter.notifyDataSetChanged();
+
+                        for ( int j = 0; j < weatherForecast.getWeatherItems().size(); j++ )
+                        {
+                            WeatherDay item = weatherForecast.getWeatherItems().get(j);
+
+                            if ( item != null )
+                            {
+                                db.weatherDayDao().deleteCurrentWeather( GlobalMethodsAndConstants.IDD_WEATHER_FORECAST );
+
+                                item.setIdCoords( db.weatherDayDao().saveCoords(item.getCoords()));
+                                item.setIdTemp( db.weatherDayDao().saveTemp(item.getTemp()) );
+                                item.setIdWind( db.weatherDayDao().saveWind(item.getWind()) );
+                                item.setIdSys( db.weatherDayDao().saveSys(item.getSys() ));
+
+                                item.setIdd( db.weatherDayDao().saveWeatherDay(item) );
+
+                                for ( int i = 0; i < item.getWeatherDesc().size(); i++ )
+                                    item.getWeatherDesc().get(i).setIdWeatherDay( item.getIdd() );
+
+                                db.weatherDayDao().saveWeatherDesc( item.getWeatherDesc() );
+                            }
+                        }
 
                         Intent intent = new Intent( GlobalMethodsAndConstants.INTENT_NEW_FORECAST );
                         intent.putExtra( GlobalMethodsAndConstants.TAG_FORECAST, weatherForecast );

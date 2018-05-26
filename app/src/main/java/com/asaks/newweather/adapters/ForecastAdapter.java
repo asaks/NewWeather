@@ -24,6 +24,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Адаптер для отображения прогноза погоды
  */
@@ -38,22 +41,28 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
 
     static class ForecastHolder extends RecyclerView.ViewHolder
     {
-        private TextView tvDay;
-        private TextView tvForecastTemp;
-        private TextView tvForecastPressure;
-        private TextView tvForecastHumidity;
-        private TextView tvForecastWind;
-        private ImageView ivWeatherCondition;
+        @BindView(R.id.tvDay)
+        protected TextView tvDay;
+
+        @BindView(R.id.tvForecastTemp)
+        protected TextView tvForecastTemp;
+
+        @BindView(R.id.tvForecastPressure)
+        protected TextView tvForecastPressure;
+
+        @BindView(R.id.tvForecastHumidity)
+        protected TextView tvForecastHumidity;
+
+        @BindView(R.id.tvForecastWind)
+        protected TextView tvForecastWind;
+
+        @BindView(R.id.ivWeatherCondition)
+        protected ImageView ivWeatherCondition;
 
         ForecastHolder(View itemView)
         {
             super(itemView);
-            tvDay = itemView.findViewById( R.id.tvDay );
-            tvForecastTemp = itemView.findViewById( R.id.tvForecastTemp );
-            tvForecastPressure = itemView.findViewById( R.id.tvForecastPressure );
-            tvForecastHumidity = itemView.findViewById( R.id.tvForecastHumidity );
-            tvForecastWind = itemView.findViewById( R.id.tvForecastWind );
-            ivWeatherCondition = itemView.findViewById( R.id.ivWeatherCondition);
+            ButterKnife.bind(this, itemView);
         }
     }
 

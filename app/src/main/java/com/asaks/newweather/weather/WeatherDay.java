@@ -1,14 +1,13 @@
 package com.asaks.newweather.weather;
 
 import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.TypeConverters;
 import android.os.Parcelable;
 import android.os.Parcel;
 
-import com.asaks.newweather.db.DbTypeConverters;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -21,12 +20,20 @@ import java.util.List;
  */
 
 
-@Entity(tableName = "current_weather")
+@Entity(tableName = "data_weather", foreignKeys = {@ForeignKey(entity = WeatherDay.Sys.class, parentColumns = "id", childColumns = "id_sys",
+        onDelete = ForeignKey.CASCADE, onUpdate = ForeignKey.CASCADE),@ForeignKey(entity = WeatherDay.Wind.class, parentColumns = "id", childColumns = "id_wind",
+        onDelete = ForeignKey.CASCADE, onUpdate = ForeignKey.CASCADE),@ForeignKey(entity = WeatherDay.DayTemperature.class, parentColumns = "id", childColumns = "id_temp",
+        onDelete = ForeignKey.CASCADE, onUpdate = ForeignKey.CASCADE),@ForeignKey(entity = WeatherDay.Coords.class,parentColumns = "id", childColumns = "id_coords",
+        onDelete = ForeignKey.CASCADE, onUpdate = ForeignKey.CASCADE)})
 public class WeatherDay implements Parcelable
 {
     //! Класс, содержащий географические координаты города
+    @Entity(tableName = "coords")
     public static class Coords
     {
+        @PrimaryKey(autoGenerate = true)
+        @ColumnInfo(name = "id")
+        long idCoord;
         // широта города
         @ColumnInfo(name = "lat")
         @SerializedName("lat")
@@ -35,6 +42,14 @@ public class WeatherDay implements Parcelable
         @ColumnInfo(name = "lon")
         @SerializedName("lon")
         double lon;
+
+        public long getIdCoord() {
+            return idCoord;
+        }
+
+        public void setIdCoord(long idCoord) {
+            this.idCoord = idCoord;
+        }
 
         public double getLat() {
             return lat;
@@ -53,8 +68,12 @@ public class WeatherDay implements Parcelable
         }
     }
     //! Класс, содержащий сведения о температуре, влажности, давлении
+    @Entity(tableName = "temperature")
     public static class DayTemperature
     {
+        @PrimaryKey(autoGenerate = true)
+        @ColumnInfo(name = "id")
+        long idTemp;
         // текущая температура
         @ColumnInfo(name = "temp")
         @SerializedName("temp")
@@ -75,6 +94,14 @@ public class WeatherDay implements Parcelable
         @ColumnInfo(name = "humidity")
         @SerializedName("humidity")
         double humidity;
+
+        public long getIdTemp() {
+            return idTemp;
+        }
+
+        public void setIdTemp(long idTemp) {
+            this.idTemp = idTemp;
+        }
 
         public double getTemp() {
             return temp;
@@ -118,13 +145,22 @@ public class WeatherDay implements Parcelable
     }
 
     //! Класс, содержащий описание погодных условий
-    @Entity
-    public class WeatherDesc
+    @Entity(tableName = "weather")
+    public static class WeatherDesc
     {
-        // id погодных условий в OpenWeatherMap
+        @PrimaryKey(autoGenerate = true)
+        @ColumnInfo(name = "id")
+        long idWeather;
+
+        @ColumnInfo(name = "id_weather_day")
+        @ForeignKey(entity = WeatherDay.class, parentColumns = "id", childColumns = "id_weather_day",
+                onDelete = ForeignKey.CASCADE, onUpdate = ForeignKey.CASCADE)
+        long idWeatherDay;
+
+        // weatherId погодных условий в OpenWeatherMap
         @ColumnInfo(name = "weather_id")
-        @SerializedName("id")
-        int id;
+        @SerializedName("weatherId")
+        int weatherId;
         // описание группы погодных условий
         @ColumnInfo(name = "main")
         @SerializedName("main")
@@ -138,12 +174,28 @@ public class WeatherDay implements Parcelable
         @SerializedName("icon")
         String icon;
 
-        public int getId() {
-            return id;
+        public long getIdWeatherDay() {
+            return idWeatherDay;
         }
 
-        public void setId(int id) {
-            this.id = id;
+        public void setIdWeatherDay(long idWeatherDay) {
+            this.idWeatherDay = idWeatherDay;
+        }
+
+        public long getIdWeather() {
+            return idWeather;
+        }
+
+        public void setIdWeather(long idWeather) {
+            this.idWeather = idWeather;
+        }
+
+        public int getWeatherId() {
+            return weatherId;
+        }
+
+        public void setWeatherId(int weatherId) {
+            this.weatherId = weatherId;
         }
 
         public String getMain() {
@@ -172,8 +224,12 @@ public class WeatherDay implements Parcelable
     }
 
     //! Класс, содержащий сведения о ветре
+    @Entity(tableName = "wind")
     public static class Wind
     {
+        @PrimaryKey(autoGenerate = true)
+        @ColumnInfo(name = "id")
+        long idWind;
         // скорость ветра
         @ColumnInfo(name = "speed")
         @SerializedName("speed")
@@ -182,6 +238,14 @@ public class WeatherDay implements Parcelable
         @ColumnInfo(name = "wind_deg")
         @SerializedName("deg")
         double deg;
+
+        public long getIdWind() {
+            return idWind;
+        }
+
+        public void setIdWind(long idWind) {
+            this.idWind = idWind;
+        }
 
         public double getSpeed() {
             return speed;
@@ -201,8 +265,12 @@ public class WeatherDay implements Parcelable
     }
 
     //! Класс, содержащий информацию о стране и времени восхода и заката
+    @Entity(tableName = "sys")
     public static class Sys
     {
+        @PrimaryKey(autoGenerate = true)
+        @ColumnInfo(name = "id")
+        long idSys;
         // страна
         @ColumnInfo(name = "country")
         @SerializedName("country")
@@ -215,6 +283,14 @@ public class WeatherDay implements Parcelable
         @ColumnInfo(name = "sunset")
         @SerializedName("sunset")
         private long sunset;
+
+        public long getIdSys() {
+            return idSys;
+        }
+
+        public void setIdSys(long idSys) {
+            this.idSys = idSys;
+        }
 
         public String getCountry() {
             return country;
@@ -241,34 +317,50 @@ public class WeatherDay implements Parcelable
         }
     }
 
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    private long idd;
+
+    @ColumnInfo(name = "current_or_forecast")
+    private long currentOrForecast;
+
+    @ColumnInfo(name = "id_coords")
+    private long idCoords;
+
+    @ColumnInfo(name = "id_temp")
+    private long idTemp;
+
+    @ColumnInfo(name = "id_wind")
+    private long idWind;
+
+    @ColumnInfo(name = "id_sys")
+    private long idSys;
+
     // название города
     @ColumnInfo(name = "city_name")
     @SerializedName("name")
     private String cityName;
 
     // id города OpenWeatherMap
-    @PrimaryKey
     @SerializedName("id")
     private long cityID;
 
-    @Embedded
+    @Ignore
     @SerializedName("coord")
     private Coords coords;
 
     // температура
-    @Embedded
+    @Ignore
     @SerializedName("main")
     private DayTemperature temp;
 
     // описание погодных условий
-    //TODO какую аннотацию вписать чтобы работать со списком
-    @ColumnInfo(name = "weather_desc")
-    @TypeConverters({DbTypeConverters.class})
+    @Ignore
     @SerializedName("weather")
     private List<WeatherDesc> weatherDesc;
 
+    @Ignore
     @SerializedName("wind")
-    @Embedded
     private Wind wind;
 
     // дата и время
@@ -276,7 +368,7 @@ public class WeatherDay implements Parcelable
     @SerializedName("dt")
     private long dateTime;
 
-    @Embedded
+    @Ignore
     @SerializedName("sys")
     private Sys sys;
 
@@ -358,23 +450,75 @@ public class WeatherDay implements Parcelable
         sys = new Sys();
     }
 
-    ////////////////////////////геттеры////////////////////////////
-
     //! Возвращает URL иконки погоды
     public String getWeatherIconUrl()
     {
+        if ( weatherDesc.isEmpty() )
+            return "";
+
         return "http://openweathermap.org/img/w/" + weatherDesc.get(0).icon + ".png";
     }
 
     //! Возвращает URL иконки флага страны
     public String getCountryFlagUrl()
     {
+        if ( sys.country == null || sys.country.isEmpty() )
+            return "";
+
         return "http://openweathermap.org/images/flags/" + sys.country.toLowerCase() + ".png";
+    }
+
+    public long getIdd() {
+        return idd;
+    }
+
+    public void setIdd(long idd) {
+        this.idd = idd;
+    }
+
+    public long getCurrentOrForecast() {
+        return currentOrForecast;
+    }
+
+    public void setCurrentOrForecast(long currentOrForecast) {
+        this.currentOrForecast = currentOrForecast;
+    }
+
+    public long getIdCoords() {
+        return idCoords;
+    }
+
+    public void setIdCoords(long idCoords) {
+        this.idCoords = idCoords;
+    }
+
+    public long getIdTemp() {
+        return idTemp;
+    }
+
+    public void setIdTemp(long idTemp) {
+        this.idTemp = idTemp;
+    }
+
+    public long getIdWind() {
+        return idWind;
+    }
+
+    public void setIdWind(long idWind) {
+        this.idWind = idWind;
+    }
+
+    public long getIdSys() {
+        return idSys;
+    }
+
+    public void setIdSys(long idSys) {
+        this.idSys = idSys;
     }
 
     public int getWeatherID()
     {
-        return weatherDesc.get(0).id;
+        return weatherDesc.get(0).weatherId;
     }
 
     public String getWeatherMain()
@@ -420,6 +564,9 @@ public class WeatherDay implements Parcelable
     //! Возвращает описание погодных условий
     public String getWeatherDescription()
     {
+        if ( weatherDesc.isEmpty() )
+            return "";
+
         return weatherDesc.get(0).description;
     }
 
@@ -465,7 +612,7 @@ public class WeatherDay implements Parcelable
         return sys.sunset;
     }
 
-    //! Возвращает id города OpenWeatherMap
+    //! Возвращает weatherId города OpenWeatherMap
     public long getCityID()
     {
         return cityID;
@@ -496,9 +643,7 @@ public class WeatherDay implements Parcelable
         return coords;
     }
 
-    ////////////////////////////сеттеры////////////////////////////
-
-    //! Записывает id города OpenWeatherMap
+    //! Записывает weatherId города OpenWeatherMap
     public void setCityID( long iCityID )
     {
         this.cityID = iCityID;
@@ -506,7 +651,7 @@ public class WeatherDay implements Parcelable
 
     public void setWeatherID( int id )
     {
-        weatherDesc.get(0).id = id;
+        weatherDesc.get(0).weatherId = id;
     }
 
     public void setWeatherMain( String main )

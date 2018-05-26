@@ -7,10 +7,11 @@ import com.asaks.newweather.ApplicationSettings;
 import com.asaks.newweather.weather.WeatherDay;
 import com.asaks.newweather.weather.WeatherForecast;
 
-@Database(entities = {WeatherDay.class/*, WeatherForecast.class*/, ApplicationSettings.class}, version = 1)
+@Database(entities = {WeatherDay.class, WeatherDay.DayTemperature.class, WeatherDay.Coords.class,
+        WeatherDay.Wind.class, WeatherDay.Sys.class, WeatherDay.WeatherDesc.class/*, WeatherForecast.class*/,
+        ApplicationSettings.class}, version = 2)
 public abstract class WeatherDatabase extends RoomDatabase
 {
     public abstract WeatherDAO weatherDayDao();
-    //public abstract ForecastDAO forecastDao();
     public abstract SettingsDAO settingsDao();
 }
