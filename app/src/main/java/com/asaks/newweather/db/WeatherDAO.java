@@ -8,20 +8,12 @@ import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
 import com.asaks.newweather.weather.WeatherDay;
-import com.asaks.newweather.weather.WeatherForecast;
 
 import java.util.List;
 
 @Dao
 public interface WeatherDAO
 {
-    /**
-     * Запрос информации о текущей погоде по всем городам
-     * @return список объектов с информацией о погоде в городах
-     */
-    @Query("select * from data_weather")
-    List<WeatherDay> getCurrentWeather();
-
     /**
      * Вставка новых данных в БД
      * @param weatherDay - объект с информацией
@@ -73,15 +65,30 @@ public interface WeatherDAO
     @Query("select * from sys where id = :id")
     WeatherDay.Sys getSys(long id);
 
-    @Query("select * from data_weather where current_or_forecast = :currentOrForecast")
-    List<WeatherDay> getCurrentWeather(int currentOrForecast);
+    @Query("select * from data_weather where current_or_forecast = 1")
+    List<WeatherDay> getCurrentWeather();
 
     @Query("select * from weather where id_weather_day = :idd")
     List<WeatherDay.WeatherDesc> getWeatherDesc(long idd);
 
     @Query("delete from data_weather where current_or_forecast = :curr_or_forecast")
-    void deleteCurrentWeather(int curr_or_forecast);
+    void deleteWeather(int curr_or_forecast);
 
-    @Query("select * from data_weather where current_or_forecast = :curr_or_forecast")
-    List<WeatherDay> getForecast(int curr_or_forecast);
+    @Query("select * from data_weather where current_or_forecast = 2")
+    List<WeatherDay> getForecast();
+
+    @Query("delete from wind where id = :idd")
+    void deleteWindData( long idd );
+
+    @Query("delete from sys where id = :idd")
+    void deleteSysData( long idd );
+
+    @Query("delete from coords")
+    void deleteAllCoordData();
+
+    @Query("delete from weather where id_weather_day = :idd")
+    void deleteWeatherDescData( long idd );
+
+    @Query("delete from temperature where id = :idd")
+    void deleteTempData( long idd );
 }

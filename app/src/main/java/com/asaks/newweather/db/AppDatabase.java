@@ -38,7 +38,7 @@ public class AppDatabase extends Application
 
     public WeatherDay getCurrentWeather()
     {
-        List<WeatherDay> days = weatherDatabase.weatherDayDao().getCurrentWeather(GlobalMethodsAndConstants.IDD_CURRENT_WEATHER);
+        List<WeatherDay> days = weatherDatabase.weatherDayDao().getCurrentWeather();
         WeatherDay weatherDay = null;
 
         if ( !days.isEmpty() )

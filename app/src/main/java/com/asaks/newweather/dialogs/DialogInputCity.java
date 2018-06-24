@@ -79,7 +79,8 @@ public class DialogInputCity extends DialogFragment
                     AddressComponents address = (AddressComponents)adapterView.getItemAtPosition(i);
 
                     //TODO выделять название города из ответа по-другому
-                    String sCity = address.getFormattedAddress().trim().split(",")[0];
+                    //String sCity = address.getFormattedAddress().trim().split(",")[0];
+                    String sCity = address.getShortName();
                     edCity.setText( sCity );
                     lat = address.getLatitude();
                     lon = address.getLongitude();

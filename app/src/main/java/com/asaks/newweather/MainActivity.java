@@ -1,8 +1,6 @@
 package com.asaks.newweather;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -87,10 +85,24 @@ public class MainActivity extends AppCompatActivity
                 }
                 case GlobalMethodsAndConstants.PAGE_FORECAST_WEATHER:
                 {
-                    List<WeatherDay> lst = db.weatherDayDao().getForecast(GlobalMethodsAndConstants.IDD_WEATHER_FORECAST);
+                    List<WeatherDay> lst = db.weatherDayDao().getForecast();
 
                     if ( lst != null && !lst.isEmpty() )
                     {
+                        for ( int i = 0; i < lst.size(); i++ )
+                        {
+                            long idd = lst.get(i).getIdd();
+                            long idTemp = lst.get(i).getIdTemp();
+                            long idWind = lst.get(i).getIdWind();
+                            long idSys = lst.get(i).getIdSys();
+
+                            lst.get(i).setTemp( db.weatherDayDao().getTemp( idTemp ) );
+                            lst.get(i).setWind( db.weatherDayDao().getWind( idWind ) );
+                            lst.get(i).setSys( db.weatherDayDao().getSys( idSys ) );
+
+                            lst.get(i).setWeatherDesc( db.weatherDayDao().getWeatherDesc( idd ) );
+                        }
+
                         weatherForecast.setWeatherItems( lst );
                     }
 
@@ -181,8 +193,8 @@ public class MainActivity extends AppCompatActivity
             applicationSettings = new ApplicationSettings();
             applicationSettings.setLon( 0.0 );
             applicationSettings.setLat( 0.0 );
-            applicationSettings.setUnitPress( GlobalMethodsAndConstants.PRESS_MM_HG );
-            applicationSettings.setUnitTemp( GlobalMethodsAndConstants.TEMP_KELVIN );
+            applicationSettings.setUnitPressPos( GlobalMethodsAndConstants.PRESS_MM_HG );
+            applicationSettings.setUnitTempPos( GlobalMethodsAndConstants.TEMP_KELVIN );
             applicationSettings.setCity( "" );
 
             DialogInputCity dlgInputCity = DialogInputCity.newInstance();
@@ -303,11 +315,10 @@ public class MainActivity extends AppCompatActivity
 
                 if ( applicationSettings != null )
                 {
-                    SharedPreferences sf = getPreferences( Context.MODE_PRIVATE );
-                    String sCity = sf.getString( GlobalMethodsAndConstants.TAG_CITY, "" );
+                    String sCity = db.settingsDao().getSettings().getCity();
 
                     // если названия не совпадаю - значит сменили город
-                    if ( !sCity.equals( applicationSettings.getCity() ) )
+                    if ( sCity != null && !sCity.equals( applicationSettings.getCity() ) )
                     {
                         // удаляем старую запись о погоде, т.к. сменили город
                         List<WeatherDay> lst = db.weatherDayDao().getCurrentWeather();
@@ -317,10 +328,8 @@ public class MainActivity extends AppCompatActivity
                         updateWeather();
                     }
 
-                    if ( db.settingsDao().isExist( applicationSettings.getCity() ) )
-                        db.settingsDao().update( applicationSettings );
-                    else
-                        db.settingsDao().insert( applicationSettings );
+                    db.settingsDao().deleteAll();
+                    db.settingsDao().insert( applicationSettings );
 
                     Intent intent = new Intent( GlobalMethodsAndConstants.INTENT_NEW_SETTINGS );
                     intent.putExtra( GlobalMethodsAndConstants.TAG_SETTINGS, applicationSettings );
@@ -338,10 +347,8 @@ public class MainActivity extends AppCompatActivity
         applicationSettings.setLat( ( (DialogInputCity)dialog ).getLatitude() );
         applicationSettings.setLon( ( (DialogInputCity)dialog ).getLongitude() );
 
-        if ( db.settingsDao().isExist( applicationSettings.getCity() ) )
-            db.settingsDao().update( applicationSettings );
-        else
-            db.settingsDao().insert( applicationSettings );
+        db.settingsDao().deleteAll();
+        db.settingsDao().insert( applicationSettings );
 
         updateWeather();
     }
@@ -441,44 +448,60 @@ public class MainActivity extends AppCompatActivity
                         WeatherDay weatherDay = response.body();
 
                         if ( response.isSuccessful() )
-                            if ( null != weatherDay )
+                        {
+                            if (null != weatherDay)
                             {
                                 //TODO а если координаты должны быть (0,0)?
-                                if ( applicationSettings.getLon() == 0.0 && applicationSettings.getLat() == 0.0 )
-                                {
-                                    applicationSettings.setLat( weatherDay.getLatitude() );
-                                    applicationSettings.setLon( weatherDay.getLongitude() );
+                                if (applicationSettings.getLon() == 0.0 && applicationSettings.getLat() == 0.0) {
+                                    applicationSettings.setLat(weatherDay.getLatitude());
+                                    applicationSettings.setLon(weatherDay.getLongitude());
 
-                                    db.settingsDao().update( applicationSettings );
+                                    db.settingsDao().deleteAll();
+                                    db.settingsDao().insert(applicationSettings);
                                 }
 
                                 // замена английского названия города на введенное пользователем
-                                weatherDay.setCityName( applicationSettings.getCity() );
+                                weatherDay.setCityName(applicationSettings.getCity());
                                 // замена времени обновления данных о текущей погоде на сервере на
                                 // время обновления данных в приложении
                                 Date timeUpd = new Date();
-                                weatherDay.setTimeUpdate( timeUpd.getTime() / 1000  );
+                                weatherDay.setTimeUpdate(timeUpd.getTime() / 1000);
 
-                                weatherDay.setCurrentOrForecast( GlobalMethodsAndConstants.IDD_CURRENT_WEATHER );
+                                weatherDay.setCurrentOrForecast(GlobalMethodsAndConstants.IDD_CURRENT_WEATHER);
 
                                 //TODO вынести в отдельный поток
                                 //TODO пока перед сохранением удаляю все записи
-                                db.weatherDayDao().deleteCurrentWeather( GlobalMethodsAndConstants.IDD_CURRENT_WEATHER );
+                                List<WeatherDay> lstTemp = db.weatherDayDao().getCurrentWeather();
 
-                                weatherDay.setIdCoords( db.weatherDayDao().saveCoords(weatherDay.getCoords()));
-                                weatherDay.setIdTemp( db.weatherDayDao().saveTemp(weatherDay.getTemp()) );
-                                weatherDay.setIdWind( db.weatherDayDao().saveWind(weatherDay.getWind()) );
-                                weatherDay.setIdSys( db.weatherDayDao().saveSys(weatherDay.getSys() ));
+                                if (lstTemp != null && !lstTemp.isEmpty()) {
+                                    WeatherDay dayInBd = lstTemp.get(0);
 
-                                weatherDay.setIdd( db.weatherDayDao().saveWeatherDay(weatherDay) );
+                                    if (dayInBd != null) {
+                                        db.weatherDayDao().deleteAllCoordData();
+                                        db.weatherDayDao().deleteTempData(dayInBd.getIdTemp());
+                                        db.weatherDayDao().deleteSysData(dayInBd.getIdSys());
+                                        db.weatherDayDao().deleteWindData(dayInBd.getIdWind());
+                                        db.weatherDayDao().deleteWeatherDescData(dayInBd.getIdd());
+                                    }
 
-                                for ( int i = 0; i < weatherDay.getWeatherDesc().size(); i++ )
-                                    weatherDay.getWeatherDesc().get(i).setIdWeatherDay( weatherDay.getIdd() );
+                                    db.weatherDayDao().deleteWeather(GlobalMethodsAndConstants.IDD_CURRENT_WEATHER);
+                                }
 
-                                db.weatherDayDao().saveWeatherDesc( weatherDay.getWeatherDesc() );
+                                weatherDay.setIdCoords(db.weatherDayDao().saveCoords(weatherDay.getCoords()));
+                                weatherDay.setIdTemp(db.weatherDayDao().saveTemp(weatherDay.getTemp()));
+                                weatherDay.setIdWind(db.weatherDayDao().saveWind(weatherDay.getWind()));
+                                weatherDay.setIdSys(db.weatherDayDao().saveSys(weatherDay.getSys()));
 
-                                updateUICurrentWeather( weatherDay );
+                                weatherDay.setIdd(db.weatherDayDao().saveWeatherDay(weatherDay));
+
+                                for (int i = 0; i < weatherDay.getWeatherDesc().size(); i++)
+                                    weatherDay.getWeatherDesc().get(i).setIdWeatherDay(weatherDay.getIdd());
+
+                                db.weatherDayDao().saveWeatherDesc(weatherDay.getWeatherDesc());
+
+                                updateUICurrentWeather(weatherDay);
                             }
+                        }
                         else
                         {
                             try
@@ -544,7 +567,7 @@ public class MainActivity extends AppCompatActivity
 
                             if ( item != null )
                             {
-                                db.weatherDayDao().deleteCurrentWeather( GlobalMethodsAndConstants.IDD_WEATHER_FORECAST );
+                                db.weatherDayDao().deleteWeather( GlobalMethodsAndConstants.IDD_WEATHER_FORECAST );
 
                                 item.setIdCoords( db.weatherDayDao().saveCoords(item.getCoords()));
                                 item.setIdTemp( db.weatherDayDao().saveTemp(item.getTemp()) );

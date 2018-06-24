@@ -71,8 +71,8 @@ public class SettingsActivity extends AppCompatActivity
 
             if ( applicationSettings != null )
             {
-                spinnerTemperature.setSelection( applicationSettings.getUnitTemp() );
-                spinnerPressure.setSelection( applicationSettings.getUnitPress() );
+                spinnerTemperature.setSelection( applicationSettings.getUnitTempPos() );
+                spinnerPressure.setSelection( applicationSettings.getUnitPressPos() );
                 btnSetCity.setText( String.format( "%s: %s", getString(R.string.change_city),
                         applicationSettings.getCity() ) );
             }
@@ -106,8 +106,8 @@ public class SettingsActivity extends AppCompatActivity
             case R.id.action_save: // сохранить
             {
                 Intent intent = new Intent();
-                applicationSettings.setUnitTemp( spinnerTemperature.getSelectedItemPosition() );
-                applicationSettings.setUnitPress( spinnerPressure.getSelectedItemPosition() );
+                applicationSettings.setUnitTempPos( spinnerTemperature.getSelectedItemPosition() );
+                applicationSettings.setUnitPressPos( spinnerPressure.getSelectedItemPosition() );
                 intent.putExtra( GlobalMethodsAndConstants.TAG_SETTINGS, applicationSettings );
                 setResult( RESULT_OK, intent );
 

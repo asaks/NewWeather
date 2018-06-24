@@ -1,6 +1,7 @@
 package com.asaks.newweather.adapters;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -104,9 +105,9 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         holder.tvDay.setText( new SimpleDateFormat( "dd.MM.yyyy HH:mm", Locale.getDefault() ).format( timeUpd ) );
 
         long temp = Math.round( weatherForecast.getWeatherItems().get(position).getCurrentTemp() );
-        holder.tvForecastTemp.setText( convertTemperature( settings.getUnitTemp(), temp ) );
+        holder.tvForecastTemp.setText( convertTemperature( settings.getUnitTempPos(), temp ) );
 
-        holder.tvForecastPressure.setText( convertPressure( settings.getUnitPress(),
+        holder.tvForecastPressure.setText( convertPressure( settings.getUnitPressPos(),
                 weatherForecast.getWeatherItems().get(position).getPressure() ) );
 
         holder.tvForecastHumidity.setText( String.format( Locale.getDefault(), "%d %s",

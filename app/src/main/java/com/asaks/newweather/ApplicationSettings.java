@@ -12,7 +12,7 @@ import android.os.Parcelable;
 @Entity(tableName = "settings")
 public class ApplicationSettings implements Parcelable
 {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private long idd;
     // город
     @ColumnInfo(name = "city")
@@ -111,26 +111,6 @@ public class ApplicationSettings implements Parcelable
     public void setCity( String city )
     {
         this.city = city;
-    }
-
-    public int getUnitTemp()
-    {
-        return unitTempPos;
-    }
-
-    public void setUnitTemp(int unitTempPos)
-    {
-        this.unitTempPos = unitTempPos;
-    }
-
-    public int getUnitPress()
-    {
-        return unitPressPos;
-    }
-
-    public void setUnitPress(int unitPressPos)
-    {
-        this.unitPressPos = unitPressPos;
     }
 
     public double getLat()

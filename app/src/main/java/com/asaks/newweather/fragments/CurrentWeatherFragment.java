@@ -114,8 +114,8 @@ public class CurrentWeatherFragment extends Fragment
             if ( applicationSettings != null )
             {
                 tvCity.setText( applicationSettings.getCity() );
-                convertPressure( applicationSettings.getUnitPress(), weatherDay.getPressure() );
-                convertTemperature( applicationSettings.getUnitTemp(), weatherDay.getCurrentTemp() );
+                convertPressure( applicationSettings.getUnitPressPos(), weatherDay.getPressure() );
+                convertTemperature( applicationSettings.getUnitTempPos(), weatherDay.getCurrentTemp() );
             }
         }
     };
@@ -163,13 +163,13 @@ public class CurrentWeatherFragment extends Fragment
         tvCity.setText( weatherDay.getCityName().toUpperCase( Locale.getDefault() ) );
 
         String sLatitude = String.format( Locale.getDefault(), "%.2f %s%s",
-                weatherDay.getLatitude(), getString( R.string.gradus),
+                Math.abs( weatherDay.getLatitude() ), getString( R.string.gradus),
                 getStringDesignationCoords( weatherDay.getLatitude(), GlobalMethodsAndConstants.COORD_LAT ) );
 
         tvLat.setText( sLatitude );
 
         String sLongitude = String.format( Locale.getDefault(), "%.2f %s%s",
-                weatherDay.getLongitude(), getString( R.string.gradus),
+                Math.abs( weatherDay.getLongitude() ), getString( R.string.gradus),
                 getStringDesignationCoords( weatherDay.getLongitude(), GlobalMethodsAndConstants.COORD_LON ) );
 
         tvLon.setText( sLongitude );
@@ -177,13 +177,13 @@ public class CurrentWeatherFragment extends Fragment
         Date timeUpd = new Date( weatherDay.getDateTime() * 1000 );
         tvDateTime.setText( new SimpleDateFormat("dd MMMM HH:mm", Locale.getDefault() ).format( timeUpd ) );
 
-        convertTemperature( applicationSettings.getUnitTemp(), weatherDay.getCurrentTemp() );
+        convertTemperature( applicationSettings.getUnitTempPos(), weatherDay.getCurrentTemp() );
 
         tvHumidity.setText( String.format( Locale.getDefault(), "%d %s",
                 Math.round( weatherDay.getHumidity() ),
                 getString( R.string.procent) ) );
 
-        convertPressure( applicationSettings.getUnitPress(), weatherDay.getPressure() );
+        convertPressure( applicationSettings.getUnitPressPos(), weatherDay.getPressure() );
 
         tvWindSpeed.setText( String.format( Locale.getDefault(), "%.2f %s",
                 weatherDay.getWindSpeed(),

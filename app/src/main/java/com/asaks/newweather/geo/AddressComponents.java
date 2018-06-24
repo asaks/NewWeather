@@ -2,11 +2,63 @@ package com.asaks.newweather.geo;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Вспомогательный класс. Содержит информацию о результатах геокодирования
  */
 public class AddressComponents
 {
+    private class Address
+    {
+        @SerializedName("long_name")
+        private String longName;
+
+        @SerializedName("short_name")
+        private String shortName;
+
+        @SerializedName("types")
+        private List<String> types;
+
+        Address()
+        {
+            longName = "";
+            shortName = "";
+            types = new ArrayList<>();
+        }
+
+        public String getLongName()
+        {
+            return longName;
+        }
+
+        public void setLongName(String longName)
+        {
+            this.longName = longName;
+        }
+
+        public String getShortName()
+        {
+            return shortName;
+        }
+
+        public void setShortName(String shortName)
+        {
+            this.shortName = shortName;
+        }
+
+        public List<String> getTypes()
+        {
+            return types;
+        }
+
+        public void setTypes(List<String> types)
+        {
+            this.types = types;
+        }
+    }
+
     /**
      * Вспомогательный класс. Координаты места
      */
@@ -17,7 +69,7 @@ public class AddressComponents
         private double dLat;
 
         // долгота места в градусах
-        @SerializedName("lon")
+        @SerializedName("lng")
         private double dLon;
 
         double getLat()
@@ -71,6 +123,9 @@ public class AddressComponents
         }
     }
 
+    @SerializedName("address_components")
+    private List<Address> addressComponents;
+
     // полный адрес мест
     @SerializedName("formatted_address")
     private String sFormattedAddress;
@@ -81,8 +136,32 @@ public class AddressComponents
 
     AddressComponents()
     {
+        addressComponents = new ArrayList<>();
         sFormattedAddress = "";
         geometry = new Geometry();
+    }
+
+    public List<Address> getAddressComponents()
+    {
+        return addressComponents;
+    }
+
+    public void setAddressComponents( List<Address> addressComponents )
+    {
+        this.addressComponents = addressComponents;
+    }
+
+    public String getShortName()
+    {
+        for ( Address addr : addressComponents )
+        {
+            List<String> types = addr.getTypes();
+
+            if ( types != null && types.contains( "locality" )/* && types.contains( "political" )*/ )
+                return addr.getShortName();
+        }
+
+        return "";
     }
 
     /**

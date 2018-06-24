@@ -1,4 +1,6 @@
 # NewWeather
 Приложение погоды с использованием API OpenWeatherMap.
 
-Курсы Android. Altarix 2018
+Курсы Android. Altarix апрель-май 2018
+
+С базой данных пока дикий треш, нужно наладить очистку.
